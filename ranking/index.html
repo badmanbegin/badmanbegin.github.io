@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>BADMAN — Ranking สมาชิก</title>
+<title>BADMAN BEGIN — Ranking สมาชิก</title>
 <meta name="description" content="อันดับและสถิติสมาชิกก๊วนแบด BADMAN ทุกวันศุกร์ 20:00–01:00 สนามแบดวังนาคา ลาดพร้าว 64">
 <meta property="og:title" content="BADMAN — Ranking สมาชิก">
 <meta property="og:description" content="ใครอันดับไหน ชนะกี่เกม ดูสถิติสมาชิกก๊วน BADMAN">
@@ -160,8 +160,8 @@ footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; m
     <a class="brand-lockup" href="./">
       <img src="../badman-logo.jpg" alt="Badman Badminton">
       <div>
-        <p class="eyebrow">BADMAN • RANKING</p>
-        <h1>ก๊วน <span>BADMAN</span></h1>
+        <p class="eyebrow">อันดับสมาชิก • RANKING</p>
+        <h1>BADMAN <span>BEGIN</span></h1>
         <p class="brand-tagline">ทุกมือ • ทุกคู่ • ทุกเกม จัดให้ลงตัว</p>
       </div>
     </a>
@@ -175,7 +175,7 @@ footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; m
 
   <div id="view"><div class="panel"><div class="empty">กำลังโหลด…</div></div></div>
 
-  <footer><span>BADMAN • Ranking</span><span>©2026 BADMAN Badminton</span></footer>
+  <footer><span>BADMAN BEGIN • Ranking</span><span>©2026 BADMAN BEGIN</span></footer>
 </main>
 
 <script>
@@ -263,7 +263,7 @@ function renderProfile(code) {
   const m = byCode.get(code.toUpperCase());
   if (!m) { $("view").innerHTML = `<section class="panel"><div class="empty">ไม่พบสมาชิก ${esc(code)}</div></section><a class="back" href="./">← กลับไปหน้า Ranking</a>`; return; }
   const s = stats.members[m.id];
-  document.title = `${display(m)} — BADMAN`;
+  document.title = `${display(m)} — BADMAN BEGIN`;
   const meta = [m.name ? `<span><b>${esc(m.code)}</b></span>` : "", m.level ? `<span>${lvImg(m.level, 22)} ${esc(levelLabel(m.level))} • ${esc(levelOf(m.level)?.th ?? "")}</span>` : "", m.hand ? `<span>${m.hand === "L" ? "ถนัดซ้าย" : "ถนัดขวา"}</span>` : "", m.joined ? `<span>เข้าก๊วน ${esc(thaiDate(m.joined))}</span>` : "", s?.lastDay ? `<span>เล่นล่าสุด ${esc(thaiDate(s.lastDay))}</span>` : ""].join("");
   const team = (ids) => ids.map((id) => esc(display(who(id)))).join(" + ");
   $("view").innerHTML = `<section class="panel">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>BADMAN — จัดการสมาชิก</title>
+<title>BADMAN BEGIN — จัดการสมาชิก</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0f0f0e">
 <link rel="icon" href="../favicon.svg">
@@ -124,7 +124,7 @@ footer a { color:var(--muted); }
     <div class="brand-lockup">
       <img src="../badman-logo.jpg" alt="Badman Badminton">
       <div>
-        <p class="eyebrow">BADMAN • STAFF</p>
+        <p class="eyebrow">BADMAN BEGIN • STAFF</p>
         <h1>จัดการ <span>สมาชิก</span></h1>
       </div>
     </div>
@@ -187,7 +187,7 @@ footer a { color:var(--muted); }
     <div class="list" id="list"><div class="empty">กำลังโหลด…</div></div>
   </section>
 
-  <footer><span>BADMAN • Staff</span><span><a href="../live/">คิวสด</a> · <a href="../ranking/">Ranking</a></span></footer>
+  <footer><span>BADMAN BEGIN • Staff</span><span><a href="../live/">คิวสด</a> · <a href="../ranking/">Ranking</a></span></footer>
 </main>
 
 <dialog id="dlg">
@@ -736,7 +736,7 @@ $("rDetail").addEventListener("click", async (e) => {
     } else if (b.id === "rReload") { await selectRound(selRound.id); }
     else if (b.id === "rCopy") {
       const st = standingsOf(selRound, selEntries);
-      const lines = [`ก๊วนแบด BADMAN • ${thaiDay(selRound.id)}`];
+      const lines = [`ก๊วนแบด BADMAN BEGIN • ${thaiDay(selRound.id)}`];
       for (const s of st) {
         lines.push("", `มา ${s.time} (${s.used}/${s.cap})`);
         let n = 0;
