@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ลงชื่อก๊วน — BADMAN BEGIN</title>
+<meta name="description" content="ลงชื่อเข้าก๊วนแบด BADMAN BEGIN ทุกวันศุกร์ เลือกช่วงเวลาที่จะมา ดูรายชื่อและที่ว่างได้ทันที">
+<meta property="og:title" content="ลงชื่อก๊วนแบด BADMAN BEGIN">
+<meta property="og:description" content="เลือกช่วงเวลาที่จะมา 20:00 / 21:00 / 22:00 • ดูรายชื่อและที่ว่างได้ทันที">
+<meta property="og:image" content="https://badmanbegin.github.io/og-badman.jpg">
+<meta name="theme-color" content="#0f0f0e">
+<link rel="icon" href="../favicon.svg">
+<style>
+/* Same tokens and look as BADMAN Court Control (app/globals.css). */
+:root { --ink:#171611; --muted:#716d61; --line:#ddd6c5; --paper:#f3f0e7; --panel:#fffefa; --gold:#e9b92f; --black:#0f0f0e; --brown:#a47a06; --green:#2b9364; --red:#b84a25; }
+* { box-sizing:border-box; }
+html { background:var(--paper); -webkit-text-size-adjust:100%; }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif; }
+button,input { font:inherit; color:inherit; }
+:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+[hidden] { display:none !important; }
+.shell { max-width:560px; margin:0 auto; padding:0 14px calc(28px + env(safe-area-inset-bottom)); }
+header.top { background:var(--black); color:#fff; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; }
+header.top .in { max-width:560px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; }
+.brand img { width:38px; height:38px; border-radius:50%; border:2px solid var(--gold); display:block; }
+.brand b { font-size:17px; }
+.brand b span { color:var(--gold); }
+header.top nav { display:flex; gap:4px; }
+header.top nav a { color:#fff; text-decoration:none; font-weight:800; font-size:13px; padding:8px 10px; border-radius:9px; }
+header.top nav a:hover { background:rgba(255,255,255,.08); }
+
+.round { margin-top:14px; border-radius:18px; background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); color:#fff; padding:18px; display:flex; flex-direction:column; gap:12px; }
+.round .row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.round .eyebrow { color:var(--gold); font-weight:900; letter-spacing:.12em; font-size:11px; }
+.pill { display:inline-flex; align-items:center; gap:6px; border-radius:99px; padding:4px 10px; font-size:12px; font-weight:900; }
+.pill.open { background:rgba(43,147,100,.22); color:#8fe0b2; }
+.pill.closed { background:rgba(255,255,255,.12); color:#d8d2c0; }
+.pill .d { width:8px; height:8px; border-radius:50%; background:currentColor; }
+.round h1 { margin:0; font-size:28px; line-height:1.15; letter-spacing:-.03em; }
+.round .meta { display:flex; flex-direction:column; gap:3px; color:#d8d2c0; font-size:14px; font-weight:700; }
+.round .total { display:flex; justify-content:space-between; align-items:baseline; }
+.round .total span { font-size:13px; color:#d8d2c0; font-weight:700; }
+.round .total strong { font-size:26px; }
+.slots { display:flex; flex-direction:column; gap:9px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:12px; }
+.slots > small { font-size:12px; color:var(--gold); font-weight:900; }
+.slot { display:grid; grid-template-columns:54px minmax(0,1fr) auto; align-items:center; gap:10px; }
+.slot b { font-size:16px; }
+.bar { height:8px; border-radius:99px; background:rgba(255,255,255,.14); overflow:hidden; }
+.bar > div { height:100%; background:var(--gold); border-radius:99px; }
+.slot small { display:block; font-size:11px; color:#b9b29f; margin-top:4px; }
+.slot .lbl { text-align:right; font-size:13px; font-weight:900; }
+.btn { display:block; width:100%; border:0; border-radius:12px; padding:15px; font-weight:900; font-size:17px; text-align:center; text-decoration:none; cursor:pointer; }
+.btn.gold { background:var(--gold); color:var(--black); }
+.btn.dark { background:var(--black); color:var(--gold); }
+.btn.line { background:#06c755; color:#fff; }
+.btn.danger { background:#fff6f1; color:var(--red); border:1px solid #efc2b0; padding:13px; font-size:15px; }
+.btn.ghost { background:#fff; color:#4c4a42; border:1px solid var(--line); padding:13px; font-size:15px; }
+.btn:disabled { opacity:.55; cursor:not-allowed; }
+.hint { font-size:12px; color:#b9b29f; text-align:center; }
+
+.card { margin-top:14px; background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.card > .head { padding:14px 16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.card > .head b { font-size:18px; }
+.card > .head span { color:var(--muted); font-size:13px; font-weight:700; }
+.slothead { padding:7px 14px; background:var(--black); color:var(--gold); font-size:12px; font-weight:900; display:flex; justify-content:space-between; }
+.slothead span:last-child { color:#d8d2c0; }
+.person { display:flex; align-items:center; gap:11px; padding:9px 14px; border-bottom:1px solid #eeeadf; }
+.person.me { background:#fff9e5; }
+.person.wait { background:#fff8f1; }
+.person .no { width:28px; text-align:center; font-weight:900; color:var(--muted); font-size:13px; flex:0 0 auto; }
+.person.wait .no { color:#98450c; }
+.pav { position:relative; width:40px; height:40px; flex:0 0 auto; border-radius:50%; border:2px solid var(--gold); background:var(--black); color:var(--gold); display:grid; place-items:center; font-weight:900; font-size:16px; }
+.pav img.ph { width:100%; height:100%; border-radius:50%; object-fit:cover; }
+.pav img.lv { position:absolute; right:-5px; bottom:-5px; width:20px; height:20px; border-radius:50%; background:#fff; border:1.5px solid var(--gold); }
+.person .who { flex:1; min-width:0; display:flex; flex-direction:column; }
+.person .who b { font-size:15px; overflow-wrap:anywhere; }
+.person .who small { color:var(--muted); font-size:12px; font-weight:700; }
+.tag { border-radius:99px; padding:3px 9px; font-size:11px; font-weight:900; white-space:nowrap; }
+.tag.new { background:#e3f1ea; color:#0f6843; }
+.tag.guest { background:#fff0b7; color:#725300; }
+.tag.wait { background:#ffd5b3; color:#98450c; }
+.empty { padding:22px 16px; text-align:center; color:var(--muted); font-weight:700; }
+
+/* form */
+.form { margin-top:14px; display:flex; flex-direction:column; gap:14px; }
+.box { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:12px; margin:0; }
+.box > b, .box legend { font-size:18px; font-weight:700; }
+fieldset.box legend { float:left; padding:0; margin-bottom:4px; width:100%; }
+label.f { display:flex; flex-direction:column; gap:6px; font-size:13px; font-weight:800; color:var(--muted); }
+input.t { border:1px solid var(--line); border-radius:10px; padding:12px; font-size:16px; color:var(--ink); background:#fbfaf6; width:100%; }
+input.t:focus { border-color:var(--ink); box-shadow:0 0 0 3px rgba(233,185,47,.25); outline:none; }
+.choices { display:flex; flex-direction:column; gap:8px; }
+.choice { display:flex; align-items:center; gap:11px; border:1px solid var(--line); background:#fff; border-radius:12px; padding:10px 12px; text-align:left; cursor:pointer; width:100%; }
+.choice[aria-pressed="true"] { border:2px solid var(--ink); background:#fff9e5; padding:9px 11px; }
+.choice .who { flex:1; display:flex; flex-direction:column; min-width:0; }
+.choice .who small { color:var(--muted); font-size:12px; }
+.slotpick { display:flex; align-items:center; gap:12px; border:1px solid var(--line); background:#fff; border-radius:12px; padding:12px; cursor:pointer; }
+.slotpick:has(input:checked) { border:2px solid var(--ink); background:#fff9e5; padding:11px; }
+.slotpick input { width:22px; height:22px; accent-color:var(--black); }
+.slotpick b { font-size:18px; }
+.slotpick small { display:block; font-size:12px; font-weight:800; }
+.stepper { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.stepper .ctl { display:flex; align-items:center; gap:4px; background:#efebe0; border-radius:12px; padding:4px; }
+.stepper button { width:44px; height:44px; border:0; border-radius:9px; background:#fff; font-size:22px; font-weight:900; cursor:pointer; }
+.stepper button.plus { background:var(--black); color:var(--gold); }
+.stepper strong { width:34px; text-align:center; font-size:20px; }
+.summary { background:var(--black); color:#fff; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.summary .row { display:flex; justify-content:space-between; gap:8px; align-items:baseline; font-weight:700; }
+.summary .row span:first-child { color:#d8d2c0; font-size:14px; }
+.summary .row span:last-child { color:var(--gold); font-weight:900; font-size:14px; text-align:right; }
+.err { color:var(--red); font-weight:800; font-size:14px; }
+
+/* my entry */
+.mine { margin-top:14px; border-radius:18px; overflow:hidden; background:var(--panel); border:1px solid #9fd0b2; }
+.mine.wait { border-color:#f0ad78; }
+.mine .top { background:#edf8f1; padding:20px 18px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+.mine.wait .top { background:#fff3e8; }
+.mine .ic { width:56px; height:56px; border-radius:50%; background:var(--green); display:grid; place-items:center; }
+.mine.wait .ic { background:#ed7a32; }
+.mine .top b { font-size:21px; }
+.mine.wait .top b { color:#98450c; }
+.mine .time { background:var(--black); color:var(--gold); border-radius:12px; padding:10px 18px; font-weight:900; font-size:18px; }
+.mine .top span.sub { color:#0f6843; font-weight:800; font-size:14px; }
+.mine.wait .top span.sub { color:#98450c; }
+.mine .body { padding:16px 18px 18px; display:flex; flex-direction:column; gap:10px; }
+.mine .body p { margin:0; color:#4c4a42; font-size:14px; line-height:1.55; }
+.note { margin:14px 4px 0; font-size:12px; color:var(--muted); line-height:1.6; }
+.toast { position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:var(--black); color:var(--gold); padding:10px 16px; border-radius:10px; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,.3); z-index:10; max-width:calc(100vw - 32px); text-align:center; }
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="../"><img src="../badman-begin-logo.webp" alt="BADMAN BEGIN" width="38" height="38"><b>BADMAN <span>BEGIN</span></b></a>
+  <nav aria-label="เมนู"><a href="../live/">คิวสด</a><a href="../ranking/">Ranking</a></nav>
+</div></header>
+
+<main class="shell">
+  <div id="view"><div class="card"><div class="empty">กำลังโหลด…</div></div></div>
+  <p class="note">แสดงเฉพาะชื่อเล่น • ถึงสนามแล้วแจ้งชื่อกับทีมงาน ระบบจะเช็กอินและต่อคิวให้ • เครื่องนี้จำไว้ว่าคุณลงชื่ออะไร ยกเลิกหรือแก้ได้จากเครื่องนี้เท่านั้น (เปลี่ยนเครื่องให้แจ้งทีมงาน)</p>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+// Public data: rounds/* and rounds/{day}/entries/* (nicknames, member id, guests, slot).
+// Each device signs in anonymously (Firebase) and may write only its own entry, rounds/{day}/entries/{uid}.
+const FIREBASE = { apiKey: "AIzaSyAI1EaI2OSmwXkbZs5GsO6Ze7jPUk8iumQ", projectId: "badman-live" };
+const ROOT = `projects/${FIREBASE.projectId}/databases/(default)/documents`;
+const API = `https://firestore.googleapis.com/v1/${ROOT}`;
+const AUTH_KEY = "badman-signup-auth-v1";
+const LV = ["", "Baby Bat", "Tiny Wing", "Little Bat", "Bouncing Bat", "Junior Badman", "Hero in Training", "Shadow Striker", "Dark Knight Master"];
+const LINE_URL = "https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const initial = (s) => String(s || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
+const norm = (s) => String(s || "").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+const thaiDate = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
+const thaiWhen = (iso) => new Date(iso).toLocaleString("th-TH", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const today = () => new Date(Date.now() - 6 * 3600e3).toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 3500); }
+
+/* ---------- Firestore typed values ---------- */
+function fromValue(v) {
+  if (!v) return null;
+  if ("stringValue" in v) return v.stringValue;
+  if ("integerValue" in v) return Number(v.integerValue);
+  if ("doubleValue" in v) return v.doubleValue;
+  if ("booleanValue" in v) return v.booleanValue;
+  if ("timestampValue" in v) return v.timestampValue;
+  if ("nullValue" in v) return null;
+  if ("arrayValue" in v) return (v.arrayValue.values || []).map(fromValue);
+  if ("mapValue" in v) return Object.fromEntries(Object.entries(v.mapValue.fields || {}).map(([k, x]) => [k, fromValue(x)]));
+  return null;
+}
+const docData = (d) => ({ id: d.name.split("/").pop(), ...Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, fromValue(v)])) });
+async function listDocs(path) {
+  const out = []; let page = "";
+  do {
+    const r = await fetch(`${API}/${path}?pageSize=300&key=${FIREBASE.apiKey}${page ? "&pageToken=" + encodeURIComponent(page) : ""}`, { cache: "no-store" });
+    if (!r.ok) throw new Error(String(r.status));
+    const b = await r.json();
+    for (const d of b.documents || []) out.push(docData(d));
+    page = b.nextPageToken || "";
+  } while (page);
+  return out;
+}
+
+/* ---------- anonymous sign-in (one per device) ---------- */
+let auth = null;
+try { auth = JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); } catch {}
+const saveAuth = () => { try { localStorage.setItem(AUTH_KEY, JSON.stringify(auth)); } catch {} };
+async function token() {
+  if (auth?.idToken && auth.exp - Date.now() > 60000) return auth.idToken;
+  if (auth?.refreshToken) {
+    const r = await fetch(`https://securetoken.googleapis.com/v1/token?key=${FIREBASE.apiKey}`, { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(auth.refreshToken) });
+    const b = await r.json();
+    if (r.ok) { auth = { uid: b.user_id, refreshToken: b.refresh_token, idToken: b.id_token, exp: Date.now() + Number(b.expires_in) * 1000 }; saveAuth(); return auth.idToken; }
+  }
+  const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE.apiKey}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ returnSecureToken: true }) });
+  const b = await r.json();
+  if (!r.ok) throw new Error(b?.error?.message === "ADMIN_ONLY_OPERATION" ? "ระบบลงชื่อยังไม่เปิดใช้งาน กรุณาแจ้งทีมงาน" : "เชื่อมต่อระบบไม่สำเร็จ ลองใหม่อีกครั้ง");
+  auth = { uid: b.localId, refreshToken: b.refreshToken, idToken: b.idToken, exp: Date.now() + Number(b.expiresIn) * 1000 };
+  saveAuth();
+  return auth.idToken;
+}
+async function commit(writes) {
+  const r = await fetch(`${API}:commit`, { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + (await token()) }, body: JSON.stringify({ writes }) });
+  if (!r.ok) {
+    const b = await r.json().catch(() => ({}));
+    if (r.status === 403) throw new Error("ลงชื่อไม่ได้ อาจปิดรับแล้วหรือข้อมูลไม่ถูกต้อง ลองรีเฟรชหน้า");
+    throw new Error(b?.error?.message || "บันทึกไม่สำเร็จ");
+  }
+}
+const sv = (s) => ({ stringValue: String(s) });
+
+/* ---------- state ---------- */
+let round = null, entries = [], roster = new Map(), view = "list", form = null, busy = false, cancelArmed = false;
+
+/** Per-slot standing: in order of sign-up, an entry (with its guests) is confirmed while it fits the slot. */
+function standings() {
+  const bySlot = new Map(round.slots.map((s) => [s.time, { ...s, used: 0, waitPeople: 0, list: [] }]));
+  const sorted = [...entries].sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+  let n = 0;
+  for (const e of sorted) {
+    const s = bySlot.get(e.slot);
+    if (!s) continue;
+    const size = 1 + (e.guests?.length || 0);
+    const fits = s.waitPeople === 0 && s.used + size <= s.cap;
+    if (fits) { s.used += size; e.state = "ok"; e.no = (n += 0, s.used - size + 1); }
+    else { s.waitPeople += size; e.state = "wait"; e.no = s.waitPeople - size + 1; }
+    s.list.push(e);
+  }
+  return [...bySlot.values()];
+}
+const peopleIn = (s) => s.used;
+const capTotal = () => round.slots.reduce((t, s) => t + s.cap, 0);
+const mine = () => (auth ? entries.find((e) => e.id === auth.uid) : null);
+const isOpen = () => round && round.status === "open" && new Date(round.closeAt).getTime() > Date.now();
+
+function avatar(e) {
+  const m = e.memberId ? roster.get(e.memberId) : null;
+  const lv = m?.level;
+  return `<span class="pav"${m?.photo ? ` data-photo="${esc(m.id)}"` : ""}><span class="ini">${esc(initial(e.name))}</span>${lv ? `<img class="lv" src="../levels/lv${lv}.webp" alt="">` : ""}</span>`;
+}
+function subOf(e) {
+  const m = e.memberId ? roster.get(e.memberId) : null;
+  return m?.level ? `Lv.${m.level} ${LV[m.level]}` : e.memberId ? "สมาชิก" : "คนใหม่";
+}
+
+function renderRoundCard(st) {
+  const total = st.reduce((t, s) => t + s.used, 0);
+  const open = isOpen();
+  const my = mine();
+  return `<section class="round">
+    <div class="row"><span class="eyebrow">${round.date >= today() ? "รอบถัดไป" : "รอบล่าสุด"}</span><span class="pill ${open ? "open" : "closed"}"><span class="d"></span>${open ? "เปิดรับอยู่" : "ปิดรับแล้ว"}</span></div>
+    <h1>${esc(thaiDate(round.date))}</h1>
+    <div class="meta"><span>${esc(round.start)}–${esc(round.end)} • สนามแบดวังนาคา ลาดพร้าว 64</span>${round.fee ? `<span>${esc(round.fee)}</span>` : ""}</div>
+    <div class="total"><span>ลงชื่อแล้ว</span><span><strong>${total}</strong><span> / ${capTotal()} คน</span></span></div>
+    <div class="slots"><small>ช่วงเวลาที่เปิดรับ • เลือกเองตอนลงชื่อ</small>${st.map((s) => {
+      const left = s.cap - s.used;
+      const pct = Math.min(100, Math.round((s.used / Math.max(1, s.cap)) * 100));
+      const lbl = left <= 0 ? `เต็ม ${s.used}/${s.cap}` : s.used ? `${s.used}/${s.cap} • เหลือ ${left}` : `ว่าง ${s.cap}`;
+      const color = left <= 0 ? "#d8d2c0" : s.used ? "#e9b92f" : "#8fe0b2";
+      return `<div class="slot"><b>${esc(s.time)}</b><div><div class="bar"><div style="width:${pct}%"></div></div><small>รับ ${s.cap} คน${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</small></div><span class="lbl" style="color:${color}">${lbl}</span></div>`;
+    }).join("")}</div>
+    ${open && !my ? `<button class="btn gold" id="goForm">ลงชื่อรอบนี้</button><span class="hint">ไม่ต้องสมัคร ไม่ต้องล็อกอิน • ยกเลิกเองได้ถึง ${esc(thaiWhen(round.closeAt))} น.</span>` : ""}
+    ${!open ? `<span class="hint">ปิดรับลงชื่อแล้ว • ติดต่อทีมงานในกลุ่ม LINE</span>` : ""}
+  </section>`;
+}
+
+function renderMine(st) {
+  const my = mine();
+  if (!my) return "";
+  const ok = my.state === "ok";
+  const who = [my.name, ...(my.guests || []).map((g) => `${g} (เพื่อน)`)].join(" • ");
+  return `<section class="mine ${ok ? "" : "wait"}">
+    <div class="top">
+      <span class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ok ? '<path d="M5 12l5 5 9-10"/>' : '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'}</svg></span>
+      <b>${ok ? "คุณลงชื่อแล้ว • ได้ที่แล้ว" : `อยู่คิวสำรองที่ ${my.no} ของช่วง ${esc(my.slot)}`}</b>
+      <span class="sub">${esc(who)}</span>
+      ${ok ? `<span class="time">มาได้ตั้งแต่ ${esc(my.slot)} น.</span>` : ""}
+    </div>
+    <div class="body">
+      <p>${ok ? `ถึงสนามแล้วแจ้งชื่อ "${esc(my.name)}" กับทีมงาน` : "มีคนยกเลิกเมื่อไร ระบบจะเลื่อนคุณขึ้นอัตโนมัติ เปิดหน้านี้เช็กสถานะได้ตลอด หรือเปลี่ยนไปช่วงที่ยังว่าง"}</p>
+      <a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">เปิดกลุ่ม LINE ของก๊วน</a>
+      ${isOpen() ? `<button class="btn ghost" id="editMine">แก้ไข / เปลี่ยนช่วงเวลา</button><button class="btn danger" id="cancelMine">${cancelArmed ? "กดอีกครั้งเพื่อยืนยันยกเลิก" : ok ? "ยกเลิกการลงชื่อ" : "ออกจากคิวสำรอง"}</button>` : ""}
+    </div>
+  </section>`;
+}
+
+function renderLists(st) {
+  const ok = st.flatMap((s) => s.list.filter((e) => e.state === "ok").map((e) => ({ e, s })));
+  const waits = st.flatMap((s) => s.list.filter((e) => e.state === "wait").map((e) => ({ e, s })));
+  const me = auth?.uid;
+  const row = (e, cls, no) => {
+    const tags = [];
+    if (!e.memberId) tags.push(`<span class="tag new">คนใหม่</span>`);
+    if (e.guests?.length) tags.push(`<span class="tag guest">+${e.guests.length} เพื่อน</span>`);
+    return `<div class="person ${cls}${e.id === me ? " me" : ""}"><span class="no">${no}</span>${avatar(e)}<span class="who"><b>${esc(e.name)}${e.id === me ? " (คุณ)" : ""}</b><small>${esc(subOf(e))}${e.guests?.length ? " • พา " + e.guests.map(esc).join(", ") : ""}</small></span>${tags.join("")}</div>`;
+  };
+  let html = `<section class="card"><div class="head"><b>รายชื่อรอบนี้</b><span>${ok.reduce((t, x) => t + 1 + (x.e.guests?.length || 0), 0)} คน (รวมเพื่อน)</span></div>`;
+  if (!ok.length) html += `<div class="empty">ยังไม่มีคนลงชื่อ • มาเป็นคนแรกเลย</div>`;
+  for (const s of st) {
+    const list = s.list.filter((e) => e.state === "ok");
+    if (!list.length) continue;
+    html += `<div class="slothead"><span>มา ${esc(s.time)}</span><span>${s.used}/${s.cap}${s.used >= s.cap ? " • เต็มแล้ว" : ` • เหลือ ${s.cap - s.used}`}</span></div>`;
+    html += list.map((e) => row(e, "", e.no)).join("");
+  }
+  html += `</section>`;
+  if (waits.length) {
+    html += `<section class="card" style="border-color:#f0ad78"><div class="head" style="background:#fff3e8"><b style="color:#98450c">คิวสำรอง</b><span style="color:#98450c">เลื่อนขึ้นอัตโนมัติเมื่อมีคนยกเลิก</span></div>`;
+    html += waits.map(({ e, s }) => row(e, "wait", `${esc(s.time)}<br>ส.${e.no}`)).join("") + `</section>`;
+  }
+  return html;
+}
+
+function renderForm(st) {
+  const f = form;
+  const q = norm(f.query);
+  const matches = q ? [...roster.values()].filter((m) => m.name && m.active !== false && norm(m.name).includes(q)).slice(0, 6) : [];
+  const picked = f.memberId ? roster.get(f.memberId) : null;
+  const size = 1 + f.guests.length;
+  const slotInfo = st.map((s) => {
+    const own = mine();
+    const used = s.used - (own && own.state === "ok" && own.slot === s.time ? 1 + (own.guests?.length || 0) : 0);
+    const left = s.cap - used;
+    const full = left < size || s.waitPeople > 0 && !(own && own.slot === s.time);
+    return { ...s, left, full };
+  });
+  const chosen = slotInfo.find((s) => s.time === f.slot);
+  return `<div class="form">
+    <div class="box" style="flex-direction:row;align-items:center;justify-content:space-between"><b style="font-size:16px">${f.editing ? "แก้ไขการลงชื่อ" : "ลงชื่อ"} • ${esc(thaiDate(round.date))}</b><button class="btn ghost" id="backList" style="width:auto;padding:9px 14px">กลับ</button></div>
+    <div class="box">
+      <b>1. คุณคือใคร?</b>
+      ${picked ? `<div class="choices"><button type="button" class="choice" aria-pressed="true" id="unpick">${avatar({ name: picked.name, memberId: picked.id })}<span class="who"><b>${esc(picked.name)}</b><small>${esc(picked.code)}${picked.level ? " • Lv." + picked.level + " " + LV[picked.level] : ""} • แตะเพื่อเปลี่ยน</small></span></button></div>` : `
+      <label class="f">ชื่อเล่นที่ใช้ในก๊วน<input class="t" id="fName" value="${esc(f.query)}" maxlength="30" autocomplete="nickname" placeholder="พิมพ์ชื่อเล่น"></label>
+      ${matches.length ? `<div class="choices">${matches.map((m) => `<button type="button" class="choice" data-pick="${esc(m.id)}">${avatar({ name: m.name, memberId: m.id })}<span class="who"><b>${esc(m.name)}</b><small>${esc(m.code)}${m.level ? " • Lv." + m.level + " " + LV[m.level] : ""}${signedIds().has(m.id) ? " • ลงชื่อแล้ว" : ""}</small></span></button>`).join("")}</div><small style="color:var(--muted)">เป็นสมาชิกอยู่แล้ว แตะชื่อตัวเอง • ถ้าไม่ใช่ ลงด้วยชื่อที่พิมพ์ได้เลย</small>` : q ? `<small style="color:var(--muted)">ไม่พบชื่อนี้ในรายชื่อสมาชิกที่เปิดเผย จะลงเป็นชื่อ "${esc(f.query.trim())}"</small>` : ""}`}
+    </div>
+    <fieldset class="box"><legend>2. จะมาถึงช่วงไหน?</legend>
+      ${slotInfo.map((s) => `<label class="slotpick"><input type="radio" name="slot" value="${esc(s.time)}"${f.slot === s.time ? " checked" : ""}><span><b>${esc(s.time)}</b><small style="color:${s.full ? "#98450c" : s.left < s.cap ? "#725300" : "#0f6843"}">${s.full ? "เต็มแล้ว • เลือกได้ จะต่อคิวสำรอง" : s.left < s.cap ? `เหลือ ${s.left} ที่` : `ว่าง ${s.left} ที่`}</small></span></label>`).join("")}
+      ${f.guests.length ? `<small style="color:var(--muted)">เพื่อนที่พามาจะอยู่ช่วงเดียวกัน</small>` : ""}
+    </fieldset>
+    ${round.maxGuests > 0 ? `<div class="box">
+      <div class="stepper"><b style="font-size:18px">3. พาเพื่อนมาด้วยไหม?</b><div class="ctl"><button type="button" id="gMinus" aria-label="ลดจำนวนเพื่อน">−</button><strong>${f.guests.length}</strong><button type="button" class="plus" id="gPlus" aria-label="เพิ่มจำนวนเพื่อน">+</button></div></div>
+      <small style="color:var(--muted)">ไม่เกิน ${round.maxGuests} คน</small>
+      ${f.guests.map((g, i) => `<label class="f">ชื่อเล่นเพื่อนคนที่ ${i + 1}<input class="t" data-guest="${i}" value="${esc(g)}" maxlength="30"></label>`).join("")}
+    </div>` : ""}
+    <div class="box"><label class="f">ฝากบอกทีมงาน (ไม่บังคับ • ทีมงานเห็นคนเดียว)<input class="t" id="fNote" value="${esc(f.note)}" maxlength="120" placeholder="เช่น มาถึงประมาณ 21:30"></label></div>
+    <div class="summary">
+      <div class="row"><span>${esc(picked ? picked.name : f.query.trim() || "—")}${f.guests.length ? ` + เพื่อน ${f.guests.length} คน` : ""}</span><span>${chosen ? (chosen.full ? `ช่วง ${esc(chosen.time)} • คิวสำรอง` : `ช่วง ${esc(chosen.time)} • ได้ที่`) : "ยังไม่เลือกช่วงเวลา"}</span></div>
+      <div class="err" id="formErr">${esc(f.error || "")}</div>
+      <button class="btn gold" id="submit"${busy ? " disabled" : ""}>${busy ? "กำลังบันทึก…" : f.editing ? "บันทึกการแก้ไข" : "ยืนยันลงชื่อ"}</button>
+      <span class="hint">ชื่อเล่นจะแสดงในรายชื่อรอบนี้ • เครื่องนี้จำไว้ว่าเป็นของคุณ</span>
+    </div>
+  </div>`;
+}
+
+function render() {
+  if (!round) { $("view").innerHTML = `<section class="round"><span class="eyebrow">ลงชื่อก๊วน</span><h1>ยังไม่เปิดรอบลงชื่อ</h1><div class="meta"><span>ทีมงานจะเปิดรอบให้ลงชื่อก่อนวันศุกร์ ติดตามได้ในกลุ่ม LINE</span></div><a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">เปิดกลุ่ม LINE ของก๊วน</a></section>`; return; }
+  const st = standings();
+  if (view === "form" && form) {
+    $("view").innerHTML = renderForm(st);
+  } else {
+    $("view").innerHTML = renderRoundCard(st) + renderMine(st) + renderLists(st);
+  }
+  hydratePhotos();
+}
+
+const photoData = new Map();
+function hydratePhotos() {
+  document.querySelectorAll("[data-photo]").forEach(async (el) => {
+    const id = el.dataset.photo;
+    try {
+      if (!photoData.has(id)) {
+        photoData.set(id, fetch(`${API}/photos/${encodeURIComponent(id)}?key=${FIREBASE.apiKey}`).then((r) => (r.ok ? r.json() : null)).then((d) => d?.fields?.data?.stringValue || null));
+      }
+      const src = await photoData.get(id);
+      if (src && src.startsWith("data:image/") && el.isConnected) { el.querySelector(".ini")?.remove(); el.insertAdjacentHTML("afterbegin", `<img class="ph" src="${src}" alt="">`); el.removeAttribute("data-photo"); }
+    } catch {}
+  });
+}
+
+/* ---------- loading ---------- */
+async function loadRound() {
+  const rounds = (await listDocs("rounds")).filter((r) => r.status === "open" || r.status === "closed");
+  const t = today();
+  const upcoming = rounds.filter((r) => r.id >= t).sort((a, b) => a.id.localeCompare(b.id));
+  const want = new URLSearchParams(location.search).get("round");
+  const r = (want && rounds.find((x) => x.id === want)) || upcoming.find((x) => x.status === "open") || upcoming[0] || null;
+  if (!r) { round = null; return; }
+  let cfg = {};
+  try { cfg = JSON.parse(r.json || "{}"); } catch {}
+  round = { id: r.id, date: r.id, status: r.status, closeAt: r.closeAt, maxGuests: r.maxGuests ?? 0, slots: cfg.slots || (r.slotTimes || []).map((time) => ({ time, cap: 16 })), start: cfg.start || "20:00", end: cfg.end || "01:00", fee: cfg.fee || "" };
+  entries = await listDocs(`rounds/${r.id}/entries`);
+}
+async function loadRoster() {
+  try {
+    const r = await fetch(`${API}/public/roster?key=${FIREBASE.apiKey}`, { cache: "no-store" });
+    if (!r.ok) return;
+    const d = await r.json();
+    roster = new Map((JSON.parse(d.fields.json.stringValue).members || []).map((m) => [m.id, m]));
+  } catch {}
+}
+async function refresh() {
+  try { await Promise.all([loadRound(), loadRoster()]); render(); }
+  catch { if (!round) $("view").innerHTML = `<div class="card"><div class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชอีกครั้ง</div></div>`; }
+}
+
+/* ---------- actions ---------- */
+function openForm(editing) {
+  const my = editing ? mine() : null;
+  const st = standings();
+  const firstFree = st.find((s) => s.used < s.cap && s.waitPeople === 0);
+  form = my
+    ? { editing: true, query: my.memberId ? "" : my.name, memberId: my.memberId && roster.has(my.memberId) ? my.memberId : null, slot: my.slot, guests: [...(my.guests || [])], note: "", error: "" }
+    : { editing: false, query: "", memberId: null, slot: firstFree ? firstFree.time : "", guests: [], note: "", error: "" };
+  if (my && !form.memberId && my.memberId) form.query = my.name;
+  view = "form"; cancelArmed = false; render(); window.scrollTo(0, 0);
+}
+function signedIds() { return new Set(entries.filter((e) => e.id !== auth?.uid && e.memberId).map((e) => e.memberId)); }
+async function submit() {
+  const f = form;
+  const picked = f.memberId ? roster.get(f.memberId) : null;
+  const name = (picked ? picked.name : f.query).trim().replace(/\s+/g, " ").slice(0, 30);
+  const guests = f.guests.map((g) => g.trim().replace(/\s+/g, " ").slice(0, 30)).filter(Boolean);
+  if (!name) { f.error = "กรุณาใส่ชื่อเล่น"; return render(); }
+  if (!f.slot) { f.error = "เลือกช่วงเวลาที่จะมา"; return render(); }
+  if (guests.length !== f.guests.length) { f.error = "ใส่ชื่อเล่นเพื่อนให้ครบ หรือกด − เพื่อลดจำนวน"; return render(); }
+  if (!picked) {
+    // A typed name that matches a public member name exactly links to that member.
+    const exact = [...roster.values()].filter((m) => m.name && norm(m.name) === norm(name));
+    if (exact.length === 1) f.memberId = exact[0].id;
+  }
+  const taken = f.memberId && entries.find((e) => e.id !== auth?.uid && e.memberId === f.memberId);
+  if (taken) { f.error = `${name} ลงชื่อในรอบนี้แล้ว (ช่วง ${taken.slot}) • ถ้าไม่ได้ลงเอง หรืออยากแก้ไขจากเครื่องอื่น ทักทีมงานในกลุ่ม LINE`; if (!picked) f.memberId = null; return render(); }
+  const dup = entries.find((e) => e.id !== auth?.uid && norm(e.name) === norm(name));
+  if (dup && !f.dupOk) { f.dupOk = true; f.error = `มีคนลงชื่อ "${name}" ในรอบนี้แล้ว ถ้าเป็นคนละคน กดยืนยันอีกครั้ง หรือเพิ่มตัวอักษรท้ายชื่อ`; return render(); }
+  busy = true; f.error = ""; render();
+  try {
+    await token();
+    const uid = auth.uid;
+    const mine0 = mine();
+    const keepTime = mine0 && mine0.slot === f.slot;
+    const fields = { name: sv(name), memberId: f.memberId ? sv(f.memberId) : { nullValue: null }, guests: { arrayValue: { values: guests.map(sv) } }, slot: sv(f.slot) };
+    if (keepTime) fields.createdAt = { timestampValue: mine0.createdAt };
+    const transforms = [{ fieldPath: "updatedAt", setToServerValue: "REQUEST_TIME" }];
+    if (!keepTime) transforms.push({ fieldPath: "createdAt", setToServerValue: "REQUEST_TIME" });
+    const writes = [{ update: { name: `${ROOT}/rounds/${round.id}/entries/${uid}`, fields }, updateTransforms: transforms, ...(mine0 ? { currentDocument: { exists: true } } : { currentDocument: { exists: false } }) }];
+    const note = f.note.trim().slice(0, 120);
+    if (note) writes.push({ update: { name: `${ROOT}/rounds/${round.id}/notes/${uid}`, fields: { text: sv(note) } } });
+    await commit(writes);
+    await loadRound();
+    view = "list"; form = null; busy = false;
+    render(); window.scrollTo(0, 0);
+    const my = mine();
+    toast(my?.state === "ok" ? `ลงชื่อแล้ว • มาได้ตั้งแต่ ${my.slot} น.` : "บันทึกแล้ว • อยู่ในคิวสำรอง");
+  } catch (e) { busy = false; f.error = e.message; render(); }
+}
+async function cancelMine() {
+  if (!cancelArmed) { cancelArmed = true; render(); return; }
+  cancelArmed = false;
+  try {
+    await token();
+    await commit([{ delete: `${ROOT}/rounds/${round.id}/entries/${auth.uid}` }, { delete: `${ROOT}/rounds/${round.id}/notes/${auth.uid}` }]);
+    await loadRound(); render(); toast("ยกเลิกการลงชื่อแล้ว");
+  } catch (e) { toast(e.message); render(); }
+}
+
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("button, [data-pick]");
+  if (!t) return;
+  if (t.id === "goForm") openForm(false);
+  else if (t.id === "editMine") openForm(true);
+  else if (t.id === "cancelMine") cancelMine();
+  else if (t.id === "backList") { view = "list"; form = null; render(); }
+  else if (t.id === "submit") submit();
+  else if (t.id === "unpick") { form.memberId = null; form.query = ""; render(); $("fName")?.focus(); }
+  else if (t.dataset.pick) { form.memberId = t.dataset.pick; form.error = ""; render(); }
+  else if (t.id === "gPlus" && form.guests.length < round.maxGuests) { form.guests.push(""); render(); }
+  else if (t.id === "gMinus" && form.guests.length) { form.guests.pop(); render(); }
+});
+document.addEventListener("input", (ev) => {
+  if (!form) return;
+  const t = ev.target;
+  if (t.id === "fName") { form.query = t.value; form.dupOk = false; const pos = t.selectionStart; render(); const n = $("fName"); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }
+  else if (t.dataset.guest != null) form.guests[Number(t.dataset.guest)] = t.value;
+  else if (t.id === "fNote") form.note = t.value;
+});
+document.addEventListener("change", (ev) => { if (form && ev.target.name === "slot") { form.slot = ev.target.value; render(); } });
+document.addEventListener("visibilitychange", () => { if (!document.hidden && view === "list") refresh(); });
+setInterval(() => { if (view === "list" && !document.hidden) refresh(); }, 60000);
+refresh();
+</script>
+</body>
+</html>

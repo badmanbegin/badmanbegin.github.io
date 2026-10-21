@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BADMAN — คิวก๊วนสด</title>
+<meta name="description" content="ก๊วนแบด BADMAN ทุกวันศุกร์ 20:00–01:00 สนามแบดวังนาคา ลาดพร้าว 64 ดูคิวเกมและค่าตีแบดแบบสด">
+<meta property="og:title" content="BADMAN — คิวก๊วนสด">
+<meta property="og:description" content="ทุกวันศุกร์ 20:00–01:00 สนามแบดวังนาคา ลาดพร้าว 64 · ดูคิวเกมสด">
+<meta property="og:image" content="../badman-logo.jpg">
+<meta name="theme-color" content="#0f0f0e">
+<link rel="icon" href="../favicon.svg">
+<style>
+/* Same tokens and look as BADMAN Court Control (app/globals.css). */
+:root { --ink:#171611; --muted:#716d61; --line:#ddd6c5; --paper:#f3f0e7; --panel:#fffefa; --green:#171611; --mint:#f2c440; --orange:#ef7540; --gold:#e9b92f; --black:#0f0f0e; }
+* { box-sizing:border-box; }
+html { background:var(--paper); -webkit-text-size-adjust:100%; }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif; }
+button,input { font:inherit; color:inherit; }
+:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+.app-shell { max-width:1180px; margin:0 auto; padding:calc(18px + env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left)); }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:20px; border:1px solid #26251f; padding:16px 18px; border-radius:18px; color:white; background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); box-shadow:0 10px 35px rgba(0,0,0,.14); position:relative; overflow:hidden; flex-wrap:wrap; }
+.topbar::after { content:""; position:absolute; width:260px; height:260px; right:15%; top:-190px; border:1px solid rgba(242,196,64,.22); border-radius:50%; box-shadow:0 0 0 26px rgba(242,196,64,.035),0 0 0 54px rgba(242,196,64,.025); pointer-events:none; }
+.brand-lockup { display:flex; align-items:center; gap:15px; position:relative; z-index:1; min-width:0; }
+.brand-lockup img { width:82px; height:82px; object-fit:cover; border-radius:50%; border:2px solid var(--gold); box-shadow:0 0 0 4px rgba(255,255,255,.08); flex:0 0 auto; }
+.eyebrow,.section-no { color:#a47a06; font-weight:900; letter-spacing:.11em; font-size:11px; margin:0 0 5px; }
+.topbar .eyebrow { color:var(--gold); }
+h1 { margin:0; font-size:clamp(30px,4vw,48px); line-height:.9; letter-spacing:-.045em; }
+h1 span { color:var(--gold); }
+.brand-tagline { margin:7px 0 0; color:#d8d2c0; font-size:12px; }
+h2 { margin:0; font-size:23px; letter-spacing:-.03em; }
+.live-chip { position:relative; z-index:1; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.17); border-radius:10px; padding:10px 14px; font-weight:800; font-size:13px; }
+.dot { width:9px; height:9px; border-radius:50%; background:#8a867c; flex:0 0 auto; }
+.dot.live { background:#2b9364; box-shadow:0 0 0 0 rgba(43,147,100,.6); animation:pulse 2s infinite; }
+.dot.stale { background:var(--gold); }
+.dot.err { background:#c2533a; }
+@keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(43,147,100,0); } 100% { box-shadow:0 0 0 0 rgba(43,147,100,0); } }
+@media (prefers-reduced-motion:reduce) { .dot.live { animation:none; } }
+.info-bar { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; margin:14px 2px 0; color:var(--muted); font-size:13px; font-weight:700; }
+.info-bar b { color:var(--ink); }
+.closed { margin-top:14px; border:1px solid #f0ad78; background:#fff3e8; color:#98450c; border-radius:12px; padding:11px 14px; font-weight:800; font-size:14px; }
+.summary-grid { display:grid; grid-template-columns:repeat(5,1fr); border:1px solid var(--line); border-radius:15px; overflow:hidden; background:var(--panel); margin:16px 0 18px; box-shadow:0 5px 20px rgba(45,35,8,.035); }
+.summary-grid article { padding:15px 18px; border-right:1px solid var(--line); display:grid; grid-template-columns:1fr auto; align-items:end; }
+.summary-grid article:last-child { border-right:0; }
+.summary-grid span { font-size:12px; color:var(--muted); grid-column:1/-1; font-weight:700; }
+.summary-grid strong { font-size:31px; line-height:1; font-variant-numeric:tabular-nums; }
+.summary-grid small { color:var(--muted); }
+@media (max-width:640px) { .summary-grid { grid-template-columns:repeat(3,1fr); } .summary-grid article:nth-child(3) { border-right:0; } .summary-grid article:nth-child(n+4) { border-top:1px solid var(--line); } .summary-grid strong { font-size:26px; } .brand-lockup img { width:62px; height:62px; } }
+.tabs { display:flex; padding:3px; gap:2px; border-radius:10px; background:#e7e2d4; margin-bottom:14px; }
+.tabs button { flex:1; border:0; border-radius:8px; background:transparent; padding:10px 8px; color:var(--muted); font-size:14px; font-weight:900; cursor:pointer; }
+.tabs button[aria-selected="true"] { background:var(--black); color:var(--gold); box-shadow:0 1px 4px rgba(0,0,0,.15); }
+.grid2 { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:18px; align-items:start; }
+@media (max-width:900px) { .grid2 { grid-template-columns:1fr; } }
+.stack { display:grid; gap:18px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden; box-shadow:0 5px 22px rgba(45,35,8,.045); }
+.panel-heading { min-height:64px; display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--line); gap:16px; }
+.panel-heading > div { display:flex; align-items:baseline; gap:12px; }
+.panel-heading .section-no { margin:0; }
+.panel-heading > span { color:var(--muted); font-size:12px; text-align:right; }
+.game-list { padding:12px; display:grid; gap:10px; }
+.game-card { border:1px solid var(--line); border-radius:13px; padding:13px 14px 13px 18px; background:#fbfcfa; position:relative; overflow:hidden; }
+.game-card::before { content:""; position:absolute; inset:0 auto 0 0; width:6px; }
+.game-card.waiting { background:#fff3e8; border-color:#f0ad78; }
+.game-card.waiting::before { background:#ed7a32; }
+.game-card.playing { background:#edf8f1; border-color:#9fd0b2; box-shadow:0 6px 18px rgba(43,147,100,.1); }
+.game-card.playing::before { background:#2b9364; }
+.game-card.ended { background:#eff7f2; border-color:#bcd5c5; }
+.game-card.ended::before { background:var(--green); }
+.game-title { display:flex; align-items:center; gap:7px; }
+.game-title > span { color:var(--muted); font-size:12px; }
+.game-title > strong { font-size:25px; }
+.status-dot { margin-left:auto; border-radius:99px; padding:5px 10px; font-size:11px; font-weight:900; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.status-dot.waiting { background:#ffd5b3; color:#98450c; }
+.status-dot.playing { background:#ccebd8; color:#0f6843; }
+.status-dot.ended { background:#c7e2d0; color:#174f3a; }
+.matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; margin:10px 0 2px; }
+.matchup > div { display:flex; flex-direction:column; align-items:center; justify-content:center; background:white; border:1px solid var(--line); border-radius:9px; padding:8px; font-weight:800; min-height:62px; text-align:center; font-size:14px; line-height:1.3; min-width:0; overflow-wrap:anywhere; }
+.matchup > div .plus { color:var(--muted); line-height:1; font-size:11px; }
+.matchup > b { font-size:11px; color:var(--orange); }
+.game-list.compact { grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); }
+.game-list.compact .matchup > div { min-height:50px; font-size:13px; }
+.queue-item { display:flex; align-items:center; gap:13px; border-bottom:1px solid #edf0ec; min-height:62px; padding:8px 16px; }
+.queue-item:last-child { border-bottom:0; }
+.queue-number { width:31px; height:31px; flex:0 0 31px; display:grid; place-items:center; background:#edf1ec; border-radius:50%; font-weight:900; font-size:13px; }
+.queue-item:first-child .queue-number { background:var(--black); color:var(--gold); }
+.queue-item > span { display:flex; flex-direction:column; min-width:0; }
+.queue-item b { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.queue-item small { color:var(--muted); margin-top:2px; }
+.queue-wait { color:#9a6200; font-style:normal; font-weight:800; }
+.empty { min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--muted); gap:4px; text-align:center; padding:20px; }
+.empty b { color:var(--ink); }
+.search { padding:12px 16px; border-bottom:1px solid var(--line); }
+.search input { width:100%; border:1px solid var(--line); background:#f9faf7; border-radius:10px; padding:11px 14px; outline:none; }
+.search input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(23,79,58,.1); }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+th,td { text-align:left; padding:12px 18px; border-bottom:1px solid #edf0ec; white-space:nowrap; }
+th { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); background:#fafbf8; }
+td { font-size:14px; }
+td.r,th.r { text-align:right; font-variant-numeric:tabular-nums; }
+tr.st-stopped td { background:#f3f4f1; color:#777b74; }
+tr.st-stopped td:first-child { box-shadow:inset 4px 0 #969c95; }
+tr.st-paid td { background:#fff9e5; color:#766d52; }
+tr.st-paid td:first-child { box-shadow:inset 4px 0 #d6a91f; }
+tr.st-playing td { background:#eaf7ef; }
+tr.st-playing td:first-child { box-shadow:inset 4px 0 #2b9364; }
+tr.st-waiting td { background:#fff3e8; }
+tr.st-waiting td:first-child { box-shadow:inset 4px 0 #ed7a32; }
+tr.st-queue td:first-child, tr.st-resting td:first-child { box-shadow:inset 4px 0 #d9ded9; }
+.badge { border-radius:99px; padding:3px 8px; font-size:10px; font-weight:900; white-space:nowrap; }
+.badge.playing { color:#0f6843; background:#ccebd8; }
+.badge.waiting { color:#98450c; background:#ffd5b3; }
+.badge.queue,.badge.resting { color:#4c4a42; background:#ebe7dc; }
+.badge.paid { color:#725300; background:#fff0b7; }
+.badge.stopped { color:#62665f; background:#ecefeb; }
+.balance-due { color:#b84a25; font-weight:900; }
+.paid-amt { color:#735800; font-weight:800; text-decoration:line-through; }
+.club-stats { margin-top:18px; border:1px solid #29271f; border-radius:16px; overflow:hidden; background:linear-gradient(110deg,#0d0d0c,#28210f); color:white; }
+.club-stats header { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:6px; padding:14px 18px 4px; }
+.club-stats header b { color:var(--gold); font-size:12px; letter-spacing:.11em; font-weight:900; }
+.club-stats header span { color:#b9c9c1; font-size:12px; }
+.club-stats .tiles { display:grid; grid-template-columns:repeat(5,1fr); }
+.club-stats .tiles div { padding:10px 18px 16px; border-right:1px solid rgba(255,255,255,.12); }
+.club-stats .tiles div:last-child { border-right:0; }
+.club-stats small { display:block; font-size:11px; color:#b9c9c1; font-weight:700; }
+.club-stats strong { font-size:28px; font-variant-numeric:tabular-nums; }
+.club-stats strong.gold { color:#ffd97a; }
+@media (max-width:640px) { .club-stats .tiles { grid-template-columns:repeat(3,1fr); } .club-stats .tiles div:nth-child(3) { border-right:0; } .club-stats .tiles div:nth-child(n+4) { border-top:1px solid rgba(255,255,255,.12); } .club-stats strong { font-size:22px; } }
+.rules { margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); border:1px solid #29271f; border-radius:14px; overflow:hidden; background:linear-gradient(110deg,#0d0d0c,#28210f); color:white; }
+.rules div { padding:13px 16px; border-right:1px solid rgba(255,255,255,.12); }
+.rules div:last-child { border-right:0; }
+.rules b { display:block; font-size:12px; color:var(--gold); }
+.rules span { font-size:13px; color:#d5dfda; }
+/* member photo + level */
+.pav { position:relative; display:inline-grid; place-items:center; flex:0 0 auto; border-radius:50%; background:var(--black); color:var(--gold); font-weight:900; border:2.5px solid var(--gold); box-shadow:0 3px 10px rgba(0,0,0,.18); }
+.pav > img.ph { width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; }
+.pav > img.lv { position:absolute; right:-8px; bottom:-6px; border-radius:50%; background:#fff; border:2px solid var(--gold); object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,.25); }
+.team { display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; }
+.team.solo { grid-template-columns:1fr; }
+.pt { display:flex; flex-direction:column; align-items:center; gap:5px; min-width:0; padding:4px 2px; }
+.pt b { font-size:15px; line-height:1.2; overflow-wrap:anywhere; }
+.plv { overflow-wrap:normal; word-break:normal; hyphens:none; display:inline-block; background:var(--black); color:var(--gold); border-radius:99px; padding:3px 9px; font-size:11px; font-weight:900; max-width:100%; line-height:1.25; text-align:center; }
+.plv em { font-style:normal; color:#fff; }
+.plv.short { padding:3px 10px; font-size:12px; }
+.pt .pav { margin-bottom:2px; }
+.game-list.compact .team { gap:4px; }
+.game-list.compact .pt { padding:2px 0; }
+.game-list.compact .pt b { overflow-wrap:normal; word-break:keep-all; }
+.pth { color:var(--muted); font-size:11px; font-weight:700; }
+.matchup > div.side { padding:10px 6px; min-height:0; }
+.game-list.compact .pt b { font-size:13px; }
+.game-list.compact .plv { font-size:10px; padding:2px 7px; }
+.queue-item > .pav { display:inline-grid; margin-left:2px; flex-direction:initial; }
+.queue-item { min-height:78px; }
+.queue-item .qlv { display:flex; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap; }
+@media (max-width:520px) { .pt b { font-size:13px; } .plv { font-size:10px; padding:2px 7px; } .pth { display:none; } }
+footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:16px; color:var(--muted); font-size:12px; }
+</style>
+</head>
+<body>
+<main class="app-shell">
+  <header class="topbar">
+    <div class="brand-lockup">
+      <img src="../badman-logo.jpg" alt="Badman Badminton">
+      <div>
+        <p class="eyebrow">BADMAN • LIVE QUEUE</p>
+        <h1>ก๊วน <span>BADMAN</span></h1>
+        <p class="brand-tagline">ทุกมือ • ทุกคู่ • ทุกเกม จัดให้ลงตัว</p>
+      </div>
+    </div>
+    <div class="live-chip" aria-live="polite"><span class="dot" id="dot"></span><span id="stat">กำลังโหลดข้อมูลสด…</span></div>
+  </header>
+
+  <div class="info-bar">
+    <span>ทุกวันศุกร์ <b>20:00–01:00</b></span>
+    <span>สนามแบดวังนาคา <b>ลาดพร้าว 64</b></span>
+    <span id="rate"></span>
+    <span id="courts"></span>
+  </div>
+  <div class="closed" id="closed" hidden></div>
+
+  <section class="summary-grid" aria-label="สรุปวันนี้">
+    <article><span>ผู้เล่น</span><strong id="sPlayers">–</strong><small>คน</small></article>
+    <article><span>รอคิว</span><strong id="sQueue">–</strong><small>คน</small></article>
+    <article><span>ในสนาม</span><strong id="sCourt">–</strong><small>คน</small></article>
+    <article><span>จบแล้ว</span><strong id="sDone">–</strong><small>เกม</small></article>
+    <article><span>จำนวนลูก</span><strong id="sShuttle">–</strong><small>ลูก</small></article>
+  </section>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="queue">คิวและเกม</button>
+    <button role="tab" aria-selected="false" data-tab="cost">ค่าตีแบด</button>
+    <button role="tab" aria-selected="false" data-tab="history">เกมที่จบแล้ว</button>
+  </div>
+
+  <section data-panel="queue" class="grid2">
+    <div class="stack">
+      <div class="panel">
+        <div class="panel-heading"><div><p class="section-no">01</p><h2>กำลังเล่น</h2></div><span id="playingNote"></span></div>
+        <div class="game-list" id="playing"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-heading"><div><p class="section-no">02</p><h2>เกมถัดไป</h2></div><span>จัดแล้ว รอลงสนาม</span></div>
+        <div class="game-list" id="next"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-heading"><div><p class="section-no">03</p><h2>คิวรอ</h2></div><span>ลำดับจากระบบจัดก๊วน</span></div>
+      <div id="queue"></div>
+    </div>
+  </section>
+
+  <section data-panel="cost" hidden>
+    <div class="panel">
+      <div class="panel-heading"><div><p class="section-no">ค่าตีแบด</p><h2>ยอดของแต่ละคน</h2></div><span id="rate2"></span></div>
+      <div class="search"><input id="q" placeholder="พิมพ์ชื่อเพื่อค้นหายอดของตัวเอง" autocomplete="off" aria-label="ค้นหาชื่อ"></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ผู้เล่น</th><th>สถานะ</th><th class="r">เกม</th><th class="r">ลูก</th><th class="r">ค่าตี</th></tr></thead>
+        <tbody id="costs"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section data-panel="history" hidden>
+    <div class="panel">
+      <div class="panel-heading"><div><p class="section-no">ประวัติ</p><h2>เกมที่จบแล้ว</h2></div><span id="doneNote"></span></div>
+      <div class="game-list compact" id="done"></div>
+    </div>
+  </section>
+
+  <section class="club-stats" id="clubStats" aria-label="สถิติรวมของก๊วน" hidden></section>
+
+  <section class="rules" aria-label="ข้อมูลก๊วน">
+    <div><b>รับทุกระดับมือ</b><span>มือใหม่มาได้ จัดคู่ให้สูสี</span></div>
+    <div><b>กติกาก๊วน</b><span>รู้กติกา มารยาท • ดูแลตัวเองได้ • เล่นเพื่อสนุก</span></div>
+    <div><b>ข้อมูลสด</b><span>อัปเดตอัตโนมัติจาก BADMAN Court Control</span></div>
+  </section>
+  <footer><span>BADMAN • Live Queue · <a href="../ranking/" style="color:inherit;font-weight:800">ดู Ranking สมาชิก →</a> · <a href="../night/" style="color:inherit;font-weight:800">สรุปคืนก๊วน →</a></span><span>©2026 BADMAN Badminton</span></footer>
+</main>
+
+<script>
+// Same values as LIVE_FIREBASE in app/live-sync.ts (not secret; rules allow public read only).
+const FIREBASE = { apiKey: "AIzaSyAI1EaI2OSmwXkbZs5GsO6Ze7jPUk8iumQ", projectId: "badman-live" };
+const POLL_MS = 5000;
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const clubDay = (d = new Date()) => new Date(d.getTime() - 6 * 3600e3).toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
+const thaiDay = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short" });
+const clock = (iso) => new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const mins = (iso) => Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
+const baht = (n) => Number(n || 0).toLocaleString("th-TH", { maximumFractionDigits: 2 });
+const STATE = { playing: "กำลังเล่น", waiting: "รอลงสนาม", queue: "รอคิว", resting: "พัก", stopped: "เลิกเล่น", paid: "ชำระแล้ว" };
+
+let snap = null, failing = false;
+
+// Levels (keep in sync with app/members.ts) and the public roster: member id -> level / consented photo.
+const LEVELS = [
+  { value: 1, name: "Baby Bat", th: "ลูกค้างคาวฝึกบิน" }, { value: 2, name: "Tiny Wing", th: "ค้างคาวปีกนุ่ม" },
+  { value: 3, name: "Little Bat", th: "ค้างคาวน้อยหัดร่อน" }, { value: 4, name: "Bouncing Bat", th: "ค้างคาวดุ๊กดิ๊ก" },
+  { value: 5, name: "Junior Badman", th: "แบดแมนฝึกหัด" }, { value: 6, name: "Hero in Training", th: "ฮีโร่พร้อมลุย" },
+  { value: 7, name: "Shadow Striker", th: "ค้างคาวเงา" }, { value: 8, name: "Dark Knight Master", th: "พี่เลี้ยงก็อตแธม" },
+];
+const levelOf = (v) => LEVELS.find((l) => l.value === v);
+let roster = new Map(), rosterAt = 0;
+const photoData = new Map(), photoLoading = new Set();
+const DOC = (path) => `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/${path}?key=${FIREBASE.apiKey}`;
+async function loadRoster() {
+  if (!FIREBASE.apiKey || Date.now() - rosterAt < 180000) return;
+  rosterAt = Date.now();
+  try {
+    const r = await fetch(DOC("public/roster"), { cache: "no-store" });
+    if (!r.ok) return;
+    const doc = await r.json();
+    roster = new Map((JSON.parse(doc.fields.json.stringValue).members || []).map((m) => [m.id, m]));
+    render();
+  } catch { /* roster is optional decoration */ }
+}
+function loadPhoto(id) {
+  if (photoData.has(id) || photoLoading.has(id)) return;
+  photoLoading.add(id);
+  fetch(DOC("photos/" + encodeURIComponent(id)), { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((d) => {
+    const src = d?.fields?.data?.stringValue;
+    if (src && src.startsWith("data:image/")) {
+      photoData.set(id, src);
+      document.querySelectorAll(`[data-photo="${CSS.escape(id)}"]`).forEach((el) => { el.removeAttribute("data-photo"); el.querySelector(".ini")?.remove(); el.insertAdjacentHTML("afterbegin", `<img class="ph" src="${src}" alt="">`); });
+    }
+  }).catch(() => {}).finally(() => photoLoading.delete(id));
+}
+/** Round photo (or initial) with the level character in the corner. */
+function avatar(p, size) {
+  const m = p?.memberId ? roster.get(p.memberId) : null;
+  const lv = m && levelOf(m.level);
+  const badge = Math.round(size * 0.46);
+  const src = m?.photo ? photoData.get(m.id) : null;
+  if (m?.photo && !src) loadPhoto(m.id);
+  const face = src ? `<img class="ph" src="${src}" alt="">` : `<span class="ini">${esc((p?.name || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase())}</span>`;
+  return `<span class="pav" style="width:${size}px;height:${size}px;font-size:${Math.round(size * 0.4)}px"${m?.photo && !src ? ` data-photo="${esc(m.id)}"` : ""}>${face}${lv ? `<img class="lv" src="../levels/lv${lv.value}.webp" alt="" width="${badge}" height="${badge}" style="width:${badge}px;height:${badge}px">` : ""}</span>`;
+}
+function levelTag(p, withThai = true, short = false) {
+  const m = p?.memberId ? roster.get(p.memberId) : null;
+  const lv = m && levelOf(m.level);
+  if (!lv) return "";
+  if (short) return `<span class="plv short" title="${esc(lv.name)}">Lv.${lv.value}</span>`;
+  return `<span class="plv"><em>Lv.${lv.value}</em> ${esc(lv.name)}</span>${withThai ? `<span class="pth">${esc(lv.th)}</span>` : ""}`;
+}
+
+function gameCard(g, name, P) {
+  const tile = (id) => { const p = P.get(id); return `<div class="pt">${avatar(p, g.status === "ended" ? 46 : 68)}<b>${name(id)}</b>${levelTag(p, g.status !== "ended", g.status === "ended")}</div>`; };
+  const side = (ids) => `<div class="team${ids.length < 2 ? " solo" : ""}">${ids.map(tile).join("")}</div>`;
+  const right = g.status === "playing" ? (g.startedAt ? `${mins(g.startedAt)} นาที` : "กำลังเล่น")
+    : g.status === "waiting" ? "รอลงสนาม" : `${g.shuttles} ลูก${g.endedAt ? " • " + clock(g.endedAt) : ""}`;
+  return `<article class="game-card ${g.status}"><div class="game-title"><span>เกมที่</span><strong>${g.number}</strong><em class="status-dot ${g.status}">${right}</em></div><div class="matchup"><div class="side">${side(g.playerIds.slice(0, 2))}</div><b>VS</b><div class="side">${side(g.playerIds.slice(2))}</div></div></article>`;
+}
+
+function render() {
+  if (!snap) return;
+  const P = new Map(snap.players.map((p) => [p.id, p]));
+  const name = (id) => esc(P.get(id)?.name ?? "—");
+  const isToday = snap.day === clubDay();
+
+  $("closed").hidden = isToday;
+  if (!isToday) $("closed").textContent = `ยังไม่เปิดก๊วนวันนี้ • ข้อมูลด้านล่างเป็นของรอบ${thaiDay(snap.day)} • เจอกันวันศุกร์ 20:00 น.`;
+  $("rate").innerHTML = `เก็บ <b>${baht(snap.courtFee)}</b> บาท/คน • ลูกละ <b>${baht(snap.shuttleFee)}</b> บาท`;
+  $("rate2").textContent = `ค่าสนาม ${baht(snap.courtFee)} บาท/คน (เมื่อลงเล่น) + ลูกละ ${baht(snap.shuttleFee)} บาท`;
+  $("courts").innerHTML = snap.openCourts.length ? `เปิดอยู่ <b>${snap.openCourts.length}</b> คอร์ท` : "";
+  $("sPlayers").textContent = snap.totals.present;
+  $("sQueue").textContent = snap.queue.length;
+  $("sCourt").textContent = snap.totals.onCourt;
+  $("sDone").textContent = snap.totals.gamesEnded;
+  $("sShuttle").textContent = snap.totals.shuttles;
+
+  const playing = snap.games.filter((g) => g.status === "playing").sort((a, b) => a.number - b.number);
+  $("playingNote").textContent = playing.length ? `${playing.length} เกม` : "";
+  $("playing").innerHTML = playing.length ? playing.map((g) => gameCard(g, name, P)).join("") : '<div class="empty"><b>ยังไม่มีเกมในสนาม</b><span>เกมที่กำลังเล่นจะขึ้นตรงนี้</span></div>';
+  const waiting = snap.games.filter((g) => g.status === "waiting").sort((a, b) => a.number - b.number);
+  $("next").innerHTML = waiting.length ? waiting.map((g) => gameCard(g, name, P)).join("") : '<div class="empty"><span>ยังไม่มีเกมที่จัดรอไว้</span></div>';
+
+  const q = snap.queue.map((id) => P.get(id)).filter(Boolean);
+  $("queue").innerHTML = q.length
+    ? q.map((p, i) => `<div class="queue-item"><span class="queue-number">${i + 1}</span>${avatar(p, 54)}<span><b>${esc(p.name)}</b><span class="qlv">${levelTag(p)}</span><small>เล่นแล้ว ${p.games} เกม${p.waitSince ? ` • <em class="queue-wait">รอ ${mins(p.waitSince)} นาที</em>` : ""}</small></span></div>`).join("")
+    : '<div class="empty"><b>ไม่มีคนรอคิว</b><span>ทุกคนอยู่ในเกมหรือพักอยู่</span></div>';
+
+  const term = $("q").value.trim().toLowerCase();
+  const rows = snap.players.filter((p) => !term || p.name.toLowerCase().includes(term));
+  $("costs").innerHTML = rows.length
+    ? rows.map((p) => `<tr class="st-${p.state}"><td><b>${esc(p.name)}</b></td><td><span class="badge ${p.state}">${STATE[p.state] || ""}</span></td><td class="r">${p.games}</td><td class="r">${p.shuttles}</td><td class="r ${p.paid ? "paid-amt" : p.charge ? "balance-due" : ""}">${baht(p.charge)} ฿</td></tr>`).join("")
+    : `<tr><td colspan="5" class="empty">${term ? "ไม่พบชื่อนี้ในรอบนี้" : "ยังไม่มีใครแจ้งชื่อ"}</td></tr>`;
+
+  const done = snap.games.filter((g) => g.status === "ended").sort((a, b) => b.number - a.number);
+  $("doneNote").textContent = done.length ? `${done.length} เกม` : "";
+  const cs = snap.clubStats;
+  $("clubStats").hidden = !cs || !cs.games;
+  if (cs && cs.games) {
+    const since = cs.since ? new Date(cs.since + "T12:00:00+07:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) : "";
+    $("clubStats").innerHTML = `<header><b>สถิติก๊วน BADMAN</b><span>${since ? "ตั้งแต่ " + since + " • " : ""}${cs.nights} คืน</span></header><div class="tiles"><div><small>สมาชิก</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>เกมทั้งหมด</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>ผลเสมอ</small><strong class="gold">${cs.drawPct}%</strong></div><div><small>ลูกแบดที่ใช้</small><strong>${cs.shuttles.toLocaleString()}</strong></div><div><small>เฉลี่ยต่อคืน</small><strong>${Math.round(cs.games / Math.max(1, cs.nights))}</strong></div></div>`;
+  }
+  $("done").innerHTML = done.length ? done.map((g) => gameCard(g, name, P)).join("") : '<div class="empty"><span>ยังไม่มีเกมที่จบ</span></div>';
+  renderStatus();
+}
+
+function renderStatus() {
+  const dot = $("dot"), stat = $("stat");
+  if (!FIREBASE.apiKey) { dot.className = "dot err"; stat.textContent = "ยังไม่ได้เชื่อมกับระบบจัดก๊วน"; return; }
+  if (!snap) { dot.className = failing ? "dot err" : "dot"; stat.textContent = failing ? "โหลดไม่สำเร็จ กำลังลองใหม่…" : "กำลังโหลดข้อมูลสด…"; return; }
+  const age = (Date.now() - new Date(snap.updatedAt).getTime()) / 60000;
+  const live = snap.day === clubDay() && age < 10;
+  dot.className = failing ? "dot err" : live ? "dot live" : "dot stale";
+  stat.textContent = (live ? "LIVE • " : "") + `อัปเดต ${clock(snap.updatedAt)} น.` + (failing ? " • เชื่อมต่อมีปัญหา" : "");
+}
+
+async function load() {
+  if (!FIREBASE.apiKey) { renderStatus(); return; }
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/live/current?key=${FIREBASE.apiKey}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (res.status === 404) { failing = false; $("stat").textContent = "ยังไม่มีข้อมูลจากสนาม"; return; }
+    if (!res.ok) throw new Error(String(res.status));
+    const doc = await res.json();
+    const next = JSON.parse(doc.fields.json.stringValue);
+    failing = false;
+    if (!snap || next.updatedAt !== snap.updatedAt) { snap = next; render(); } else renderStatus();
+  } catch { failing = true; renderStatus(); }
+}
+
+document.querySelector(".tabs").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-tab]"); if (!b) return;
+  document.querySelectorAll(".tabs button").forEach((x) => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll("[data-panel]").forEach((p) => (p.hidden = p.dataset.panel !== b.dataset.tab));
+});
+$("q").addEventListener("input", render);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+
+if (new URLSearchParams(location.search).has("demo")) {
+  const t = (m) => new Date(Date.now() - m * 60000).toISOString();
+  const names = ["แมน", "บอย", "โอ๊ต", "นิว", "เก่ง", "พี", "ฟ้า", "ต้น", "เจ", "มายด์", "ปอนด์"];
+  const st = ["playing", "playing", "playing", "playing", "waiting", "waiting", "waiting", "queue", "waiting", "paid", "queue"];
+  const g = [3, 2, 2, 3, 1, 2, 1, 0, 2, 1, 1];
+  const pl = names.map((n, i) => ({ id: "p" + i, name: n, games: g[i], shuttles: g[i], state: st[i], queuePos: null, waitSince: t(4 + i), charge: (g[i] ? 100 : 0) + g[i] * 28, paid: st[i] === "paid" }));
+  snap = { version: 1, updatedAt: new Date().toISOString(), day: clubDay(), courtFee: 100, shuttleFee: 28, openCourts: ["คอร์ท 1", "คอร์ท 2"], players: pl, queue: ["p7", "p10"],
+    games: [{ number: 1, playerIds: ["p0", "p1", "p2", "p3"], status: "ended", shuttles: 1, endedAt: t(45) }, { number: 2, playerIds: ["p3", "p5", "p8", "p9"], status: "ended", shuttles: 2, endedAt: t(30) }, { number: 6, playerIds: ["p0", "p2", "p1", "p3"], status: "playing", shuttles: 1, startedAt: t(8) }, { number: 7, playerIds: ["p4", "p5", "p6", "p8"], status: "waiting", shuttles: 0 }],
+    totals: { players: 11, present: 10, onCourt: 4, gamesEnded: 5, gamesActive: 2, shuttles: 6 } };
+  FIREBASE.apiKey = FIREBASE.apiKey || "demo";
+  render(); $("stat").textContent = "ตัวอย่างข้อมูล (demo)"; $("dot").className = "dot live";
+} else {
+  load();
+  loadRoster();
+  setInterval(load, POLL_MS);
+  setInterval(loadRoster, 180000);
+  setInterval(() => snap && render(), 30000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BADMAN — จัดการสมาชิก</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0f0f0e">
+<link rel="icon" href="../favicon.svg">
+<style>
+/* Same tokens and look as BADMAN Court Control (app/globals.css). */
+:root { --ink:#171611; --muted:#716d61; --line:#ddd6c5; --paper:#f3f0e7; --panel:#fffefa; --gold:#e9b92f; --mint:#f2c440; --orange:#ef7540; --black:#0f0f0e; --red:#b84a25; }
+* { box-sizing:border-box; }
+html { background:var(--paper); -webkit-text-size-adjust:100%; }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif; }
+button,input,select,textarea { font:inherit; color:inherit; }
+:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+[hidden] { display:none !important; }
+.app-shell { max-width:1180px; margin:0 auto; padding:calc(18px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; border:1px solid #26251f; padding:16px 18px; border-radius:18px; color:white; background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); box-shadow:0 10px 35px rgba(0,0,0,.14); position:relative; overflow:hidden; flex-wrap:wrap; }
+.topbar::after { content:""; position:absolute; width:260px; height:260px; right:15%; top:-190px; border:1px solid rgba(242,196,64,.22); border-radius:50%; box-shadow:0 0 0 26px rgba(242,196,64,.035),0 0 0 54px rgba(242,196,64,.025); pointer-events:none; }
+.brand-lockup { display:flex; align-items:center; gap:15px; position:relative; z-index:1; min-width:0; }
+.brand-lockup img { width:70px; height:70px; object-fit:cover; border-radius:50%; border:2px solid var(--gold); box-shadow:0 0 0 4px rgba(255,255,255,.08); flex:0 0 auto; }
+.eyebrow,.section-no { color:#a47a06; font-weight:900; letter-spacing:.11em; font-size:11px; margin:0 0 5px; }
+.topbar .eyebrow { color:var(--gold); }
+h1 { margin:0; font-size:clamp(28px,4vw,42px); line-height:.95; letter-spacing:-.045em; }
+h1 span { color:var(--gold); }
+h2 { margin:0; font-size:21px; letter-spacing:-.03em; }
+.who { position:relative; z-index:1; display:flex; align-items:center; gap:10px; font-size:13px; color:#d8d2c0; flex-wrap:wrap; }
+.btn { border:1px solid var(--line); background:var(--panel); border-radius:10px; padding:9px 14px; font-weight:800; cursor:pointer; font-size:14px; }
+.btn:hover { border-color:#bdb39a; }
+.btn.dark { background:var(--black); color:var(--gold); border-color:var(--black); }
+.btn.gold { background:var(--gold); color:var(--black); border-color:var(--gold); }
+.btn.ghost { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); color:white; }
+.btn.danger { color:var(--red); border-color:#efc2b0; background:#fff6f1; }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden; box-shadow:0 5px 22px rgba(45,35,8,.045); margin-top:16px; }
+.panel-heading { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--line); gap:12px; flex-wrap:wrap; }
+.panel-heading > div { display:flex; align-items:baseline; gap:12px; }
+.panel-heading .section-no { margin:0; }
+.login { max-width:420px; margin:28px auto 0; padding:22px; display:grid; gap:12px; }
+.login p { margin:0; color:var(--muted); font-size:13px; }
+label.f { display:grid; gap:5px; font-size:12px; font-weight:800; color:var(--muted); }
+input.t, select.t, textarea.t { width:100%; border:1px solid var(--line); background:#fbfaf6; border-radius:10px; padding:10px 12px; outline:none; color:var(--ink); font-size:15px; font-weight:500; }
+input.t:focus, select.t:focus, textarea.t:focus { border-color:var(--ink); box-shadow:0 0 0 3px rgba(233,185,47,.25); }
+textarea.t { min-height:70px; resize:vertical; }
+.err { color:var(--red); font-weight:800; font-size:13px; }
+.toolbar { display:flex; gap:10px; padding:12px 16px; border-bottom:1px solid var(--line); flex-wrap:wrap; align-items:center; }
+.toolbar input { flex:1 1 220px; }
+.toolbar select { flex:0 0 auto; width:auto; }
+.summary { display:flex; gap:8px 18px; flex-wrap:wrap; color:var(--muted); font-size:13px; font-weight:700; padding:10px 18px 0; }
+.summary b { color:var(--ink); }
+.list { display:grid; }
+.row { display:grid; grid-template-columns:48px minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 16px; border-bottom:1px solid #eeeadf; cursor:pointer; background:none; border-left:0; border-right:0; border-top:0; text-align:left; width:100%; }
+.row:hover { background:#fbf7ea; }
+.row:last-child { border-bottom:0; }
+.row.closed { opacity:.55; }
+.row .name { font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row small { display:block; color:var(--muted); font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tags { display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; }
+.tag { border-radius:99px; padding:3px 8px; font-size:10px; font-weight:900; white-space:nowrap; background:#ebe7dc; color:#4c4a42; }
+.tag.ok { background:#fff0b7; color:#725300; }
+.tag.no { background:#f3ece4; color:#8c6f5b; }
+.tag.paused { background:#ffd5b3; color:#98450c; }
+.tag.closed { background:#e5e5e2; color:#62665f; }
+.avatar { width:48px; height:48px; border-radius:50%; background:var(--black); color:var(--gold); display:grid; place-items:center; font-weight:900; font-size:17px; overflow:hidden; flex:0 0 auto; border:2px solid var(--gold); }
+.avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+.empty { padding:30px; text-align:center; color:var(--muted); }
+/* editor */
+dialog { border:0; padding:0; border-radius:18px; width:min(640px,calc(100vw - 20px)); max-height:calc(100dvh - 20px); background:var(--panel); color:var(--ink); box-shadow:0 20px 60px rgba(0,0,0,.35); }
+dialog::backdrop { background:rgba(15,15,14,.55); }
+.dlg-head { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--line); background:linear-gradient(125deg,#080808,#2b2411); color:white; position:sticky; top:0; z-index:2; }
+.dlg-head b { color:var(--gold); }
+.dlg-body { padding:16px 18px; display:grid; gap:14px; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:560px) { .grid2 { grid-template-columns:1fr; } }
+.photo-box { display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center; }
+.photo-box .avatar { width:96px; height:96px; font-size:30px; }
+.photo-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.cropper { display:grid; gap:10px; justify-items:center; border:1px dashed var(--line); border-radius:14px; padding:12px; }
+.cropper canvas { width:240px; height:240px; border-radius:50%; touch-action:none; cursor:grab; background:#222; }
+.cropper input[type=range] { width:240px; accent-color:var(--gold); }
+.consent { display:flex; gap:10px; align-items:flex-start; padding:12px; border-radius:12px; background:#fff8df; border:1px solid #f0dc9a; font-size:14px; font-weight:700; }
+.consent input { width:20px; height:20px; accent-color:var(--black); margin-top:2px; flex:0 0 auto; }
+.private { border-top:1px dashed var(--line); padding-top:12px; display:grid; gap:12px; }
+.private-note { font-size:11px; color:var(--muted); font-weight:900; letter-spacing:.08em; }
+.dlg-foot { display:flex; justify-content:space-between; gap:8px; padding:12px 18px; border-top:1px solid var(--line); flex-wrap:wrap; position:sticky; bottom:0; background:var(--panel); }
+.dlg-foot div { display:flex; gap:8px; flex-wrap:wrap; }
+.stats-line { font-size:13px; color:var(--muted); }
+.stats-line b { color:var(--ink); }
+.tabs { display:flex; padding:3px; gap:2px; border-radius:10px; background:#e7e2d4; margin-top:16px; }
+.tabs button { flex:1; border:0; border-radius:8px; background:transparent; padding:11px 8px; color:var(--muted); font-size:15px; font-weight:900; cursor:pointer; }
+.tabs button[aria-selected="true"] { background:var(--black); color:var(--gold); }
+.rgrid { display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:16px; align-items:start; margin-top:16px; }
+@media (max-width:900px) { .rgrid { grid-template-columns:1fr; } }
+.rgrid .panel { margin-top:0; }
+.rform { padding:16px; display:grid; gap:10px; }
+.rform .two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.slotrow { display:grid; grid-template-columns:1fr 1fr 40px; gap:8px; align-items:center; }
+.slotrow button { height:40px; border:1px solid #efc2b0; background:#fff6f1; color:var(--red); border-radius:8px; font-weight:900; cursor:pointer; }
+.rlist button { display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:11px 16px; border:0; border-bottom:1px solid #eeeadf; background:none; cursor:pointer; }
+.rlist button[aria-current="true"] { background:#fff9e5; }
+.rlist button > span:first-child { flex:1; display:flex; flex-direction:column; }
+.rlist small { color:var(--muted); font-size:12px; }
+.st { border-radius:99px; padding:3px 9px; font-size:11px; font-weight:900; white-space:nowrap; }
+.st.draft { background:#ebe7dc; color:#4c4a42; } .st.open { background:#e3f1ea; color:#0f6843; } .st.closed { background:#fff0b7; color:#725300; } .st.done { background:#ecefeb; color:#62665f; }
+.rhead { padding:14px 18px; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+.rhead .acts { display:flex; flex-wrap:wrap; gap:8px; }
+.etable { width:100%; border-collapse:collapse; }
+.etable th, .etable td { text-align:left; padding:9px 14px; border-bottom:1px solid #eeeadf; font-size:14px; vertical-align:top; }
+.etable th { font-size:11px; letter-spacing:.05em; color:var(--muted); background:#fafbf8; }
+.etable tr.wait td { background:#fff8f1; }
+.etable td.n { font-weight:900; color:var(--muted); white-space:nowrap; }
+.wrapx { overflow-x:auto; }
+.toast { position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:var(--black); color:var(--gold); padding:10px 16px; border-radius:10px; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,.3); z-index:10; max-width:calc(100vw - 32px); }
+.toast.bad { color:#ffb59a; }
+footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:16px; color:var(--muted); font-size:12px; }
+footer a { color:var(--muted); }
+</style>
+</head>
+<body>
+<main class="app-shell">
+  <header class="topbar">
+    <div class="brand-lockup">
+      <img src="../badman-logo.jpg" alt="Badman Badminton">
+      <div>
+        <p class="eyebrow">BADMAN • STAFF</p>
+        <h1>จัดการ <span>สมาชิก</span></h1>
+      </div>
+    </div>
+    <div class="who" id="who" hidden><span id="whoEmail"></span><button class="btn ghost" id="reload">รีเฟรช</button><button class="btn ghost" id="logout">ออกจากระบบ</button></div>
+  </header>
+
+  <section class="panel login" id="login" hidden>
+    <h2>เข้าสู่ระบบทีมงาน</h2>
+    <p>ใช้บัญชีเดียวกับปุ่ม LIVE ในระบบจัดก๊วน</p>
+    <label class="f">อีเมล<input class="t" id="email" type="email" autocomplete="username"></label>
+    <label class="f">รหัสผ่าน<input class="t" id="password" type="password" autocomplete="current-password"></label>
+    <div class="err" id="loginErr"></div>
+    <button class="btn dark" id="loginBtn">เข้าสู่ระบบ</button>
+  </section>
+
+  <div class="tabs" id="tabs" role="tablist" hidden><button role="tab" aria-selected="true" data-tab="members">สมาชิก</button><button role="tab" aria-selected="false" data-tab="rounds">รอบลงชื่อ</button></div>
+  <div class="rgrid" id="roundsPanel" hidden>
+    <div style="display:grid;gap:16px">
+      <section class="panel">
+        <div class="panel-heading"><div><p class="section-no">ROUND</p><h2 id="rfTitle">สร้างรอบใหม่</h2></div></div>
+        <div class="rform">
+          <label class="f">วันที่ (วันก๊วน)<input class="t" type="date" id="rDate"></label>
+          <div class="two"><label class="f">เริ่ม<input class="t" type="time" id="rStart" value="20:00"></label><label class="f">เลิก<input class="t" type="time" id="rEnd" value="01:00"></label></div>
+          <div class="f" style="gap:8px">ช่วงเวลาให้เลือก (เวลามา / รับกี่คน)<div id="rSlots" style="display:grid;gap:8px"></div><button type="button" class="btn" id="rAddSlot">+ เพิ่มช่วงเวลา</button></div>
+          <div class="two"><label class="f">พาเพื่อนได้ไม่เกิน<input class="t" type="number" min="0" max="5" id="rGuests" value="2"></label><label class="f">ปิดรับ / ยกเลิกได้ถึง<input class="t" type="datetime-local" id="rClose"></label></div>
+          <label class="f">ค่าใช้จ่าย (แสดงในหน้าลงชื่อ)<input class="t" id="rFee" value="100 บาท/คน + ลูกละ 28 บาท" maxlength="80"></label>
+          <div class="err" id="rErr"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn dark" id="rSave">บันทึกรอบ</button><button type="button" class="btn" id="rNew" hidden>ล้างฟอร์ม</button></div>
+        </div>
+      </section>
+      <section class="panel"><div class="panel-heading"><div><p class="section-no">ROUNDS</p><h2>รอบทั้งหมด</h2></div></div><div class="rlist" id="rList"><div class="empty">กำลังโหลด…</div></div></section>
+    </div>
+    <section class="panel" id="rDetail"><div class="empty">เลือกรอบทางซ้าย หรือสร้างรอบใหม่</div></section>
+  </div>
+  <section class="panel" id="main" hidden>
+    <div class="panel-heading">
+      <div><p class="section-no">MEMBERS</p><h2>สมาชิกก๊วน</h2></div>
+      <button class="btn gold" id="addBtn">+ เพิ่มสมาชิก</button>
+    </div>
+    <div class="summary" id="summary"></div>
+    <div class="toolbar">
+      <input class="t" id="q" placeholder="ค้นหาชื่อ รหัส LINE หรือเบอร์" autocomplete="off" aria-label="ค้นหา">
+      <select class="t" id="filter" aria-label="กรอง">
+        <option value="live">ทั้งหมด (ยกเว้นปิด)</option>
+        <option value="all">ทั้งหมด</option>
+        <option value="active">เล่นอยู่</option>
+        <option value="paused">พักชั่วคราว</option>
+        <option value="closed">ปิดแล้ว</option>
+        <option value="noconsent">ยังไม่ยินยอม</option>
+        <option value="nophoto">ยังไม่มีรูป</option>
+        <option value="nolevel">ยังไม่ระบุระดับ</option>
+      </select>
+      <select class="t" id="sort" aria-label="เรียง">
+        <option value="code">เรียงตามรหัส</option>
+        <option value="name">เรียงตามชื่อ</option>
+        <option value="games">เรียงตามจำนวนเกม</option>
+        <option value="recent">แก้ไขล่าสุด</option>
+      </select>
+    </div>
+    <div class="list" id="list"><div class="empty">กำลังโหลด…</div></div>
+  </section>
+
+  <footer><span>BADMAN • Staff</span><span><a href="../live/">คิวสด</a> · <a href="../ranking/">Ranking</a></span></footer>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" id="form">
+    <div class="dlg-head"><span id="dlgTitle">สมาชิก</span><button class="btn ghost" value="cancel" formnovalidate>ปิด</button></div>
+    <div class="dlg-body">
+      <div class="photo-box">
+        <div class="avatar" id="fAvatar"></div>
+        <div style="display:grid;gap:8px">
+          <div class="stats-line" id="fStats"></div>
+          <div class="photo-actions">
+            <label class="btn" for="file">เลือกรูป / ถ่ายรูป</label>
+            <input type="file" id="file" accept="image/*" hidden>
+            <button type="button" class="btn danger" id="removePhoto">ลบรูป</button>
+          </div>
+        </div>
+      </div>
+      <div class="cropper" id="cropper" hidden>
+        <canvas id="cropCanvas" width="480" height="480" aria-label="ลากเพื่อจัดตำแหน่งรูป"></canvas>
+        <input type="range" id="zoom" min="1" max="3" step="0.01" value="1" aria-label="ซูม">
+        <small style="color:var(--muted)">ลากรูปเพื่อจัดตำแหน่ง • เลื่อนแถบเพื่อซูม</small>
+      </div>
+      <div class="grid2">
+        <label class="f">ชื่อเล่น (ชื่อที่ใช้ในก๊วน)<input class="t" id="fName" required maxlength="40"></label>
+        <label class="f">ระดับฝีมือ<select class="t" id="fLevel"></select></label>
+        <label class="f">มือที่ถนัด<select class="t" id="fHand"><option value="">ไม่ระบุ</option><option value="R">มือขวา</option><option value="L">มือซ้าย</option></select></label>
+        <label class="f">สถานะ<select class="t" id="fStatus"><option value="active">เล่นอยู่</option><option value="paused">พักชั่วคราว</option><option value="closed">ปิดแล้ว</option></select></label>
+      </div>
+      <label class="consent"><input type="checkbox" id="fConsent"><span>อนุญาตให้แสดงชื่อและรูปบนเว็บเพื่อประชาสัมพันธ์ก๊วน<br><small style="color:var(--muted);font-weight:600">ถ้าไม่ติ๊ก หน้าเว็บสาธารณะจะแสดงแค่รหัสสมาชิก และระบบจะลบรูปออก</small></span></label>
+      <div class="private">
+        <div class="private-note">เฉพาะทีมงาน • ไม่แสดงบนเว็บ</div>
+        <div class="grid2">
+          <label class="f">LINE ID<input class="t" id="fLine" maxlength="60" autocomplete="off"></label>
+          <label class="f">เบอร์โทร<input class="t" id="fPhone" maxlength="20" inputmode="tel" autocomplete="off"></label>
+        </div>
+        <label class="f">โน้ต<textarea class="t" id="fNote" maxlength="500"></textarea></label>
+      </div>
+      <div class="private" id="mergeBox">
+        <div class="private-note">รวมรายชื่อซ้ำ</div>
+        <label class="f">รวมสมาชิกคนนี้เข้ากับ (ประวัติเกมทั้งหมดจะย้ายไปที่คนที่เลือก)<select class="t" id="fMerge"></select></label>
+        <button type="button" class="btn danger" id="mergeBtn">รวมรายชื่อ</button>
+      </div>
+      <div class="err" id="formErr"></div>
+    </div>
+    <div class="dlg-foot">
+      <div><button type="button" class="btn danger" id="deleteBtn">ลบสมาชิก</button></div>
+      <div><button class="btn" value="cancel" formnovalidate>ยกเลิก</button><button type="button" class="btn dark" id="saveBtn">บันทึก</button></div>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+// Same values as LIVE_FIREBASE in app/live-sync.ts. The key is not secret: Firestore rules allow
+// members/, nights/ and writes only for the staff account.
+const FIREBASE = { apiKey: "AIzaSyAI1EaI2OSmwXkbZs5GsO6Ze7jPUk8iumQ", projectId: "badman-live" };
+const BASE = `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents`;
+const AUTH_KEY = "badman-admin-auth-v1";
+const LEVELS = [
+  { value: 1, icon: "🥚", name: "Baby Bat", th: "ลูกค้างคาวฝึกบิน", desc: "เพิ่งเริ่มจับไม้-หัดตี เสิร์ฟข้ามบ้าง ติดเน็ตบ้าง เน้นออกกำลังกาย เอาเหงื่อ เอาฮาเป็นหลัก", label: "🥚 1 Baby Bat" },
+  { value: 2, icon: "🐣", name: "Tiny Wing", th: "ค้างคาวปีกนุ่ม", desc: "เริ่มตีโดนลูก วิ่งรับลูกที่มาตรงตัวได้ ตีโต้สั้นๆ ได้ 2-3 ไม้", label: "🐣 2 Tiny Wing" },
+  { value: 3, icon: "🏸", name: "Little Bat", th: "ค้างคาวน้อยหัดร่อน", desc: "เริ่มตีโต้กลับได้บ้าง ทิศทางยังไม่แม่นยำมากนัก เริ่มสนุกกับการเล่นกับเพื่อนๆ", label: "🏸 3 Little Bat" },
+  { value: 4, icon: "💨", name: "Bouncing Bat", th: "ค้างคาวดุ๊กดิ๊ก", desc: "วิ่งรับลูกทั่วคอร์ท ขยันวิ่ง มีแรงเยอะ ตีเคลียร์หลังได้บ้าง สายพลัง สายวิ่งสู้ฟัด", label: "💨 4 Bouncing Bat" },
+  { value: 5, icon: "⭐", name: "Junior Badman", th: "แบดแมนฝึกหัด", desc: "ตีโต้แรลลี่ได้ต่อเนื่อง เริ่มวางลูกหยอดหน้าเน็ต มือเบาที่เริ่มเล่นเกมเต็มสนุก", label: "⭐ 5 Junior Badman" },
+  { value: 6, icon: "⚡", name: "Hero in Training", th: "ฮีโร่พร้อมลุย", desc: "เริ่มมีลูกตัด ลูกเซฟ วางทางลูกได้ดีขึ้น เล่นคู่เข้าใจตำแหน่ง ทักษะรอบด้านขึ้น", label: "⚡ 6 Hero in Training" },
+  { value: 7, icon: "🔥", name: "Shadow Striker", th: "ค้างคาวเงา", desc: "ทักษะดี ตีสนุก เล่นทางได้หลากหลาย มีความฟิต คล่องตัว ช่วยแนะนำประคองเพื่อนในทีมได้", label: "🔥 7 Shadow Striker" },
+  { value: 8, icon: "👑", name: "Dark Knight Master", th: "พี่เลี้ยงก็อตแธม", desc: "ประสบการณ์สูง เล่นได้ทุกรูปแบบ คุมเกมได้ดีเยี่ยม เน้นแจกจ่ายลูก ใจดีกับมือใหม่เป็นพิเศษ", label: "👑 8 Dark Knight Master" },
+]; // keep in sync with app/members.ts
+const PHOTO_PX = 320;
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const levelLabel = (v) => LEVELS.find((l) => l.value === v)?.label ?? "ยังไม่ระบุระดับ";
+const lvImg = (v) => LEVELS.some((l) => l.value === v) ? `<img src="../levels/lv${v}.webp" alt="" width="16" height="16" style="border-radius:50%;vertical-align:-3px;background:#fff">` : "";
+const codeNum = (c) => parseInt(String(c).replace(/\D/g, ""), 10) || 0;
+const isLive = (m) => !m.deleted && !m.mergedInto;
+const initial = (m) => (m.name || m.code || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
+
+/* ---------- auth (same REST endpoints as the court app) ---------- */
+let auth = null;
+try { auth = JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); } catch {}
+function saveAuth() { try { auth ? localStorage.setItem(AUTH_KEY, JSON.stringify(auth)) : localStorage.removeItem(AUTH_KEY); } catch {} }
+async function signIn(email, password) {
+  const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE.apiKey}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, password, returnSecureToken: true }) });
+  const b = await r.json();
+  if (!r.ok) throw new Error(b?.error?.message || "เข้าสู่ระบบไม่สำเร็จ");
+  auth = { email: b.email, refreshToken: b.refreshToken, idToken: b.idToken, exp: Date.now() + Number(b.expiresIn) * 1000 };
+  saveAuth();
+}
+async function token() {
+  if (!auth) throw new Error("ยังไม่ได้เข้าสู่ระบบ");
+  if (auth.idToken && auth.exp - Date.now() > 60000) return auth.idToken;
+  const r = await fetch(`https://securetoken.googleapis.com/v1/token?key=${FIREBASE.apiKey}`, { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(auth.refreshToken) });
+  const b = await r.json();
+  if (!r.ok) { auth = null; saveAuth(); showLogin(); throw new Error("หมดเวลาเข้าสู่ระบบ กรุณาเข้าใหม่"); }
+  auth = { ...auth, idToken: b.id_token, refreshToken: b.refresh_token, exp: Date.now() + Number(b.expires_in) * 1000 };
+  saveAuth();
+  return auth.idToken;
+}
+
+/* ---------- Firestore REST ---------- */
+const toValue = (v) => v === null || v === undefined ? { nullValue: null } : typeof v === "boolean" ? { booleanValue: v } : typeof v === "number" ? (Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v }) : { stringValue: String(v) };
+const fromValue = (v) => "stringValue" in v ? v.stringValue : "integerValue" in v ? Number(v.integerValue) : "doubleValue" in v ? Number(v.doubleValue) : "booleanValue" in v ? v.booleanValue : "timestampValue" in v ? v.timestampValue : null;
+const toFields = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, toValue(v)]));
+const fromFields = (f = {}) => Object.fromEntries(Object.entries(f).map(([k, v]) => [k, fromValue(v)]));
+async function call(method, path, body) {
+  const r = await fetch(path.startsWith("http") ? path : `${BASE}/${path}`, { method, headers: { "content-type": "application/json", authorization: "Bearer " + (await token()) }, body: body ? JSON.stringify(body) : undefined });
+  if (r.status === 404 && method === "GET") return null;
+  if (!r.ok) {
+    if (r.status === 403) throw new Error("บัญชีนี้ไม่มีสิทธิ์แก้ไขข้อมูลสมาชิก");
+    throw new Error(`บันทึกไม่สำเร็จ (${r.status})`);
+  }
+  return r.json().catch(() => ({}));
+}
+async function list(name) {
+  const out = []; let page = "";
+  do {
+    const b = await call("GET", `${name}?pageSize=300${page ? "&pageToken=" + encodeURIComponent(page) : ""}`);
+    for (const d of b?.documents ?? []) out.push({ id: d.name.split("/").pop(), ...fromFields(d.fields) });
+    page = b?.nextPageToken ?? "";
+  } while (page);
+  return out;
+}
+const patch = (path, fields, mask) => call("PATCH", path + (mask ? "?" + mask.map((f) => "updateMask.fieldPaths=" + encodeURIComponent(f)).join("&") : ""), { fields: toFields(fields) });
+const del = (path) => call("DELETE", path);
+
+/* ---------- state ---------- */
+let members = [], photos = new Map(), stats = {}, editing = null, crop = null;
+
+function toast(msg, bad = false) {
+  const t = $("toast"); t.textContent = msg; t.className = "toast" + (bad ? " bad" : ""); t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), bad ? 6000 : 2800);
+}
+function avatarHtml(m) {
+  const src = photos.get(m.id);
+  return src ? `<img src="${src}" alt="">` : esc(initial(m));
+}
+function showLogin() { $("login").hidden = false; $("main").hidden = true; $("who").hidden = true; $("tabs").hidden = true; $("roundsPanel").hidden = true; }
+
+async function loadAll() {
+  $("list").innerHTML = '<div class="empty">กำลังโหลด…</div>';
+  const [ms, ph, st] = await Promise.all([list("members"), list("photos"), call("GET", "public/stats").catch(() => null)]);
+  members = ms;
+  photos = new Map(ph.filter((p) => p.data).map((p) => [p.id, p.data]));
+  try { stats = st ? JSON.parse(st.fields.json.stringValue).members || {} : {}; } catch { stats = {}; }
+  render();
+}
+
+function render() {
+  const q = $("q").value.trim().toLowerCase();
+  const f = $("filter").value, sort = $("sort").value;
+  const live = members.filter(isLive);
+  $("summary").innerHTML = `<span>สมาชิก <b>${live.filter((m) => m.status !== "closed").length}</b> คน</span><span>ยินยอมแสดงบนเว็บ <b>${live.filter((m) => m.consent).length}</b></span><span>มีรูป <b>${live.filter((m) => photos.has(m.id)).length}</b></span><span>ยังไม่ระบุระดับ <b>${live.filter((m) => !m.level).length}</b></span>`;
+  let rows = live.filter((m) => {
+    if (f === "live" && m.status === "closed") return false;
+    if (["active", "paused", "closed"].includes(f) && (m.status || "active") !== f) return false;
+    if (f === "noconsent" && m.consent) return false;
+    if (f === "nophoto" && photos.has(m.id)) return false;
+    if (f === "nolevel" && m.level) return false;
+    return !q || [m.name, m.code, m.line, m.phone, m.note].some((x) => String(x ?? "").toLowerCase().includes(q));
+  });
+  const g = (m) => stats[m.id]?.games ?? 0;
+  rows.sort(sort === "name" ? (a, b) => a.name.localeCompare(b.name, "th") : sort === "games" ? (a, b) => g(b) - g(a) : sort === "recent" ? (a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)) : (a, b) => codeNum(a.code) - codeNum(b.code));
+  $("list").innerHTML = rows.length ? rows.map((m) => {
+    const s = stats[m.id];
+    const st = m.status || "active";
+    return `<button class="row ${st === "closed" ? "closed" : ""}" data-id="${esc(m.id)}"><span class="avatar">${avatarHtml(m)}</span><span style="min-width:0"><span class="name">${esc(m.name)}</span><small>${esc(m.code)} • ${lvImg(m.level)} ${esc(levelLabel(m.level))}${s ? ` • ${s.games} เกม • อันดับ ${s.rank}` : ""}${m.line ? " • LINE " + esc(m.line) : ""}</small></span><span class="tags">${m.consent ? '<span class="tag ok">แสดงบนเว็บ</span>' : '<span class="tag no">ไม่แสดงชื่อ</span>'}${st !== "active" ? `<span class="tag ${st}">${st === "paused" ? "พัก" : "ปิด"}</span>` : ""}</span></button>`;
+  }).join("") : `<div class="empty">${q ? "ไม่พบสมาชิกที่ค้นหา" : "ยังไม่มีสมาชิก • สมาชิกจะมาจากระบบจัดก๊วนเมื่อเปิด LIVE หรือกดเพิ่มที่นี่"}</div>`;
+}
+
+/* ---------- public roster (same shape as buildPublicRoster in app/members.ts) ---------- */
+async function publishRoster() {
+  const roster = { version: 1, updatedAt: new Date().toISOString(), members: members.filter(isLive).map((m) => ({ id: m.id, code: m.code, name: m.consent ? m.name : null, level: m.level ?? null, hand: m.hand ?? null, joined: String(m.createdAt || "").slice(0, 10), photo: Boolean(m.consent && m.hasPhoto), active: m.status !== "closed" })) };
+  await patch("public/roster", { json: JSON.stringify(roster) });
+}
+
+/* ---------- editor ---------- */
+function openEditor(m) {
+  editing = m ? { ...m } : null;
+  crop = null; $("cropper").hidden = true; $("file").value = "";
+  $("dlgTitle").innerHTML = m ? `<b>${esc(m.code)}</b> • แก้ไขสมาชิก` : "<b>เพิ่มสมาชิกใหม่</b>";
+  $("fName").value = m?.name ?? "";
+  $("fLevel").innerHTML = '<option value="">ยังไม่ระบุ</option>' + LEVELS.map((l) => `<option value="${l.value}">${esc(l.label)} • ${esc(l.th)}</option>`).join("");
+  $("fLevel").value = m?.level ?? "";
+  $("fHand").value = m?.hand ?? "";
+  $("fStatus").value = m?.status ?? "active";
+  $("fConsent").checked = Boolean(m?.consent);
+  $("fLine").value = m?.line ?? ""; $("fPhone").value = m?.phone ?? ""; $("fNote").value = m?.note ?? "";
+  $("formErr").textContent = "";
+  const s = m && stats[m.id];
+  $("fStats").innerHTML = m ? (s ? `อันดับ <b>${s.rank}</b> • <b>${s.games}</b> เกม • ชนะ ${s.wins} เสมอ ${s.draws} แพ้ ${s.losses} • ${s.points} แต้ม` : "ยังไม่มีสถิติเกม") + `<br>เข้าก๊วน ${esc(String(m.createdAt || "").slice(0, 10))}` : "รหัสสมาชิกจะออกให้อัตโนมัติ";
+  $("fAvatar").innerHTML = m ? avatarHtml(m) : "+";
+  $("removePhoto").hidden = !(m && photos.has(m.id));
+  $("mergeBox").hidden = !m;
+  $("deleteBtn").hidden = !m;
+  if (m) $("fMerge").innerHTML = '<option value="">— เลือกสมาชิก —</option>' + members.filter((x) => isLive(x) && x.id !== m.id).sort((a, b) => a.name.localeCompare(b.name, "th")).map((x) => `<option value="${esc(x.id)}">${esc(x.name)} (${esc(x.code)})</option>`).join("");
+  $("dlg").showModal();
+}
+
+function busy(on) { ["saveBtn", "mergeBtn", "deleteBtn", "removePhoto"].forEach((id) => ($(id).disabled = on)); }
+
+async function save() {
+  const name = $("fName").value.trim().replace(/\s+/g, " ");
+  if (!name) { $("formErr").textContent = "กรุณาใส่ชื่อ"; return; }
+  const dup = members.find((x) => isLive(x) && x.id !== editing?.id && x.name.trim().toLowerCase() === name.toLowerCase());
+  if (dup && !confirmDup(dup)) return;
+  const now = new Date().toISOString();
+  const consent = $("fConsent").checked;
+  const fields = { name, level: $("fLevel").value ? Number($("fLevel").value) : null, hand: $("fHand").value || null, status: $("fStatus").value, consent, line: $("fLine").value.trim(), phone: $("fPhone").value.trim(), note: $("fNote").value.trim(), updatedAt: now };
+  busy(true);
+  try {
+    let m = editing;
+    if (!m) {
+      const nextCode = Math.max(0, ...members.map((x) => codeNum(x.code))) + 1;
+      m = { id: "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), code: "B" + String(nextCode).padStart(4, "0"), createdAt: now, deleted: false, hasPhoto: false };
+      await patch(`members/${m.id}`, { ...m, ...fields });
+    }
+    let hasPhoto = photos.has(m.id);
+    if (crop && consent) {
+      const data = cropToJpeg();
+      await patch(`photos/${m.id}`, { data, updatedAt: now });
+      photos.set(m.id, data); hasPhoto = true;
+    }
+    if (!consent && hasPhoto) { await del(`photos/${m.id}`); photos.delete(m.id); hasPhoto = false; }
+    const all = { ...fields, hasPhoto };
+    await patch(`members/${m.id}`, all, Object.keys(all));
+    const idx = members.findIndex((x) => x.id === m.id);
+    const merged = { ...m, ...all };
+    idx >= 0 ? (members[idx] = merged) : members.push(merged);
+    await publishRoster();
+    $("dlg").close(); render();
+    toast(crop && !consent ? "บันทึกแล้ว (ไม่ได้เก็บรูป เพราะยังไม่ได้ติ๊กยินยอม)" : editing ? "บันทึกแล้ว" : `เพิ่ม ${name} (${m.code}) แล้ว`);
+  } catch (e) { $("formErr").textContent = e.message; }
+  finally { busy(false); }
+}
+function confirmDup(dup) {
+  // Avoid browser dialogs: ask by requiring a second click.
+  if (save.dupOk === dup.id) { save.dupOk = null; return true; }
+  save.dupOk = dup.id;
+  $("formErr").textContent = `มีสมาชิกชื่อนี้แล้ว (${dup.code}) • ถ้าเป็นคนละคน กดบันทึกอีกครั้ง หรือเพิ่มอักษรต่อท้ายชื่อ`;
+  return false;
+}
+
+async function removePhoto() {
+  if (!editing) return;
+  busy(true);
+  try {
+    await del(`photos/${editing.id}`);
+    photos.delete(editing.id);
+    const now = new Date().toISOString();
+    await patch(`members/${editing.id}`, { hasPhoto: false, updatedAt: now }, ["hasPhoto", "updatedAt"]);
+    const m = members.find((x) => x.id === editing.id); if (m) { m.hasPhoto = false; m.updatedAt = now; }
+    await publishRoster();
+    $("fAvatar").innerHTML = esc(initial(editing)); $("removePhoto").hidden = true; render(); toast("ลบรูปแล้ว");
+  } catch (e) { $("formErr").textContent = e.message; }
+  finally { busy(false); }
+}
+
+async function deleteMember() {
+  if (!editing) return;
+  const s = stats[editing.id];
+  if (s && s.games) { $("formErr").textContent = `ลบไม่ได้ เพราะมีประวัติ ${s.games} เกม • ให้เปลี่ยนสถานะเป็น "ปิดแล้ว" หรือรวมรายชื่อแทน`; return; }
+  if (deleteMember.armed !== editing.id) { deleteMember.armed = editing.id; $("formErr").textContent = "กด ลบสมาชิก อีกครั้งเพื่อยืนยัน"; return; }
+  deleteMember.armed = null;
+  busy(true);
+  try {
+    const now = new Date().toISOString();
+    if (photos.has(editing.id)) { await del(`photos/${editing.id}`); photos.delete(editing.id); }
+    await patch(`members/${editing.id}`, { deleted: true, hasPhoto: false, updatedAt: now }, ["deleted", "hasPhoto", "updatedAt"]);
+    const m = members.find((x) => x.id === editing.id); if (m) Object.assign(m, { deleted: true, updatedAt: now });
+    await publishRoster();
+    $("dlg").close(); render(); toast("ลบสมาชิกแล้ว");
+  } catch (e) { $("formErr").textContent = e.message; }
+  finally { busy(false); }
+}
+
+async function merge() {
+  if (!editing) return;
+  const targetId = $("fMerge").value;
+  const target = members.find((x) => x.id === targetId);
+  if (!target) { $("formErr").textContent = "เลือกสมาชิกที่จะรวมเข้าไปก่อน"; return; }
+  if (merge.armed !== targetId) { merge.armed = targetId; $("formErr").textContent = `ยืนยัน: รวม ${editing.name} (${editing.code}) เข้ากับ ${target.name} (${target.code}) • ${editing.code} จะหายไปจากรายชื่อ • กด รวมรายชื่อ อีกครั้ง`; return; }
+  merge.armed = null;
+  busy(true);
+  try {
+    const now = new Date().toISOString();
+    // 1. Move game history.
+    const nights = await list("nights");
+    let moved = 0;
+    for (const n of nights) {
+      let rows; try { rows = JSON.parse(n.json || "[]"); } catch { continue; }
+      let changed = false;
+      for (const r of rows) {
+        if (r.memberIds?.includes(editing.id)) { r.memberIds = r.memberIds.map((id) => (id === editing.id ? targetId : id)); changed = true; moved++; }
+      }
+      if (changed) await patch(`nights/${n.id}`, { json: JSON.stringify(rows), games: rows.length, updatedAt: now });
+    }
+    // 2. Keep the useful details on the remaining member.
+    const keep = {};
+    if (!target.level && editing.level) keep.level = editing.level;
+    if (!target.hand && editing.hand) keep.hand = editing.hand;
+    if (!target.line && editing.line) keep.line = editing.line;
+    if (!target.phone && editing.phone) keep.phone = editing.phone;
+    if (editing.note) keep.note = [target.note, editing.note].filter(Boolean).join("\n");
+    if (String(editing.createdAt) < String(target.createdAt)) keep.createdAt = editing.createdAt;
+    if (Object.keys(keep).length) {
+      await patch(`members/${targetId}`, { ...keep, updatedAt: now }, [...Object.keys(keep), "updatedAt"]);
+      Object.assign(target, keep, { updatedAt: now });
+    }
+    // 3. Retire the duplicate.
+    if (photos.has(editing.id)) { await del(`photos/${editing.id}`); photos.delete(editing.id); }
+    await patch(`members/${editing.id}`, { mergedInto: targetId, hasPhoto: false, updatedAt: now }, ["mergedInto", "hasPhoto", "updatedAt"]);
+    const m = members.find((x) => x.id === editing.id); if (m) Object.assign(m, { mergedInto: targetId, updatedAt: now });
+    await publishRoster();
+    $("dlg").close(); render();
+    toast(`รวมแล้ว • ย้าย ${moved} เกมไปที่ ${target.name} • สถิติจะอัปเดตเมื่อระบบจัดก๊วนซิงก์รอบถัดไป`);
+  } catch (e) { $("formErr").textContent = e.message; }
+  finally { busy(false); }
+}
+
+/* ---------- photo crop: square, centre-weighted, drag to pan, slider to zoom ---------- */
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("เปิดรูปนี้ไม่ได้ ลองเลือกไฟล์ JPG หรือ PNG")); };
+    img.src = url;
+  });
+}
+function drawCrop(canvas = $("cropCanvas"), size = canvas.width) {
+  if (!crop) return;
+  const ctx = canvas.getContext("2d");
+  const { img, zoom, cx, cy } = crop;
+  const side = Math.min(img.naturalWidth, img.naturalHeight) / zoom; // source square edge
+  const sx = Math.min(Math.max(cx - side / 2, 0), img.naturalWidth - side);
+  const sy = Math.min(Math.max(cy - side / 2, 0), img.naturalHeight - side);
+  crop.cx = sx + side / 2; crop.cy = sy + side / 2;
+  ctx.imageSmoothingQuality = "high";
+  ctx.fillStyle = "#111"; ctx.fillRect(0, 0, size, size);
+  ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+}
+function cropToJpeg() {
+  const c = document.createElement("canvas"); c.width = c.height = PHOTO_PX;
+  drawCrop(c, PHOTO_PX);
+  let q = 0.85, data = c.toDataURL("image/jpeg", q);
+  while (data.length > 60000 && q > 0.4) { q -= 0.1; data = c.toDataURL("image/jpeg", q); }
+  return data;
+}
+$("file").addEventListener("change", async (e) => {
+  const file = e.target.files?.[0]; if (!file) return;
+  try {
+    const img = await loadImage(file);
+    crop = { img, zoom: 1, cx: img.naturalWidth / 2, cy: img.naturalHeight / 2.4 };
+    $("zoom").value = 1; $("cropper").hidden = false; drawCrop();
+    if (!$("fConsent").checked) $("formErr").textContent = "ต้องติ๊ก “อนุญาตให้แสดงชื่อและรูป” ก่อน ระบบจึงจะเก็บรูป";
+  } catch (err) { $("formErr").textContent = err.message; }
+});
+$("zoom").addEventListener("input", (e) => { if (crop) { crop.zoom = Number(e.target.value); drawCrop(); } });
+(() => {
+  const cv = $("cropCanvas"); let drag = null;
+  cv.addEventListener("pointerdown", (e) => { if (!crop) return; drag = { x: e.clientX, y: e.clientY }; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", (e) => {
+    if (!drag || !crop) return;
+    const side = Math.min(crop.img.naturalWidth, crop.img.naturalHeight) / crop.zoom;
+    const scale = side / cv.getBoundingClientRect().width;
+    crop.cx -= (e.clientX - drag.x) * scale; crop.cy -= (e.clientY - drag.y) * scale;
+    drag = { x: e.clientX, y: e.clientY }; drawCrop();
+  });
+  cv.addEventListener("pointerup", () => (drag = null));
+  cv.addEventListener("pointercancel", () => (drag = null));
+})();
+
+/* ---------- wiring ---------- */
+$("list").addEventListener("click", (e) => { const b = e.target.closest("[data-id]"); if (b) openEditor(members.find((m) => m.id === b.dataset.id)); });
+["q", "filter", "sort"].forEach((id) => $(id).addEventListener("input", render));
+$("addBtn").addEventListener("click", () => openEditor(null));
+$("saveBtn").addEventListener("click", save);
+$("removePhoto").addEventListener("click", removePhoto);
+$("deleteBtn").addEventListener("click", deleteMember);
+$("mergeBtn").addEventListener("click", merge);
+$("dlg").addEventListener("close", () => { save.dupOk = merge.armed = deleteMember.armed = null; crop = null; });
+$("reload").addEventListener("click", () => start().catch((e) => toast(e.message, true)));
+$("logout").addEventListener("click", () => { auth = null; saveAuth(); members = []; photos.clear(); showLogin(); });
+async function doLogin() {
+  $("loginErr").textContent = ""; $("loginBtn").disabled = true;
+  try { await signIn($("email").value.trim(), $("password").value); $("password").value = ""; await start(); }
+  catch (e) { $("loginErr").textContent = /INVALID|PASSWORD|EMAIL/.test(e.message) ? "อีเมลหรือรหัสผ่านไม่ถูกต้อง" : e.message; }
+  finally { $("loginBtn").disabled = false; }
+}
+$("loginBtn").addEventListener("click", doLogin);
+$("password").addEventListener("keydown", (e) => { if (e.key === "Enter") doLogin(); });
+
+async function start() {
+  if (!auth) { showLogin(); return; }
+  $("login").hidden = true; $("main").hidden = false; $("who").hidden = false; $("tabs").hidden = false; $("whoEmail").textContent = auth.email;
+  showTab(currentTab);
+  try { await loadAll(); }
+  catch (e) { $("list").innerHTML = `<div class="empty err">${esc(e.message)}</div>`; }
+}
+/* ================= sign-up rounds ================= */
+const ROOT_DOCS = `projects/${FIREBASE.projectId}/databases/(default)/documents`;
+let currentTab = "members", rounds = [], selRound = null, selEntries = [], selNotes = new Map(), rosterPub = new Map(), delArmed = null;
+const pad = (n) => String(n).padStart(2, "0");
+function nextFriday() { const d = new Date(Date.now() + 7 * 3600e3); const add = (5 - d.getUTCDay() + 7) % 7; d.setUTCDate(d.getUTCDate() + add); return d.toISOString().slice(0, 10); }
+const thaiDay = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+const thaiWhen = (iso) => new Date(iso).toLocaleString("th-TH", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const STATUS = { draft: "ร่าง (ยังไม่เปิด)", open: "เปิดรับอยู่", closed: "ปิดรับแล้ว", done: "จบแล้ว" };
+function fv(v) {
+  if (!v) return null;
+  if ("stringValue" in v) return v.stringValue; if ("integerValue" in v) return Number(v.integerValue); if ("doubleValue" in v) return v.doubleValue;
+  if ("booleanValue" in v) return v.booleanValue; if ("timestampValue" in v) return v.timestampValue; if ("nullValue" in v) return null;
+  if ("arrayValue" in v) return (v.arrayValue.values || []).map(fv);
+  return null;
+}
+async function listTyped(path) {
+  const out = []; let page = "";
+  do {
+    const b = await call("GET", `${path}?pageSize=300${page ? "&pageToken=" + encodeURIComponent(page) : ""}`);
+    for (const d of b?.documents ?? []) out.push({ id: d.name.split("/").pop(), ...Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, fv(v)])) });
+    page = b?.nextPageToken ?? "";
+  } while (page);
+  return out;
+}
+function roundCfg(r) { let c = {}; try { c = JSON.parse(r.json || "{}"); } catch {} return { slots: c.slots || [], start: c.start || "20:00", end: c.end || "01:00", fee: c.fee || "" }; }
+
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll("#tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+  $("main").hidden = tab !== "members";
+  $("roundsPanel").hidden = tab !== "rounds";
+  if (tab === "rounds") loadRounds().catch((e) => toast(e.message, true));
+}
+$("tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) showTab(b.dataset.tab); });
+
+function slotRows(slots) {
+  $("rSlots").innerHTML = slots.map((sl, i) => `<div class="slotrow"><input class="t" type="time" data-st="${i}" value="${esc(sl.time)}" aria-label="เวลามา"><input class="t" type="number" min="1" max="200" data-sc="${i}" value="${sl.cap}" aria-label="รับกี่คน"><button type="button" data-sdel="${i}" aria-label="ลบช่วงนี้">×</button></div>`).join("");
+}
+function readSlots() {
+  return [...$("rSlots").querySelectorAll(".slotrow")].map((row) => ({ time: row.querySelector("[data-st]").value, cap: Number(row.querySelector("[data-sc]").value) || 0 })).filter((x) => x.time);
+}
+function fillForm(r) {
+  const day = r ? r.id : nextFriday();
+  const cfg = r ? roundCfg(r) : { slots: [{ time: "20:00", cap: 16 }, { time: "21:00", cap: 8 }, { time: "22:00", cap: 16 }], start: "20:00", end: "01:00", fee: "100 บาท/คน + ลูกละ 28 บาท" };
+  $("rfTitle").textContent = r ? `แก้ไขรอบ ${thaiDay(r.id)}` : "สร้างรอบใหม่";
+  $("rDate").value = day; $("rDate").disabled = Boolean(r);
+  $("rStart").value = cfg.start; $("rEnd").value = cfg.end; $("rFee").value = cfg.fee;
+  $("rGuests").value = r ? r.maxGuests ?? 2 : 2;
+  const close = r?.closeAt ? new Date(new Date(r.closeAt).getTime() + 7 * 3600e3).toISOString().slice(0, 16) : `${day}T19:00`;
+  $("rClose").value = close;
+  slotRows(cfg.slots);
+  $("rNew").hidden = !r; $("rErr").textContent = "";
+}
+$("rSlots").addEventListener("click", (e) => { const b = e.target.closest("[data-sdel]"); if (!b) return; const sl = readSlots(); sl.splice(Number(b.dataset.sdel), 1); slotRows(sl); });
+$("rAddSlot").addEventListener("click", () => { const sl = readSlots(); const last = sl[sl.length - 1]; const h = last ? (Number(last.time.slice(0, 2)) + 1) % 24 : 20; sl.push({ time: `${pad(h)}:00`, cap: 8 }); slotRows(sl); });
+$("rNew").addEventListener("click", () => fillForm(null));
+
+async function saveRound(statusOverride) {
+  const day = $("rDate").value;
+  const slots = readSlots().sort((a, b) => a.time.localeCompare(b.time));
+  const closeLocal = $("rClose").value;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error("เลือกวันที่");
+  if (!slots.length || slots.some((x) => x.cap < 1)) throw new Error("ต้องมีช่วงเวลาอย่างน้อย 1 ช่วง และรับอย่างน้อย 1 คน");
+  if (new Set(slots.map((x) => x.time)).size !== slots.length) throw new Error("มีช่วงเวลาซ้ำกัน");
+  if (!closeLocal) throw new Error("ตั้งเวลาปิดรับ");
+  const existing = rounds.find((r) => r.id === day);
+  const status = statusOverride || existing?.status || "draft";
+  const closeAt = new Date(closeLocal + ":00+07:00").toISOString();
+  const json = JSON.stringify({ slots, start: $("rStart").value, end: $("rEnd").value, fee: $("rFee").value.trim() });
+  const body = { fields: {
+    status: { stringValue: status }, closeAt: { timestampValue: closeAt }, maxGuests: { integerValue: String(Math.max(0, Math.min(5, Number($("rGuests").value) || 0))) },
+    slotTimes: { arrayValue: { values: slots.map((x) => ({ stringValue: x.time })) } }, json: { stringValue: json }, updatedAt: { timestampValue: new Date().toISOString() },
+  } };
+  await call("PATCH", `rounds/${day}`, body);
+  return day;
+}
+$("rSave").addEventListener("click", async () => {
+  $("rErr").textContent = ""; $("rSave").disabled = true;
+  try { const day = await saveRound(); await loadRounds(day); toast("บันทึกรอบแล้ว"); }
+  catch (e) { $("rErr").textContent = e.message; }
+  finally { $("rSave").disabled = false; }
+});
+
+async function loadRounds(selectId) {
+  const [rs, roster] = await Promise.all([listTyped("rounds"), call("GET", "public/roster").catch(() => null)]);
+  rounds = rs.sort((a, b) => b.id.localeCompare(a.id));
+  try { rosterPub = new Map((roster ? JSON.parse(roster.fields.json.stringValue).members : []).map((m) => [m.id, m])); } catch { rosterPub = new Map(); }
+  const id = selectId || selRound?.id || rounds.find((r) => r.status === "open")?.id || rounds[0]?.id;
+  $("rList").innerHTML = rounds.length ? rounds.map((r) => `<button data-round="${esc(r.id)}" aria-current="${r.id === id}"><span><b>${esc(thaiDay(r.id))}</b><small>${esc(roundCfg(r).slots.map((x) => `${x.time}·${x.cap}`).join("  "))}</small></span><span class="st ${esc(r.status)}">${esc(STATUS[r.status] || r.status)}</span></button>`).join("") : `<div class="empty">ยังไม่มีรอบ • สร้างรอบแรกทางด้านบน</div>`;
+  if (id) await selectRound(id); else { selRound = null; $("rDetail").innerHTML = `<div class="empty">ยังไม่มีรอบ</div>`; fillForm(null); }
+}
+$("rList").addEventListener("click", (e) => { const b = e.target.closest("[data-round]"); if (b) loadRounds(b.dataset.round).catch((x) => toast(x.message, true)); });
+
+function standingsOf(r, list) {
+  const cfg = roundCfg(r);
+  const by = new Map(cfg.slots.map((x) => [x.time, { ...x, used: 0, waitPeople: 0, list: [] }]));
+  for (const e of [...list].sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))) {
+    const s = by.get(e.slot) || [...by.values()][0];
+    if (!s) continue;
+    const size = 1 + (e.guests?.length || 0);
+    if (s.waitPeople === 0 && s.used + size <= s.cap) { e.state = "ok"; e.no = s.used + 1; s.used += size; }
+    else { e.state = "wait"; e.no = s.waitPeople + 1; s.waitPeople += size; }
+    s.list.push(e);
+  }
+  return [...by.values()];
+}
+async function selectRound(id) {
+  selRound = rounds.find((r) => r.id === id) || null;
+  if (!selRound) return;
+  fillForm(selRound);
+  const [ents, notes] = await Promise.all([listTyped(`rounds/${id}/entries`), listTyped(`rounds/${id}/notes`).catch(() => [])]);
+  selEntries = ents; selNotes = new Map(notes.map((n) => [n.id, n.text]));
+  renderDetail();
+}
+function renderDetail() {
+  const r = selRound;
+  const st = standingsOf(r, selEntries);
+  const total = st.reduce((t, s) => t + s.used, 0), cap = st.reduce((t, s) => t + s.cap, 0);
+  const waitN = st.reduce((t, s) => t + s.waitPeople, 0);
+  const rows = st.flatMap((s) => s.list.map((e) => ({ e, s })));
+  const nk = (x) => String(x || "").toLowerCase().replace(/\s+/g, "");
+  const cnt = new Map(); for (const e of selEntries) { for (const k of new Set([e.memberId ? "m:" + e.memberId : "", "n:" + nk(e.name)].filter(Boolean))) cnt.set(k, (cnt.get(k) || 0) + 1); }
+  const isDup = (e) => (e.memberId && cnt.get("m:" + e.memberId) > 1) || cnt.get("n:" + nk(e.name)) > 1;
+  const dupN = selEntries.filter(isDup).length;
+  const nameOf = (e) => { const m = e.memberId ? rosterPub.get(e.memberId) : null; return m ? `${m.code}${m.level ? " • Lv." + m.level : ""}` : e.memberId ? "สมาชิก" : "คนใหม่"; };
+  $("rDetail").innerHTML = `<div class="rhead"><div><b style="font-size:21px">${esc(thaiDay(r.id))}</b> <span class="st ${esc(r.status)}">${esc(STATUS[r.status] || r.status)}</span><div style="color:var(--muted);font-weight:700;font-size:13px;margin-top:4px">ลงชื่อ ${total}/${cap}${waitN ? ` • สำรอง ${waitN}` : ""} • ${st.map((s) => `${s.time} ${s.used}/${s.cap}`).join(" • ")} • ปิดรับ ${esc(thaiWhen(r.closeAt))}</div>${dupN ? `<div style="color:#c2533a;font-weight:900;font-size:13px;margin-top:4px">พบชื่อซ้ำ ${dupN} รายการ • ตรวจแล้วกด ลบ อันที่เกิน</div>` : ""}</div>
+    <div class="acts">
+      ${r.status !== "open" ? `<button class="btn gold" data-status="open">เปิดรับลงชื่อ</button>` : `<button class="btn danger" data-status="closed">ปิดรับลงชื่อ</button>`}
+      ${r.status === "closed" ? `<button class="btn" data-status="done">จบรอบ</button>` : ""}
+      <button class="btn" id="rCopy">คัดลอกรายชื่อไปโพสต์ LINE</button>
+      <button class="btn" id="rReload">รีเฟรช</button>
+    </div></div>
+    <div class="wrapx"><table class="etable"><thead><tr><th>ลำดับ</th><th>ชื่อเล่น</th><th>สมาชิก</th><th>เพื่อน</th><th>ฝากบอก</th><th>ลงเมื่อ</th><th></th></tr></thead><tbody>
+    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${esc(nameOf(e))}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td><button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
+    </tbody></table></div>
+    <p style="margin:0;padding:10px 18px 14px;color:var(--muted);font-size:12px">หน้าลงชื่อสำหรับผู้เล่น: <a href="../signup/" target="_blank" rel="noopener">/badman/signup/</a> • ลบชื่อ = ที่ว่างในช่วงนั้นจะเลื่อนให้คนแรกในคิวสำรองของช่วงเดียวกัน</p>`;
+}
+$("rDetail").addEventListener("click", async (e) => {
+  const b = e.target.closest("button");
+  if (!b || !selRound) return;
+  try {
+    if (b.dataset.status) {
+      await saveRound(b.dataset.status);
+      await loadRounds(selRound.id);
+      toast(b.dataset.status === "open" ? "เปิดรับลงชื่อแล้ว" : b.dataset.status === "closed" ? "ปิดรับแล้ว" : "จบรอบแล้ว");
+    } else if (b.id === "rReload") { await selectRound(selRound.id); }
+    else if (b.id === "rCopy") {
+      const st = standingsOf(selRound, selEntries);
+      const lines = [`ก๊วนแบด BADMAN • ${thaiDay(selRound.id)}`];
+      for (const s of st) {
+        lines.push("", `มา ${s.time} (${s.used}/${s.cap})`);
+        let n = 0;
+        for (const x of s.list.filter((x) => x.state === "ok")) { lines.push(`${++n}. ${x.name}`); for (const g of x.guests || []) lines.push(`${++n}. ${g} (เพื่อน${x.name})`); }
+        const w = s.list.filter((x) => x.state === "wait");
+        if (w.length) lines.push(`สำรอง: ${w.map((x) => [x.name, ...(x.guests || [])].join(", ")).join(", ")}`);
+      }
+      lines.push("", "ลงชื่อ/ยกเลิกได้ที่ https://badmanbegin.github.io/signup/");
+      await navigator.clipboard.writeText(lines.join("\n"));
+      toast("คัดลอกรายชื่อแล้ว วางในกลุ่ม LINE ได้เลย");
+    } else if (b.dataset.del) {
+      if (delArmed !== b.dataset.del) { delArmed = b.dataset.del; renderDetail(); return; }
+      delArmed = null;
+      await call("DELETE", `rounds/${selRound.id}/entries/${b.dataset.del}`);
+      await call("DELETE", `rounds/${selRound.id}/notes/${b.dataset.del}`).catch(() => {});
+      await selectRound(selRound.id);
+      toast("ลบชื่อแล้ว");
+    }
+  } catch (x) { toast(x.message, true); }
+});
+
+start();
+</script>
+</body>
+</html>

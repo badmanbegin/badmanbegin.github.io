@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BADMAN BEGIN — ก๊วนแบดคืนวันศุกร์ ลาดพร้าว 64</title>
+<meta name="description" content="ก๊วนแบด BADMAN BEGIN ทุกวันศุกร์ 20:00–01:00 สนามแบดวังนาคา ลาดพร้าว 64 รับทุกระดับมือ ระบบจัดคิวอัตโนมัติ ดูคิวสดและ Ranking ได้บนมือถือ">
+<meta property="og:title" content="BADMAN BEGIN — ก๊วนแบดคืนวันศุกร์ ลาดพร้าว 64">
+<meta property="og:description" content="ทุกวันศุกร์ 20:00–01:00 • สนามแบดวังนาคา ลาดพร้าว 64 • มือใหม่มาได้ ระบบจัดคู่ให้สูสี">
+<meta property="og:image" content="https://badmanbegin.github.io/og-badman.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0f0f0e">
+<link rel="icon" href="favicon.svg">
+<script>
+// Staff who installed Court Control on the home screen used to open it from this address: send them straight there.
+(function () {
+  try {
+    var standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
+    if (standalone && localStorage.getItem("badminton-queue-offline-v1")) location.replace("https://thexman49.github.io/badman/court/");
+  } catch (e) {}
+})();
+</script>
+<style>
+/* Same tokens and look as BADMAN Court Control (app/globals.css). */
+:root { --ink:#171611; --muted:#716d61; --line:#ddd6c5; --paper:#f3f0e7; --panel:#fffefa; --gold:#e9b92f; --black:#0f0f0e; --brown:#a47a06; --green:#2b9364; }
+* { box-sizing:border-box; }
+html { background:var(--paper); -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif; }
+a { color:inherit; }
+:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+[hidden] { display:none !important; }
+.wrap { max-width:1180px; margin:0 auto; padding-left:max(20px,env(safe-area-inset-left)); padding-right:max(20px,env(safe-area-inset-right)); }
+.eyebrow { margin:0 0 6px; color:var(--brown); font-weight:900; letter-spacing:.12em; font-size:12px; }
+h2 { margin:0; font-size:clamp(26px,3.4vw,34px); letter-spacing:-.03em; line-height:1.15; }
+.btn { display:inline-flex; align-items:center; gap:10px; text-decoration:none; font-weight:900; border-radius:12px; padding:14px 22px; font-size:16px; }
+.btn.gold { background:var(--gold); color:var(--black); }
+.btn.ghost { color:#fff; border:1px solid rgba(255,255,255,.35); }
+.btn.line { background:#06c755; color:#fff; }
+.btn.dark { background:var(--black); color:var(--gold); padding:12px 18px; font-size:15px; }
+.dot { width:10px; height:10px; border-radius:50%; background:#8a867c; display:inline-block; flex:0 0 auto; }
+.dot.live { background:var(--green); box-shadow:0 0 0 0 rgba(43,147,100,.6); animation:pulse 2s infinite; }
+@keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(43,147,100,0); } 100% { box-shadow:0 0 0 0 rgba(43,147,100,0); } }
+@media (prefers-reduced-motion:reduce) { .dot.live { animation:none; } html { scroll-behavior:auto; } }
+
+/* nav */
+.nav { background:var(--black); color:#fff; border-bottom:1px solid #2b2411; position:sticky; top:0; z-index:5; }
+.nav .wrap { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 12px; padding-top:calc(10px + env(safe-area-inset-top)); padding-bottom:10px; }
+.brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:#fff; }
+.brand img { width:46px; height:46px; object-fit:cover; border-radius:50%; border:2px solid var(--gold); display:block; }
+.brand b { display:block; font-size:20px; letter-spacing:-.02em; line-height:1.1; }
+.brand b span { color:var(--gold); }
+.brand small { display:block; font-size:11px; color:#d8d2c0; font-weight:600; }
+.nav nav { display:flex; flex-wrap:wrap; align-items:center; gap:2px; }
+.nav nav a { color:#fff; text-decoration:none; font-weight:800; font-size:14px; padding:10px 12px; border-radius:10px; display:inline-flex; align-items:center; gap:7px; }
+.nav nav a:hover { background:rgba(255,255,255,.08); }
+.nav nav a.cta { background:var(--gold); color:var(--black); font-weight:900; padding:10px 16px; margin-left:4px; }
+@media (max-width:640px) { .nav nav { width:100%; justify-content:space-between; } .nav nav a { padding:8px 8px; font-size:13px; } .nav nav a.cta { padding:8px 12px; } .nav { position:static; } }
+
+/* hero */
+.hero { background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); color:#fff; overflow:hidden; position:relative; }
+.hero::after { content:""; position:absolute; width:520px; height:520px; right:6%; top:-340px; border:1px solid rgba(242,196,64,.18); border-radius:50%; box-shadow:0 0 0 40px rgba(242,196,64,.03),0 0 0 90px rgba(242,196,64,.02); pointer-events:none; }
+.hero .wrap { display:flex; flex-wrap:wrap; align-items:center; gap:40px; padding-top:60px; padding-bottom:72px; position:relative; z-index:1; }
+.hero-text { flex:999 1 520px; min-width:0; display:flex; flex-direction:column; gap:20px; }
+.hero-text .eyebrow { color:var(--gold); letter-spacing:.14em; font-size:13px; margin:0; }
+.hero h1 { margin:0; font-size:clamp(38px,6vw,72px); line-height:1.04; letter-spacing:-.04em; font-weight:900; }
+.hero h1 span { color:var(--gold); }
+.hero p.lead { margin:0; font-size:18px; line-height:1.6; color:#d8d2c0; max-width:560px; }
+.chips { display:flex; flex-wrap:wrap; gap:10px; }
+.chip { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); border-radius:12px; padding:10px 14px; font-weight:800; font-size:15px; }
+.chip svg { flex:0 0 auto; }
+.hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:6px; }
+.hero-logo { flex:1 1 380px; display:flex; justify-content:center; }
+.hero-logo img { width:100%; height:auto; max-width:380px; aspect-ratio:1/1; object-fit:cover; border-radius:50%; border:4px solid var(--gold); box-shadow:0 0 0 14px rgba(233,185,47,.07),0 0 0 30px rgba(233,185,47,.04),0 24px 60px rgba(0,0,0,.45); display:block; }
+
+/* live box */
+.livebox { margin-top:-30px; position:relative; z-index:2; }
+.livebox .card { background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:0 12px 34px rgba(45,35,8,.10); padding:18px 20px; display:flex; flex-wrap:wrap; align-items:center; gap:16px 28px; }
+.livebox .head { display:flex; align-items:center; gap:10px; }
+.livebox .head b { font-size:18px; }
+.livebox .head small { font-size:12px; color:var(--muted); font-weight:700; }
+.livebox .nums { display:flex; flex-wrap:wrap; gap:10px 28px; flex:999 1 380px; align-items:baseline; }
+.livebox .nums div { display:flex; align-items:baseline; gap:6px; }
+.livebox .nums strong { font-size:30px; font-variant-numeric:tabular-nums; }
+.livebox .nums span { color:var(--muted); font-weight:700; }
+.livebox .closed { color:#4c4a42; font-weight:700; font-size:15px; }
+
+section.block { padding-top:64px; }
+
+/* who's coming this round: player cards on a conveyor */
+.coming { padding-top:56px; }
+.coming .head { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px 20px; margin-bottom:16px; }
+.coming h2 span { color:var(--brown); }
+.coming .head small { display:block; color:var(--muted); font-weight:700; margin-top:6px; }
+.belt { background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); padding:26px 0; overflow:hidden; position:relative; }
+.belt::before, .belt::after { content:""; position:absolute; top:0; bottom:0; width:60px; z-index:2; pointer-events:none; }
+.belt::before { left:0; background:linear-gradient(90deg,#080808,rgba(8,8,8,0)); }
+.belt::after { right:0; background:linear-gradient(270deg,#251f10,rgba(37,31,16,0)); }
+.track { display:flex; gap:16px; width:max-content; padding:0 16px; }
+.track.run { animation:belt var(--dur,40s) linear infinite; }
+.belt:hover .track.run, .track.run:focus-within { animation-play-state:paused; }
+.track.still { width:auto; flex-wrap:wrap; justify-content:center; }
+@keyframes belt { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+@media (prefers-reduced-motion:reduce) { .track.run { animation:none; } .belt { overflow-x:auto; } }
+.pcard { width:196px; flex:0 0 auto; border-radius:18px; overflow:hidden; background:linear-gradient(170deg,#1d211d,#0f0f0e 72%); border:1px solid rgba(255,255,255,.14); text-decoration:none; color:#fff; display:block; transition:transform .2s; }
+.pcard:hover { transform:translateY(-4px); }
+.pcard.mid { background:linear-gradient(170deg,#2a2a24,#0f0f0e 72%); }
+.pcard.top { background:linear-gradient(170deg,#3a2e10,#0f0f0e 72%); border-color:var(--gold); }
+.pcard .pic { height:196px; position:relative; background:#fff; overflow:hidden; display:grid; place-items:center; }
+.pcard .pic img { width:100%; height:100%; object-fit:cover; display:block; }
+.pcard .pic .ini { font-size:72px; font-weight:900; color:var(--gold); background:var(--black); width:100%; height:100%; display:grid; place-items:center; }
+.pcard .rk { position:absolute; top:10px; left:10px; background:var(--black); color:var(--gold); border-radius:10px; padding:4px 9px; font-weight:900; font-size:13px; }
+.pcard .tm { position:absolute; top:10px; right:10px; background:rgba(15,15,14,.82); color:#fff; border-radius:10px; padding:4px 9px; font-weight:800; font-size:12px; }
+.pcard .gst { position:absolute; bottom:10px; right:10px; background:var(--gold); color:var(--black); border-radius:99px; padding:3px 9px; font-weight:900; font-size:11px; }
+.pcard .bd { padding:12px 14px 14px; display:flex; flex-direction:column; gap:6px; }
+.pcard .bd b { font-size:19px; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pcard .lvl { display:flex; align-items:center; gap:7px; min-height:24px; }
+.pcard .lvl img { width:24px; height:24px; border-radius:50%; background:#fff; border:1.5px solid var(--gold); }
+.pcard .lvl small { color:var(--gold); font-weight:900; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pcard .nums { display:flex; gap:14px; font-variant-numeric:tabular-nums; }
+.pcard .nums span { display:flex; flex-direction:column; }
+.pcard .nums strong { font-size:18px; }
+.pcard .nums small { color:#b9b29f; font-size:10px; }
+@media (max-width:540px) { .pcard { width:160px; } .pcard .pic { height:160px; } .pcard .bd b { font-size:16px; } }
+.section-head { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:8px 24px; margin-bottom:22px; }
+.section-head > span { color:var(--muted); font-weight:700; }
+.section-head a.more { font-weight:900; text-decoration:none; border-bottom:2px solid var(--gold); padding-bottom:2px; }
+
+/* steps */
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+.step { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px; display:flex; flex-direction:column; gap:10px; }
+.step .no { width:40px; height:40px; border-radius:50%; background:var(--black); color:var(--gold); display:grid; place-items:center; font-weight:900; font-size:18px; }
+.step b { font-size:19px; }
+.step span { color:#4c4a42; line-height:1.6; font-size:15px; }
+
+/* fees */
+.fees { margin-top:24px; border-radius:18px; overflow:hidden; background:linear-gradient(110deg,#0d0d0c,#28210f); color:#fff; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+.fees > div { padding:24px; border-right:1px solid rgba(255,255,255,.12); }
+.fees > div:last-child { border-right:0; }
+.fees small { color:var(--gold); font-weight:900; letter-spacing:.1em; font-size:12px; }
+.fees .big { display:flex; align-items:baseline; gap:8px; margin-top:6px; }
+.fees .big strong { font-size:44px; }
+.fees .big span { color:#d8d2c0; font-weight:700; }
+.fees .note { color:#b9b29f; font-size:14px; }
+.fees .text { font-size:19px; font-weight:800; margin-top:10px; line-height:1.45; }
+.fees .text a { color:var(--gold); }
+@media (max-width:540px) { .fees > div { border-right:0; border-bottom:1px solid rgba(255,255,255,.12); } .fees > div:last-child { border-bottom:0; } }
+
+/* levels */
+.levels { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; }
+.lv { background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; }
+.lv .pic { background:#fff; display:flex; justify-content:center; padding:10px 0 0; border-bottom:1px solid #eeeadf; }
+.lv .pic img { width:150px; height:150px; object-fit:cover; display:block; }
+.lv .body { padding:14px 16px 16px; display:flex; flex-direction:column; gap:4px; }
+.lv .tag { align-self:flex-start; background:var(--black); color:var(--gold); border-radius:99px; padding:3px 10px; font-size:12px; font-weight:900; }
+.lv b { font-size:18px; margin-top:4px; }
+.lv .th { color:var(--brown); font-weight:800; font-size:14px; }
+.lv .desc { color:#4c4a42; font-size:13px; line-height:1.55; }
+@media (max-width:540px) { .levels { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .lv .pic img { width:120px; height:120px; } .lv .desc { display:none; } .lv b { font-size:15px; } }
+
+/* podium */
+.podium { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; align-items:end; }
+.pod { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:28px 12px 20px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; position:relative; text-decoration:none; color:var(--ink); min-width:0; }
+.pod.r1 { background:linear-gradient(170deg,#1a1812,#3a2e10); color:#fff; border-color:#3a2e10; padding-top:36px; }
+.pod .medal { position:absolute; top:0; left:50%; transform:translateX(-50%); background:var(--black); color:var(--gold); font-weight:900; font-size:13px; padding:4px 14px; border-radius:0 0 10px 10px; }
+.pod.r1 .medal { background:var(--gold); color:var(--black); }
+.pav { position:relative; display:inline-grid; place-items:center; border-radius:50%; border:3px solid var(--gold); background:var(--black); color:var(--gold); font-weight:900; flex:0 0 auto; }
+.pav > img.ph { width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; }
+.pav > img.lvb { position:absolute; right:-6px; bottom:-6px; width:42%; height:42%; border-radius:50%; background:#fff; border:2px solid var(--gold); object-fit:cover; }
+.pod .pav { width:92px; height:92px; font-size:32px; margin-top:6px; }
+.pod.r1 .pav { width:120px; height:120px; font-size:40px; }
+.pod b { font-size:19px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pod .lvname { font-size:13px; color:var(--muted); font-weight:700; }
+.pod.r1 .lvname { color:#d8d2c0; }
+.pod .stat { display:flex; gap:18px; margin-top:4px; }
+.pod .stat span { display:flex; flex-direction:column; }
+.pod .stat strong { font-size:24px; font-variant-numeric:tabular-nums; }
+.pod.r1 .stat strong:first-child { color:var(--gold); }
+.pod .stat small { color:var(--muted); font-size:11px; }
+.pod.r1 .stat small { color:#d8d2c0; }
+@media (max-width:540px) { .podium { gap:7px; } .pod { padding:24px 6px 14px; } .pod .pav { width:58px; height:58px; font-size:22px; } .pod.r1 .pav { width:78px; height:78px; } .pod b { font-size:14px; } .pod .lvname { font-size:10px; } .pod .stat { gap:8px; } .pod .stat strong { font-size:17px; } }
+.empty-note { background:var(--panel); border:1px dashed var(--line); border-radius:16px; padding:26px; text-align:center; color:var(--muted); font-weight:700; }
+
+/* stats */
+.club { margin-top:24px; border:1px solid #29271f; border-radius:18px; overflow:hidden; background:linear-gradient(110deg,#0d0d0c,#28210f); color:#fff; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
+@media (max-width:640px) { .club { grid-template-columns:repeat(2,minmax(0,1fr)); } .club > div:nth-child(2) { border-right:0; } .club > div:nth-child(n+3) { border-top:1px solid rgba(255,255,255,.12); } .club strong { font-size:26px; } }
+.club > div { padding:20px 22px; border-right:1px solid rgba(255,255,255,.12); }
+.club > div:last-child { border-right:0; }
+.club small { display:block; color:#b9c9c1; font-weight:700; font-size:12px; }
+.club strong { font-size:34px; font-variant-numeric:tabular-nums; }
+.club strong.gold { color:#ffd97a; }
+
+/* rules + map */
+.duo { display:flex; flex-wrap:wrap; gap:20px; }
+.duo > div { flex:1 1 420px; min-width:0; background:var(--panel); border:1px solid var(--line); border-radius:18px; overflow:hidden; }
+.rules { padding:26px; display:flex; flex-direction:column; gap:14px; }
+.rules ul { margin:0; padding-left:20px; display:flex; flex-direction:column; gap:10px; font-size:16px; line-height:1.55; color:#2b2a24; }
+.map iframe { width:100%; height:240px; border:0; display:block; background:#e7e2d4; }
+.map .info { padding:20px 26px 24px; display:flex; flex-direction:column; gap:8px; }
+.map .info b { font-size:20px; }
+.map .info span { color:#4c4a42; }
+.map .info .btn { align-self:flex-start; margin-top:6px; }
+
+/* contact */
+.contact { padding:56px 0 64px; }
+.contact .card { background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); color:#fff; border-radius:22px; padding:36px 28px; display:flex; flex-wrap:wrap; align-items:center; gap:24px; }
+.contact .card > div:first-child { flex:999 1 440px; min-width:0; }
+.contact .eyebrow { color:var(--gold); }
+.contact p { margin:10px 0 0; color:#d8d2c0; line-height:1.6; }
+.contact .actions { flex:1 1 260px; display:flex; flex-direction:column; gap:10px; }
+.contact .actions .btn { justify-content:center; }
+
+.staff { background:#fff3e8; border-bottom:1px solid #f0ad78; color:#98450c; font-weight:800; font-size:14px; }
+.staff .wrap { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding-top:10px; padding-bottom:10px; }
+.staff a { background:var(--black); color:var(--gold); text-decoration:none; border-radius:9px; padding:8px 14px; font-weight:900; }
+
+footer { border-top:1px solid var(--line); }
+footer .wrap { padding-top:18px; padding-bottom:calc(28px + env(safe-area-inset-bottom)); display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; color:var(--muted); font-size:13px; }
+footer nav { display:flex; gap:14px; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+<div class="staff" id="staff" hidden><div class="wrap"><span>เครื่องนี้มีข้อมูลระบบจัดก๊วน • ระบบจัดก๊วน (Court Control) อยู่ที่ thexman49.github.io/badman/court/</span><a href="https://thexman49.github.io/badman/court/">เปิด Court Control</a></div></div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="badman-begin-logo.webp" alt="โลโก้ BADMAN BEGIN" width="46" height="46">
+      <span><b>BADMAN <span>BEGIN</span></b><small>ก๊วนแบดวันศุกร์ ลาดพร้าว 64</small></span>
+    </a>
+    <nav aria-label="เมนูหลัก">
+      <a href="live/"><span class="dot" id="navDot"></span>คิวสด</a>
+      <a href="ranking/">Ranking</a>
+      <a href="#levels">ระดับฝีมือ</a>
+      <a href="#join">วิธีมาเล่น</a>
+      <a class="cta" href="signup/">ลงชื่อรอบนี้</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="eyebrow">BADMAN • BADMINTON CLUB</p>
+      <h1>ก๊วนแบดคืนวันศุกร์<br><span>ทุกมือ ทุกคู่ ทุกเกม</span><br>จัดให้ลงตัว</h1>
+      <p class="lead">มือใหม่มาได้ ระบบจัดคิวให้อัตโนมัติ คู่สูสี ไม่ต้องรอนาน ดูคิวสดได้จากมือถือ และจ่ายตามที่เล่นจริง</p>
+      <div class="chips">
+        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>ทุกวันศุกร์ 20:00–01:00</span>
+        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>สนามแบดวังนาคา ลาดพร้าว 64</span>
+        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="7" rx="7" ry="3"/><path d="M5 7v5c0 1.7 3.1 3 7 3s7-1.3 7-3V7"/><path d="M5 12v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg><span id="feeChip">100 บาท/คน + ลูกละ 28 บาท</span></span>
+      </div>
+      <div class="hero-actions">
+        <a class="btn gold" href="signup/">ลงชื่อรอบนี้</a>
+        <a class="btn ghost" href="live/"><span class="dot live"></span>ดูคิวสด</a>
+        <a class="btn ghost" href="ranking/">Ranking</a>
+      </div>
+    </div>
+    <div class="hero-logo"><img src="badman-begin-logo.webp" alt="โลโก้ก๊วน BADMAN BEGIN" width="380" height="380"></div>
+  </div>
+</section>
+
+<section class="livebox" aria-label="สถานะก๊วนคืนนี้">
+  <div class="wrap">
+    <div class="card">
+      <div class="head"><span class="dot" id="liveDot"></span><b id="liveTitle">LIVE คืนนี้</b><small id="liveAt"></small></div>
+      <div class="nums" id="liveNums"><span class="closed">กำลังโหลด…</span></div>
+      <a class="btn dark" href="live/">เปิดหน้าคิวสด →</a>
+    </div>
+  </div>
+</section>
+
+<section class="coming" id="coming" hidden aria-label="คนที่ลงชื่อรอบนี้">
+  <div class="wrap head">
+    <div><p class="eyebrow" id="comingDay">รอบนี้</p><h2 id="comingTitle">ใครมาบ้าง</h2><small id="comingSub"></small></div>
+    <a class="btn gold" href="signup/" id="comingCta">ลงชื่อเข้าร่วม</a>
+  </div>
+  <div class="belt"><div class="track" id="track"></div></div>
+</section>
+
+<section class="block" id="join">
+  <div class="wrap">
+    <p class="eyebrow">วิธีมาเล่น</p>
+    <h2 style="margin-bottom:24px">มาคนเดียวก็ได้ ระบบจัดคู่ให้</h2>
+    <p style="margin:-14px 0 22px"><a class="btn dark" href="signup/">ลงชื่อรอบนี้ →</a></p>
+    <div class="steps">
+      <div class="step"><span class="no">1</span><b>ลงชื่อบนเว็บ</b><span>เลือกช่วงเวลาที่จะมา 20:00 / 21:00 / 22:00 พาเพื่อนมาได้ ถึงสนามแล้วแจ้งชื่อกับทีมงาน</span></div>
+      <div class="step"><span class="no">2</span><b>ระบบจัดคิวให้</b><span>จัดคู่ 4 คนตามลำดับคิว รอไม่นาน คู่สูสี ได้เล่นกับคนใหม่ๆ ทุกเกม</span></div>
+      <div class="step"><span class="no">3</span><b>ดูคิวบนมือถือ</b><span>เปิดหน้าคิวสดดูว่าเกมถัดไปเป็นของใคร ค่าตีของตัวเองเท่าไร แล้วจ่ายตามจริงตอนกลับ</span></div>
+    </div>
+    <div class="fees">
+      <div><small>ค่าสนาม</small><div class="big"><strong id="feeCourt">100</strong><span>บาท / คน</span></div><span class="note">เก็บเมื่อลงเล่นอย่างน้อย 1 เกม</span></div>
+      <div><small>ค่าลูกแบด</small><div class="big"><strong id="feeShuttle">28</strong><span>บาท / ลูก</span></div><span class="note">นับตามลูกที่ใช้ในเกมที่คุณเล่น</span></div>
+      <div><small>ดูยอดตัวเองได้</small><div class="text">เช็กค่าตีของคุณได้สดๆ<br>ใน<a href="live/">หน้าคิวสด</a> แท็บ "ค่าตีแบด"</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="levels">
+  <div class="wrap">
+    <div class="section-head">
+      <div><p class="eyebrow">BADMAN BEGIN</p><h2>8 ระดับค้างคาวน้อย</h2></div>
+      <span>เน้นสนุก ไม่กดดัน • ทีมงานช่วยประเมินระดับให้ในคืนแรก</span>
+    </div>
+    <div class="levels" id="levelGrid"></div>
+  </div>
+</section>
+
+<section class="block" id="ranking">
+  <div class="wrap">
+    <div class="section-head">
+      <div><p class="eyebrow">RANKING</p><h2>ท็อป 3 ของก๊วน</h2></div>
+      <a class="more" href="ranking/">ดูอันดับทั้งหมด →</a> <a class="more" href="night/">สรุปคืนล่าสุด →</a>
+    </div>
+    <div id="podium"><div class="empty-note">กำลังโหลดอันดับ…</div></div>
+    <div class="club" id="club" hidden></div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap duo">
+    <div class="rules">
+      <p class="eyebrow" style="margin:0">กติกาก๊วน</p>
+      <h2>เล่นสนุก ดูแลกันและกัน</h2>
+      <ul>
+        <li>รู้กติกาและมารยาทในสนาม</li>
+        <li>ดูแลตัวเองได้ วอร์มก่อนลงเล่น</li>
+        <li>เล่นเพื่อสนุก มือใหม่ช่วยกันประคอง</li>
+        <li>แจ้งชื่อกับทีมงานเมื่อมาถึง ระบบจะต่อคิวให้</li>
+      </ul>
+    </div>
+    <div class="map">
+      <iframe title="แผนที่สนามแบดวังนาคา ลาดพร้าว 64" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64&amp;output=embed"></iframe>
+      <div class="info">
+        <b>สนามแบดวังนาคา</b>
+        <span>ซอยลาดพร้าว 64 กรุงเทพฯ</span>
+        <a class="btn dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64">เปิดใน Google Maps</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="card">
+      <div>
+        <p class="eyebrow">มาตีด้วยกัน</p>
+        <h2>ศุกร์นี้ 20:00 น. เจอกันที่สนาม</h2>
+        <p>ลงชื่อล่วงหน้าบนเว็บ เลือกช่วงเวลาที่จะมา ไม่ต้องสมัครสมาชิก มาคนเดียวก็มีคู่ให้ตี มีคำถามทักมาได้ทางเพจหรือโอเพนแชทของก๊วน</p>
+      </div>
+      <div class="actions" id="contactLinks">
+        <a class="btn gold" href="signup/">ลงชื่อรอบนี้</a>
+        <a class="btn line" target="_blank" rel="noopener" href="https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5c0 4.1-4 7.5-9 7.5-1 0-2-.1-2.9-.4L5 20l1-3.3C4.2 15.3 3 13.5 3 11.5 3 7.4 7 4 12 4s9 3.4 9 7.5z"/></svg>เข้าโอเพนแชท LINE</a>
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.facebook.com/BadmintonBadman"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5H14l.6-3.5h-3.1V7.8c0-.7.5-1.3 1.3-1.3H15z"/></svg>เพจ Facebook BADMAN</a>
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64">นำทางไปสนาม</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>©2026 BADMAN Badminton • ก๊วนแบดวันศุกร์ ลาดพร้าว 64</span>
+    <nav aria-label="ลิงก์ท้ายหน้า"><a href="signup/">ลงชื่อ</a><a href="https://www.facebook.com/BadmintonBadman" target="_blank" rel="noopener">Facebook</a><a href="https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA" target="_blank" rel="noopener">LINE โอเพนแชท</a><a href="live/">คิวสด</a><a href="ranking/">Ranking</a><a href="night/">สรุปคืนก๊วน</a><a href="https://thexman49.github.io/badman/court/">สำหรับทีมงาน</a></nav>
+  </div>
+</footer>
+
+<script>
+// Public data only: live/current, public/roster, public/stats, photos/{id} (consented members).
+const FIREBASE = { apiKey: "AIzaSyAI1EaI2OSmwXkbZs5GsO6Ze7jPUk8iumQ", projectId: "badman-live" };
+const DOC = (path) => `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/${path}?key=${FIREBASE.apiKey}`;
+const LEVELS = [ // keep in sync with app/members.ts
+  { value: 1, name: "Baby Bat", th: "ลูกค้างคาวฝึกบิน", desc: "เพิ่งเริ่มจับไม้-หัดตี เสิร์ฟข้ามบ้าง ติดเน็ตบ้าง เน้นออกกำลังกาย เอาเหงื่อ เอาฮาเป็นหลัก" },
+  { value: 2, name: "Tiny Wing", th: "ค้างคาวปีกนุ่ม", desc: "เริ่มตีโดนลูก วิ่งรับลูกที่มาตรงตัวได้ ตีโต้สั้นๆ ได้ 2-3 ไม้" },
+  { value: 3, name: "Little Bat", th: "ค้างคาวน้อยหัดร่อน", desc: "เริ่มตีโต้กลับได้บ้าง ทิศทางยังไม่แม่นยำมากนัก เริ่มสนุกกับการเล่นกับเพื่อนๆ" },
+  { value: 4, name: "Bouncing Bat", th: "ค้างคาวดุ๊กดิ๊ก", desc: "วิ่งรับลูกทั่วคอร์ท ขยันวิ่ง มีแรงเยอะ ตีเคลียร์หลังได้บ้าง สายพลัง สายวิ่งสู้ฟัด" },
+  { value: 5, name: "Junior Badman", th: "แบดแมนฝึกหัด", desc: "ตีโต้แรลลี่ได้ต่อเนื่อง เริ่มวางลูกหยอดหน้าเน็ต มือเบาที่เริ่มเล่นเกมเต็มสนุก" },
+  { value: 6, name: "Hero in Training", th: "ฮีโร่พร้อมลุย", desc: "เริ่มมีลูกตัด ลูกเซฟ วางทางลูกได้ดีขึ้น เล่นคู่เข้าใจตำแหน่ง ทักษะรอบด้านขึ้น" },
+  { value: 7, name: "Shadow Striker", th: "ค้างคาวเงา", desc: "ทักษะดี ตีสนุก เล่นทางได้หลากหลาย มีความฟิต คล่องตัว ช่วยแนะนำประคองเพื่อนในทีมได้" },
+  { value: 8, name: "Dark Knight Master", th: "พี่เลี้ยงก็อตแธม", desc: "ประสบการณ์สูง เล่นได้ทุกรูปแบบ คุมเกมได้ดีเยี่ยม เน้นแจกจ่ายลูก ใจดีกับมือใหม่เป็นพิเศษ" },
+];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const clubDay = (d = new Date()) => new Date(d.getTime() - 6 * 3600e3).toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
+const clock = (iso) => new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const levelOf = (v) => LEVELS.find((l) => l.value === v);
+const initial = (s) => String(s || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
+async function getJson(path) {
+  const r = await fetch(DOC(path), { cache: "no-store" });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(String(r.status));
+  const d = await r.json();
+  return JSON.parse(d.fields.json.stringValue);
+}
+
+$("levelGrid").innerHTML = LEVELS.map((l) => `<div class="lv"><div class="pic"><img src="levels/full${l.value}.webp" alt="ตัวละครระดับ ${l.value} ${esc(l.name)}" width="150" height="150" loading="lazy"></div><div class="body"><span class="tag">LEVEL ${l.value}</span><b>${esc(l.name)}</b><span class="th">${esc(l.th)}</span><span class="desc">${esc(l.desc)}</span></div></div>`).join("");
+
+try { if (localStorage.getItem("badminton-queue-offline-v1")) $("staff").hidden = false; } catch (e) {}
+// The old app's service worker lived at this address; the court app now has its own under court/.
+if ("serviceWorker" in navigator) navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => { if (new URL(r.scope).pathname === location.pathname.replace(/index\.html$/, "")) r.unregister(); })).catch(() => {});
+
+async function loadLive() {
+  try {
+    const snap = await getJson("live/current");
+    const live = snap && snap.day === clubDay() && Date.now() - new Date(snap.updatedAt).getTime() < 30 * 60000;
+    if (snap) {
+      $("feeCourt").textContent = snap.courtFee; $("feeShuttle").textContent = snap.shuttleFee;
+      $("feeChip").textContent = `${snap.courtFee} บาท/คน + ลูกละ ${snap.shuttleFee} บาท`;
+    }
+    $("liveDot").className = live ? "dot live" : "dot"; $("navDot").className = live ? "dot live" : "dot";
+    if (live) {
+      const playing = snap.games.filter((g) => g.status === "playing").length;
+      $("liveTitle").textContent = "LIVE คืนนี้";
+      $("liveAt").textContent = `อัปเดต ${clock(snap.updatedAt)} น.`;
+      $("liveNums").innerHTML = `<div><strong>${snap.totals.present}</strong><span>ผู้เล่น</span></div><div><strong>${playing}</strong><span>เกมกำลังเล่น</span></div><div><strong>${snap.queue.length}</strong><span>คนรอคิว</span></div><div><strong>${snap.totals.gamesEnded}</strong><span>เกมจบแล้ว</span></div>`;
+    } else {
+      $("liveTitle").textContent = "ยังไม่เปิดก๊วน";
+      $("liveAt").textContent = "";
+      $("liveNums").innerHTML = `<span class="closed">เจอกันวันศุกร์ 20:00 น. • ช่วงเปิดก๊วน กล่องนี้จะแสดงจำนวนผู้เล่นและคิวแบบสด</span>`;
+    }
+  } catch {
+    $("liveNums").innerHTML = `<span class="closed">โหลดสถานะคืนนี้ไม่สำเร็จ ลองเปิดหน้าคิวสด</span>`;
+  }
+}
+
+async function loadRanking() {
+  try {
+    const [roster, stats] = await Promise.all([getJson("public/roster"), getJson("public/stats")]);
+    const byId = new Map((roster?.members ?? []).map((m) => [m.id, m]));
+    const ranked = Object.entries(stats?.members ?? {}).map(([id, s]) => ({ m: byId.get(id), s })).filter((x) => x.m && x.m.active !== false && x.s.games > 0).sort((a, b) => a.s.rank - b.s.rank).slice(0, 3);
+    if (!ranked.length) {
+      $("podium").innerHTML = `<div class="empty-note">อันดับจะขึ้นหลังจบเกมแรกที่บันทึกผล • <a href="ranking/">ดูหน้า Ranking</a></div>`;
+    } else {
+      const pod = (x, i) => {
+        if (!x) return "<div></div>";
+        const lv = levelOf(x.m.level);
+        const name = x.m.name || x.m.code;
+        return `<a class="pod r${i + 1}" href="ranking/#${encodeURIComponent(x.m.code)}"><span class="medal">#${i + 1}</span><span class="pav"${x.m.photo ? ` data-photo="${esc(x.m.id)}"` : ""}><span class="ini">${esc(initial(name))}</span>${lv ? `<img class="lvb" src="levels/lv${lv.value}.webp" alt="">` : ""}</span><b>${esc(name)}</b><span class="lvname">${lv ? `Lv.${lv.value} ${esc(lv.name)}` : "&nbsp;"}</span><div class="stat"><span><strong>${x.s.points}</strong><small>แต้ม</small></span><span><strong>${x.s.winPct}%</strong><small>ชนะ</small></span></div></a>`;
+      };
+      $("podium").innerHTML = `<div class="podium">${pod(ranked[1], 1)}${pod(ranked[0], 0)}${pod(ranked[2], 2)}</div>`;
+      document.querySelectorAll("[data-photo]").forEach(async (el) => {
+        try {
+          const r = await fetch(DOC("photos/" + encodeURIComponent(el.dataset.photo)), { cache: "no-store" });
+          if (!r.ok) return;
+          const src = (await r.json())?.fields?.data?.stringValue;
+          if (src && src.startsWith("data:image/")) { el.querySelector(".ini")?.remove(); el.insertAdjacentHTML("afterbegin", `<img class="ph" src="${src}" alt="">`); }
+        } catch {}
+      });
+    }
+    const cs = stats?.club;
+    if (cs && cs.games) {
+      $("club").hidden = false;
+      $("club").innerHTML = `<div><small>สมาชิก</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>เกมทั้งหมด</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>คืนที่เปิดก๊วน</small><strong>${cs.nights.toLocaleString()}</strong></div><div><small>ลูกแบดที่ใช้</small><strong class="gold">${cs.shuttles.toLocaleString()}</strong></div>`;
+    }
+  } catch {
+    $("podium").innerHTML = `<div class="empty-note">โหลดอันดับไม่สำเร็จ • <a href="ranking/">เปิดหน้า Ranking</a></div>`;
+  }
+}
+
+/* ---------- who's coming this round ---------- */
+function fvx(v) {
+  if (!v) return null;
+  if ("stringValue" in v) return v.stringValue; if ("integerValue" in v) return Number(v.integerValue);
+  if ("timestampValue" in v) return v.timestampValue; if ("nullValue" in v) return null;
+  if ("arrayValue" in v) return (v.arrayValue.values || []).map(fvx);
+  return null;
+}
+async function listCol(path) {
+  const r = await fetch(`https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/${path}?pageSize=300&key=${FIREBASE.apiKey}`, { cache: "no-store" });
+  if (!r.ok) return [];
+  const b = await r.json();
+  return (b.documents || []).map((d) => ({ id: d.name.split("/").pop(), ...Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, fvx(v)])) }));
+}
+const comingPhotos = new Map();
+async function loadComing() {
+  try {
+    const today = clubDay();
+    const rounds = (await listCol("rounds")).filter((r) => r.status === "open" && r.id >= today).sort((a, b) => a.id.localeCompare(b.id));
+    const round = rounds[0];
+    if (!round) { $("coming").hidden = true; return; }
+    let cfg = {}; try { cfg = JSON.parse(round.json || "{}"); } catch {}
+    const cap = (cfg.slots || []).reduce((t, s) => t + (s.cap || 0), 0);
+    const [entries, roster, stats] = await Promise.all([listCol(`rounds/${round.id}/entries`), getJson("public/roster").catch(() => null), getJson("public/stats").catch(() => null)]);
+    if (!entries.length) {
+      $("coming").hidden = false;
+      $("comingDay").textContent = new Date(round.id + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short" });
+      $("comingTitle").innerHTML = `ยังไม่มีใครลงชื่อ <span>มาเป็นคนแรก</span>`;
+      $("comingSub").textContent = cap ? `รับ ${cap} คน • เลือกช่วงเวลาที่จะมาได้เอง` : "";
+      $("track").className = "track still"; $("track").innerHTML = "";
+      return;
+    }
+    const byId = new Map((roster?.members || []).map((m) => [m.id, m]));
+    // Rank among active ranked members, the same as the Ranking page.
+    const ranked = Object.entries(stats?.members || {}).map(([id, st]) => ({ id, st, m: byId.get(id) })).filter((x) => x.m && x.m.active !== false).sort((a, b) => a.st.rank - b.st.rank);
+    const rankOf = new Map(ranked.map((x, i) => [x.id, { ...x.st, rank: i + 1 }]));
+    // Same member signed up twice: show once (earliest), keep any guests the later entry brought.
+    const seenM = new Set();
+    for (const e of entries.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)))) { e.dupOf = e.memberId && seenM.has(e.memberId); if (e.memberId) seenM.add(e.memberId); }
+    const people = entries.filter((e) => !e.dupOf).map((e, i) => {
+      const m = e.memberId ? byId.get(e.memberId) : null;
+      return { e, m, st: m ? rankOf.get(m.id) : null, order: i };
+    });
+    people.sort((a, b) => (a.st ? a.st.rank : 9999) - (b.st ? b.st.rank : 9999) || a.order - b.order);
+    const headcount = entries.reduce((t, e) => t + (e.dupOf ? 0 : 1) + (e.guests?.length || 0), 0);
+    $("coming").hidden = false;
+    $("comingDay").textContent = "ใครมาบ้าง • " + new Date(round.id + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short" });
+    $("comingTitle").innerHTML = `ลงชื่อแล้ว <span>${headcount} คน</span>`;
+    $("comingSub").textContent = cap ? (headcount < cap ? `เหลือ ${cap - headcount} ที่ • เรียงตามอันดับ Ranking` : "เต็มแล้ว ลงชื่อต่อคิวสำรองได้") : "";
+    $("comingCta").textContent = cap && headcount >= cap ? "ลงชื่อต่อคิวสำรอง" : `ลงชื่อเข้าร่วม${cap ? ` • เหลือ ${Math.max(0, cap - headcount)} ที่` : ""}`;
+    const card = ({ e, m, st }) => {
+      const lv = m && levelOf(m.level);
+      const cls = lv && lv.value >= 7 ? "top" : lv && lv.value >= 5 ? "mid" : "";
+      const name = m?.name || e.name;
+      const pic = m?.photo ? `<span class="ini" data-cphoto="${esc(m.id)}">${esc(initial(name))}</span>` : lv ? `<img src="levels/full${lv.value}.webp" alt="" loading="lazy">` : `<span class="ini">${esc(initial(name))}</span>`;
+      const href = m?.code && st ? `ranking/#${encodeURIComponent(m.code)}` : "signup/";
+      return `<a class="pcard ${cls}" href="${href}"><div class="pic">${pic}${st ? `<span class="rk">#${st.rank}</span>` : `<span class="rk">${m ? "สมาชิก" : "ใหม่"}</span>`}<span class="tm">${esc(e.slot || "")}</span>${e.guests?.length ? `<span class="gst">+${e.guests.length} เพื่อน</span>` : ""}</div><div class="bd"><b>${esc(name)}</b><span class="lvl">${lv ? `<img src="levels/lv${lv.value}.webp" alt=""><small>Lv.${lv.value} ${esc(lv.name)}</small>` : `<small style="color:#b9b29f">ยังไม่ระบุระดับ</small>`}</span><div class="nums"><span><strong>${st ? st.points : "–"}</strong><small>แต้ม</small></span><span><strong>${st ? st.winPct + "%" : "–"}</strong><small>ชนะ</small></span><span><strong>${st ? st.games : "–"}</strong><small>เกม</small></span></div></div></a>`;
+    };
+    const cards = people.map(card).join("");
+    const run = people.length >= 5;
+    const t = $("track");
+    t.className = run ? "track run" : "track still";
+    t.style.setProperty("--dur", `${Math.max(24, people.length * 3.4)}s`);
+    // The belt shows the list twice so the loop is seamless; the copy is hidden from screen readers.
+    t.innerHTML = run ? cards + `<div style="display:contents" aria-hidden="true">${cards.replace(/<a /g, '<a tabindex="-1" ')}</div>` : cards;
+    t.querySelectorAll("[data-cphoto]").forEach(async (el) => {
+      const id = el.dataset.cphoto;
+      if (!comingPhotos.has(id)) comingPhotos.set(id, fetch(DOC("photos/" + encodeURIComponent(id)), { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((d) => d?.fields?.data?.stringValue || null).catch(() => null));
+      const src = await comingPhotos.get(id);
+      if (src && src.startsWith("data:image/") && el.isConnected) el.outerHTML = `<img src="${src}" alt="">`;
+    });
+  } catch { $("coming").hidden = true; }
+}
+
+loadLive(); loadRanking(); loadComing();
+setInterval(loadComing, 120000);
+setInterval(loadLive, 60000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) loadLive(); });
+</script>
+</body>
+</html>

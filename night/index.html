@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>สรุปคืนก๊วน — BADMAN BEGIN</title>
+<meta name="description" content="สรุปผลก๊วนแบด BADMAN BEGIN แต่ละคืน: MVP คู่หูแห่งคืน เกมที่สูสีที่สุด และผลทุกเกม">
+<meta property="og:title" content="สรุปคืนก๊วนแบด BADMAN BEGIN">
+<meta property="og:description" content="MVP ประจำคืน • คู่หูแห่งคืน • เกมที่สูสีที่สุด • ผลทุกเกม">
+<meta property="og:image" content="https://badmanbegin.github.io/og-badman.jpg">
+<meta name="theme-color" content="#0f0f0e">
+<link rel="icon" href="../favicon.svg">
+<style>
+/* Same tokens and look as BADMAN Court Control (app/globals.css). */
+:root { --ink:#171611; --muted:#716d61; --line:#ddd6c5; --paper:#f3f0e7; --panel:#fffefa; --gold:#e9b92f; --black:#0f0f0e; --brown:#a47a06; --win:#2b9364; --loss:#c2533a; }
+* { box-sizing:border-box; }
+html { background:var(--paper); -webkit-text-size-adjust:100%; }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif; }
+button,select { font:inherit; color:inherit; }
+a { color:inherit; }
+:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+[hidden] { display:none !important; }
+header.top { background:var(--black); color:#fff; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; }
+header.top .in { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; }
+.brand img { width:38px; height:38px; border-radius:50%; border:2px solid var(--gold); object-fit:cover; }
+.brand b { font-size:17px; } .brand b span { color:var(--gold); }
+header.top nav { display:flex; gap:2px; flex-wrap:wrap; }
+header.top nav a { color:#fff; text-decoration:none; font-weight:800; font-size:13px; padding:8px 10px; border-radius:9px; }
+main { max-width:900px; margin:0 auto; padding:16px 14px calc(30px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:16px; }
+.hero { border-radius:20px; background:linear-gradient(125deg,#080808 0%,#161510 62%,#2b2411 100%); color:#fff; padding:22px; display:flex; flex-direction:column; gap:14px; position:relative; overflow:hidden; }
+.hero::after { content:""; position:absolute; width:300px; height:300px; right:-80px; top:-170px; border:1px solid rgba(242,196,64,.2); border-radius:50%; box-shadow:0 0 0 30px rgba(242,196,64,.03),0 0 0 64px rgba(242,196,64,.02); pointer-events:none; }
+.hero .row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
+.eyebrow { color:var(--gold); font-weight:900; letter-spacing:.12em; font-size:11px; margin:0; }
+.hero h1 { margin:0; font-size:clamp(26px,5vw,36px); letter-spacing:-.03em; line-height:1.1; position:relative; z-index:1; }
+.hero select { background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.2); border-radius:10px; padding:8px 10px; font-weight:800; }
+.hero select option { color:#171611; }
+.tiles { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border-top:1px solid rgba(255,255,255,.12); padding-top:12px; position:relative; z-index:1; }
+.tiles div { display:flex; flex-direction:column; }
+.tiles small { color:#b9b29f; font-size:11px; font-weight:800; }
+.tiles strong { font-size:28px; font-variant-numeric:tabular-nums; }
+@media (max-width:480px) { .tiles strong { font-size:22px; } }
+.actions { display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:1; }
+.btn { border:0; border-radius:11px; padding:11px 16px; font-weight:900; font-size:15px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+.btn.gold { background:var(--gold); color:var(--black); }
+.btn.line { background:#06c755; color:#fff; }
+.btn.ghost { background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.22); }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.panel > h2 { margin:0; padding:14px 16px; border-bottom:1px solid var(--line); font-size:18px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.panel > h2 small { color:var(--muted); font-size:12px; font-weight:700; }
+.mvp { display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:center; padding:18px; background:linear-gradient(170deg,#1a1812,#3a2e10); color:#fff; }
+.mvp .badge { display:inline-block; background:var(--gold); color:var(--black); border-radius:10px; padding:3px 10px; font-weight:900; font-size:13px; }
+.mvp b.n { display:block; font-size:30px; margin:6px 0 2px; line-height:1.05; }
+.mvp .lvl { color:var(--gold); font-weight:900; font-size:14px; }
+.mvp .st { color:#d8d2c0; font-size:14px; margin-top:6px; }
+.pav { position:relative; display:inline-grid; place-items:center; border-radius:50%; border:3px solid var(--gold); background:var(--black); color:var(--gold); font-weight:900; flex:0 0 auto; }
+.pav > img.ph { width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; background:#fff; }
+.pav > img.lv { position:absolute; right:-6px; bottom:-6px; width:42%; height:42%; border-radius:50%; background:#fff; border:2px solid var(--gold); }
+.row-p { display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid #eeeadf; text-decoration:none; color:inherit; }
+.row-p:last-child { border-bottom:0; }
+.row-p .no { width:24px; text-align:center; font-weight:900; color:var(--muted); }
+.row-p .who { flex:1; min-width:0; display:flex; flex-direction:column; }
+.row-p .who b { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row-p .who small { color:var(--muted); font-size:12px; font-weight:700; }
+.row-p .pts { text-align:right; font-variant-numeric:tabular-nums; }
+.row-p .pts strong { display:block; font-size:18px; }
+.row-p .pts small { color:var(--muted); font-size:11px; }
+.duo { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:640px) { .duo { grid-template-columns:1fr; } }
+.feature { padding:16px; display:flex; flex-direction:column; gap:10px; align-items:center; text-align:center; }
+.feature .pair { display:flex; align-items:center; gap:-8px; }
+.feature .pair .pav + .pav { margin-left:-14px; }
+.feature b { font-size:18px; }
+.feature small { color:var(--muted); font-weight:700; }
+.score { font-size:30px; font-weight:900; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+.game { display:grid; grid-template-columns:42px minmax(0,1fr) auto minmax(0,1fr); gap:8px; align-items:center; padding:10px 14px; border-bottom:1px solid #eeeadf; font-size:14px; }
+.game:last-child { border-bottom:0; }
+.game .n { color:var(--muted); font-weight:900; font-size:12px; }
+.game .t { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.game .t span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700; }
+.game .t.win span { color:var(--win); font-weight:900; }
+.game .t.right { text-align:right; }
+.game .mid { text-align:center; font-weight:900; font-variant-numeric:tabular-nums; min-width:62px; }
+.game .mid small { display:block; font-size:10px; color:var(--muted); font-weight:800; }
+.empty { padding:26px 16px; text-align:center; color:var(--muted); font-weight:700; }
+.toast { position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:var(--black); color:var(--gold); padding:10px 16px; border-radius:10px; font-weight:800; z-index:10; max-width:calc(100vw - 32px); text-align:center; }
+footer { text-align:center; color:var(--muted); font-size:12px; padding:0 14px 24px; }
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="../"><img src="../badman-begin-logo.webp" alt="BADMAN BEGIN" width="38" height="38"><b>BADMAN <span>BEGIN</span></b></a>
+  <nav aria-label="เมนู"><a href="../signup/">ลงชื่อ</a><a href="../live/">คิวสด</a><a href="../ranking/">Ranking</a></nav>
+</div></header>
+<main id="view"><div class="panel"><div class="empty">กำลังโหลดสรุป…</div></div></main>
+<footer>สรุปจากผลเกมที่บันทึกในระบบจัดก๊วน • ชนะ 2 แต้ม เสมอ 1 แต้ม • แสดงชื่อและรูปเฉพาะสมาชิกที่ยินยอม</footer>
+<div class="toast" id="toast" hidden></div>
+<script>
+// Public data only: public/nights (list of days), public/night-{day} (member ids + numbers), public/roster, photos/{id}.
+const FIREBASE = { apiKey: "AIzaSyAI1EaI2OSmwXkbZs5GsO6Ze7jPUk8iumQ", projectId: "badman-live" };
+const DOC = (path) => `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/${path}?key=${FIREBASE.apiKey}`;
+const LV = ["", "Baby Bat", "Tiny Wing", "Little Bat", "Bouncing Bat", "Junior Badman", "Hero in Training", "Shadow Striker", "Dark Knight Master"];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const initial = (s) => String(s || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
+const thaiDate = (day, long = true) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", long ? { weekday: "long", day: "numeric", month: "long", year: "numeric" } : { day: "numeric", month: "short", year: "2-digit" });
+function toast(m) { const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 3000); }
+async function getJson(path) { const r = await fetch(DOC(path), { cache: "no-store" }); if (r.status === 404) return null; if (!r.ok) throw new Error(String(r.status)); const d = await r.json(); return JSON.parse(d.fields.json.stringValue); }
+
+let roster = new Map(), days = [], sum = null;
+const who = (id) => (id ? roster.get(id) : null);
+const nameOf = (id) => { const m = who(id); return m ? m.name || m.code : "ผู้เล่น"; };
+function avatar(id, size) {
+  const m = who(id);
+  const lv = m?.level;
+  return `<span class="pav" style="width:${size}px;height:${size}px;font-size:${Math.round(size * 0.4)}px"${m?.photo ? ` data-photo="${esc(m.id)}"` : ""}>${lv && !m?.photo ? `<img class="ph" src="../levels/full${lv}.webp" alt="">` : `<span class="ini">${esc(initial(nameOf(id)))}</span>`}${lv ? `<img class="lv" src="../levels/lv${lv}.webp" alt="">` : ""}</span>`;
+}
+const link = (id) => { const m = who(id); return m?.code ? `../ranking/#${encodeURIComponent(m.code)}` : "#"; };
+const team = (ids) => ids.filter(Boolean).map((id) => esc(nameOf(id))).join(" + ") || "—";
+
+function render() {
+  if (!sum) { $("view").innerHTML = `<section class="hero"><p class="eyebrow">สรุปคืนก๊วน</p><h1>ยังไม่มีสรุป</h1><span style="color:#d8d2c0">สรุปจะขึ้นหลังจบเกมแรกที่บันทึกผลในคืนนั้น</span></section>`; return; }
+  const s = sum;
+  const mvp = s.leaders[0];
+  const opts = days.map((d) => `<option value="${esc(d)}"${d === s.day ? " selected" : ""}>${esc(thaiDate(d, false))}</option>`).join("");
+  let html = `<section class="hero">
+    <div class="row"><p class="eyebrow">สรุปคืนก๊วน BADMAN</p>${days.length > 1 ? `<select id="pick" aria-label="เลือกคืน">${opts}</select>` : ""}</div>
+    <h1>${esc(thaiDate(s.day))}</h1>
+    <div class="tiles"><div><small>เกม</small><strong>${s.games}</strong></div><div><small>ผู้เล่น</small><strong>${s.players}</strong></div><div><small>ลูกแบด</small><strong>${s.shuttles}</strong></div><div><small>เสมอ</small><strong>${s.draws}</strong></div></div>
+    <div class="actions"><button class="btn line" id="copy">คัดลอกสรุปไปโพสต์ LINE</button>${navigator.share ? `<button class="btn ghost" id="share">แชร์ลิงก์</button>` : ""}<a class="btn gold" href="../signup/">ลงชื่อรอบถัดไป</a></div>
+  </section>`;
+  if (mvp) {
+    const m = who(mvp.id);
+    html += `<section class="panel"><a class="mvp" href="${link(mvp.id)}" style="text-decoration:none">${avatar(mvp.id, 116)}<div><span class="badge">MVP ประจำคืน</span><b class="n">${esc(nameOf(mvp.id))}</b>${m?.level ? `<span class="lvl">Lv.${m.level} ${esc(LV[m.level])}</span>` : ""}<div class="st">${mvp.points} แต้ม • ชนะ ${mvp.wins} เสมอ ${mvp.draws} แพ้ ${mvp.losses} จาก ${mvp.games} เกม</div></div></a></section>`;
+  }
+  if (s.leaders.length > 1) {
+    html += `<section class="panel"><h2>ตารางคะแนนคืนนี้ <small>ชนะ 2 • เสมอ 1</small></h2>${s.leaders.slice(0, 8).map((x, i) => `<a class="row-p" href="${link(x.id)}"><span class="no">${i + 1}</span>${avatar(x.id, 42)}<span class="who"><b>${esc(nameOf(x.id))}</b><small>ชนะ ${x.wins} • เสมอ ${x.draws} • แพ้ ${x.losses}</small></span><span class="pts"><strong>${x.points}</strong><small>แต้ม</small></span></a>`).join("")}</section>`;
+  }
+  const pair = s.pairs[0], close = s.closest;
+  if (pair || close) {
+    html += `<div class="duo">`;
+    html += pair ? `<section class="panel"><h2>คู่หูแห่งคืน</h2><div class="feature"><div class="pair">${avatar(pair.a, 72)}${avatar(pair.b, 72)}</div><b>${esc(nameOf(pair.a))} + ${esc(nameOf(pair.b))}</b><small>ชนะด้วยกัน ${pair.wins} จาก ${pair.games} เกม</small></div></section>` : "<div></div>";
+    html += close ? `<section class="panel"><h2>เกมที่สูสีที่สุด <small>เกมที่ ${close.n}</small></h2><div class="feature"><span class="score">${close.sa} – ${close.sb}</span><b style="font-size:15px">${team(close.a)}</b><small>พบ</small><b style="font-size:15px">${team(close.b)}</b></div></section>` : "<div></div>";
+    html += `</div>`;
+  }
+  html += `<section class="panel"><h2>ผลทุกเกม <small>${s.decided}/${s.games} เกมมีผล</small></h2>${s.list.map((g) => {
+    const mid = g.r === "draw" ? "เสมอ" : g.r && typeof g.sa === "number" && (g.sa || g.sb) ? `${g.sa}–${g.sb}` : g.r ? "VS" : "–";
+    return `<div class="game"><span class="n">#${g.n}</span><span class="t${g.r === "a" ? " win" : ""}">${g.a.map((id) => `<span>${esc(id ? nameOf(id) : "ผู้เล่น")}</span>`).join("")}</span><span class="mid">${esc(mid)}<small>${g.r === "a" ? "◀ ชนะ" : g.r === "b" ? "ชนะ ▶" : g.r ? "" : "ไม่บันทึกผล"}</small></span><span class="t right${g.r === "b" ? " win" : ""}">${g.b.map((id) => `<span>${esc(id ? nameOf(id) : "ผู้เล่น")}</span>`).join("")}</span></div>`;
+  }).join("")}</section>`;
+  $("view").innerHTML = html;
+  document.querySelectorAll("[data-photo]").forEach(async (el) => {
+    try {
+      const r = await fetch(DOC("photos/" + encodeURIComponent(el.dataset.photo)));
+      if (!r.ok) return;
+      const src = (await r.json())?.fields?.data?.stringValue;
+      if (src && src.startsWith("data:image/")) { el.querySelector(".ini")?.remove(); el.insertAdjacentHTML("afterbegin", `<img class="ph" src="${src}" alt="">`); }
+    } catch {}
+  });
+}
+
+function summaryText() {
+  const s = sum;
+  const lines = [`🏸 สรุปก๊วน BADMAN • ${thaiDate(s.day)}`, `${s.games} เกม • ${s.players} คน • ลูกแบด ${s.shuttles} ลูก`];
+  if (s.leaders[0]) lines.push("", `🏆 MVP: ${nameOf(s.leaders[0].id)} (${s.leaders[0].points} แต้ม, ชนะ ${s.leaders[0].wins}/${s.leaders[0].games})`);
+  if (s.leaders.length > 1) { lines.push("", "ตารางคะแนนคืนนี้"); s.leaders.slice(0, 5).forEach((x, i) => lines.push(`${i + 1}. ${nameOf(x.id)} • ${x.points} แต้ม`)); }
+  if (s.pairs[0]) lines.push("", `🤝 คู่หูแห่งคืน: ${nameOf(s.pairs[0].a)} + ${nameOf(s.pairs[0].b)} (ชนะ ${s.pairs[0].wins}/${s.pairs[0].games})`);
+  if (s.closest) lines.push(`🔥 เกมสูสีที่สุด: ${team(s.closest.a)} ${s.closest.sa}–${s.closest.sb} ${team(s.closest.b)}`.replace(/&amp;/g, "&"));
+  lines.push("", `ดูสรุปเต็ม: ${location.origin}${location.pathname}?d=${s.day}`, `ลงชื่อรอบถัดไป: ${location.origin}${location.pathname.replace(/night\/.*$/, "signup/")}`);
+  return lines.join("\n");
+}
+
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.id === "copy") { try { await navigator.clipboard.writeText(summaryText()); toast("คัดลอกแล้ว วางในกลุ่ม LINE ได้เลย"); } catch { toast("คัดลอกไม่สำเร็จ"); } }
+  if (b.id === "share") { try { await navigator.share({ title: "สรุปก๊วน BADMAN", text: summaryText().split("\n").slice(0, 4).join("\n"), url: `${location.origin}${location.pathname}?d=${sum.day}` }); } catch {} }
+});
+document.addEventListener("change", async (e) => { if (e.target.id === "pick") { history.replaceState(null, "", `?d=${e.target.value}`); await load(e.target.value); } });
+
+async function load(day) {
+  try { sum = day ? await getJson(`public/night-${day}`) : null; } catch { sum = null; }
+  render(); window.scrollTo(0, 0);
+}
+(async () => {
+  try {
+    const [idx, r] = await Promise.all([getJson("public/nights").catch(() => null), getJson("public/roster").catch(() => null)]);
+    days = idx?.days || [];
+    roster = new Map((r?.members || []).map((m) => [m.id, m]));
+    const want = new URLSearchParams(location.search).get("d");
+    await load(want && /^\d{4}-\d{2}-\d{2}$/.test(want) ? want : days[0]);
+  } catch { $("view").innerHTML = `<div class="panel"><div class="empty">โหลดสรุปไม่สำเร็จ ลองรีเฟรช</div></div>`; }
+})();
+</script>
+</body>
+</html>
