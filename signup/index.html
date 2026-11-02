@@ -255,7 +255,7 @@ function renderRoundCard(st) {
   return `<section class="round">
     <div class="row"><span class="eyebrow">${round.date >= today() ? "รอบถัดไป" : "รอบล่าสุด"}</span><span class="pill ${open ? "open" : "closed"}"><span class="d"></span>${open ? "เปิดรับอยู่" : "ปิดรับแล้ว"}</span></div>
     <h1>${esc(thaiDate(round.date))}</h1>
-    <div class="meta"><span>${esc(round.start)}–${esc(round.end)} • สนามแบดวังนาคา ลาดพร้าว 64</span>${round.fee ? `<span>${esc(round.fee)}</span>` : ""}</div>
+    <div class="meta"><span>${esc(round.start)}–${esc(round.end === "00:00" ? "24:00" : round.end)} น. • สนามแบดวังนาคา ลาดพร้าว 64</span>${round.fee ? `<span>${esc(round.fee)}</span>` : ""}</div>
     <div class="total"><span>ลงชื่อแล้ว</span><span><strong>${total}</strong><span> / ${capTotal()} คน</span></span></div>
     <div class="slots"><small>ช่วงเวลาที่เปิดรับ • เลือกเองตอนลงชื่อ</small>${st.map((s) => {
       const left = s.cap - s.used;
