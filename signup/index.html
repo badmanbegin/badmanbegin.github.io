@@ -391,7 +391,7 @@ async function loadRound() {
   if (!r) { round = null; return; }
   let cfg = {};
   try { cfg = JSON.parse(r.json || "{}"); } catch {}
-  round = { id: r.id, date: r.id, status: r.status, closeAt: r.closeAt, maxGuests: r.maxGuests ?? 0, slots: cfg.slots || (r.slotTimes || []).map((time) => ({ time, cap: 16 })), start: cfg.start || "20:00", end: cfg.end || "01:00", fee: cfg.fee || "" };
+  round = { id: r.id, date: r.id, status: r.status, closeAt: r.closeAt, maxGuests: r.maxGuests ?? 0, slots: cfg.slots || (r.slotTimes || []).map((time) => ({ time, cap: 16 })), start: cfg.start || "20:00", end: cfg.end || "00:00", fee: cfg.fee || "" };
   entries = await listDocs(`rounds/${r.id}/entries`);
 }
 async function loadRoster() {

@@ -147,7 +147,7 @@ footer a { color:var(--muted); }
         <div class="panel-heading"><div><p class="section-no">ROUND</p><h2 id="rfTitle">สร้างรอบใหม่</h2></div></div>
         <div class="rform">
           <label class="f">วันที่ (วันก๊วน)<input class="t" type="date" id="rDate"></label>
-          <div class="two"><label class="f">เริ่ม<input class="t" type="time" id="rStart" value="20:00"></label><label class="f">เลิก<input class="t" type="time" id="rEnd" value="01:00"></label></div>
+          <div class="two"><label class="f">เริ่ม<input class="t" type="time" id="rStart" value="20:00"></label><label class="f">เลิก<input class="t" type="time" id="rEnd" value="00:00"></label></div>
           <div class="f" style="gap:8px">ช่วงเวลาให้เลือก (เวลามา / รับกี่คน)<div id="rSlots" style="display:grid;gap:8px"></div><button type="button" class="btn" id="rAddSlot">+ เพิ่มช่วงเวลา</button></div>
           <div class="two"><label class="f">พาเพื่อนได้ไม่เกิน<input class="t" type="number" min="0" max="5" id="rGuests" value="2"></label><label class="f">ปิดรับ / ยกเลิกได้ถึง<input class="t" type="datetime-local" id="rClose"></label></div>
           <label class="f">ค่าใช้จ่าย (แสดงในหน้าลงชื่อ)<input class="t" id="rFee" value="100 บาท/คน + ลูกละ 28 บาท" maxlength="80"></label>
@@ -612,7 +612,7 @@ async function listTyped(path) {
   } while (page);
   return out;
 }
-function roundCfg(r) { let c = {}; try { c = JSON.parse(r.json || "{}"); } catch {} return { slots: c.slots || [], start: c.start || "20:00", end: c.end || "01:00", fee: c.fee || "" }; }
+function roundCfg(r) { let c = {}; try { c = JSON.parse(r.json || "{}"); } catch {} return { slots: c.slots || [], start: c.start || "20:00", end: c.end || "00:00", fee: c.fee || "" }; }
 
 function showTab(tab) {
   currentTab = tab;
@@ -631,7 +631,7 @@ function readSlots() {
 }
 function fillForm(r) {
   const day = r ? r.id : nextFriday();
-  const cfg = r ? roundCfg(r) : { slots: [{ time: "20:00", cap: 16 }, { time: "21:00", cap: 8 }, { time: "22:00", cap: 16 }], start: "20:00", end: "01:00", fee: "100 บาท/คน + ลูกละ 28 บาท" };
+  const cfg = r ? roundCfg(r) : { slots: [{ time: "20:00", cap: 16 }, { time: "21:00", cap: 8 }, { time: "22:00", cap: 16 }], start: "20:00", end: "00:00", fee: "100 บาท/คน + ลูกละ 28 บาท" };
   $("rfTitle").textContent = r ? `แก้ไขรอบ ${thaiDay(r.id)}` : "สร้างรอบใหม่";
   $("rDate").value = day; $("rDate").disabled = Boolean(r);
   $("rStart").value = cfg.start; $("rEnd").value = cfg.end; $("rFee").value = cfg.fee;
