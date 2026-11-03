@@ -107,6 +107,10 @@ dialog::backdrop { background:rgba(15,15,14,.55); }
 .rhead { padding:14px 18px; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
 .rhead .acts { display:flex; flex-wrap:wrap; gap:8px; }
 .etable { width:100%; border-collapse:collapse; }
+.btn.sm { padding:5px 10px; font-size:12px; border-radius:8px; }
+.linkbox { display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center; margin-left:6px; }
+.linkbox select { font:inherit; font-size:13px; padding:5px 8px; border:1px solid var(--line); border-radius:8px; max-width:200px; }
+.newtag { color:#2b6b4a; font-weight:800; font-size:12px; }
 .etable th, .etable td { text-align:left; padding:9px 14px; border-bottom:1px solid #eeeadf; font-size:14px; vertical-align:top; }
 .etable th { font-size:11px; letter-spacing:.05em; color:var(--muted); background:#fafbf8; }
 .etable tr.wait td { background:#fff8f1; }
@@ -418,6 +422,9 @@ async function save() {
     const merged = { ...m, ...all };
     idx >= 0 ? (members[idx] = merged) : members.push(merged);
     await publishRoster();
+    const link = !editing && linkAfterSave;
+    linkAfterSave = null;
+    if (link) await linkEntry(link.round, link.entry, m.id);
     $("dlg").close(); render();
     toast(crop && !consent ? "บันทึกแล้ว (ไม่ได้เก็บรูป เพราะยังไม่ได้ติ๊กยินยอม)" : editing ? "บันทึกแล้ว" : `เพิ่ม ${name} (${m.code}) แล้ว`);
   } catch (e) { $("formErr").textContent = e.message; }
@@ -564,7 +571,8 @@ $("zoom").addEventListener("input", (e) => { if (crop) { crop.zoom = Number(e.ta
 /* ---------- wiring ---------- */
 $("list").addEventListener("click", (e) => { const b = e.target.closest("[data-id]"); if (b) openEditor(members.find((m) => m.id === b.dataset.id)); });
 ["q", "filter", "sort"].forEach((id) => $(id).addEventListener("input", render));
-$("addBtn").addEventListener("click", () => openEditor(null));
+$("addBtn").addEventListener("click", () => { linkAfterSave = null; openEditor(null); });
+$("dlg").addEventListener("close", () => { linkAfterSave = null; });
 $("saveBtn").addEventListener("click", save);
 $("removePhoto").addEventListener("click", removePhoto);
 $("deleteBtn").addEventListener("click", deleteMember);
@@ -590,7 +598,7 @@ async function start() {
 }
 /* ================= sign-up rounds ================= */
 const ROOT_DOCS = `projects/${FIREBASE.projectId}/databases/(default)/documents`;
-let currentTab = "members", rounds = [], selRound = null, selEntries = [], selNotes = new Map(), rosterPub = new Map(), delArmed = null;
+let currentTab = "members", rounds = [], selRound = null, selEntries = [], selNotes = new Map(), rosterPub = new Map(), delArmed = null, linkArmed = null, linkAfterSave = null;
 const pad = (n) => String(n).padStart(2, "0");
 function nextFriday() { const d = new Date(Date.now() + 7 * 3600e3); const add = (5 - d.getUTCDay() + 7) % 7; d.setUTCDate(d.getUTCDate() + add); return d.toISOString().slice(0, 10); }
 const thaiDay = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
@@ -694,6 +702,13 @@ function standingsOf(r, list) {
   }
   return [...by.values()];
 }
+/** Point a sign-up entry at a member (staff may change only memberId; see firestore.rules). */
+async function linkEntry(roundId, entryId, memberId) {
+  await patch(`rounds/${roundId}/entries/${entryId}`, { memberId }, ["memberId"]);
+  const m = members.find((x) => x.id === memberId);
+  if (selRound?.id === roundId) { const en = selEntries.find((x) => x.id === entryId); if (en) en.memberId = memberId; renderDetail(); }
+  toast(m ? `ผูกกับ ${m.name} (${m.code}) แล้ว` : "ผูกสมาชิกแล้ว");
+}
 async function selectRound(id) {
   selRound = rounds.find((r) => r.id === id) || null;
   if (!selRound) return;
@@ -712,7 +727,13 @@ function renderDetail() {
   const cnt = new Map(); for (const e of selEntries) { for (const k of new Set([e.memberId ? "m:" + e.memberId : "", "n:" + nk(e.name)].filter(Boolean))) cnt.set(k, (cnt.get(k) || 0) + 1); }
   const isDup = (e) => (e.memberId && cnt.get("m:" + e.memberId) > 1) || cnt.get("n:" + nk(e.name)) > 1;
   const dupN = selEntries.filter(isDup).length;
-  const nameOf = (e) => { const m = e.memberId ? rosterPub.get(e.memberId) : null; return m ? `${m.code}${m.level ? " • Lv." + m.level : ""}` : e.memberId ? "สมาชิก" : "คนใหม่"; };
+  const byId = new Map(members.filter(isLive).map((m) => [m.id, m]));
+  const nameOf = (e) => { const m = e.memberId ? byId.get(e.memberId) || rosterPub.get(e.memberId) : null; return m ? `${m.code}${m.name && m.name !== e.name ? " " + m.name : ""}${m.level ? " • Lv." + m.level : ""}` : e.memberId ? "สมาชิก" : "คนใหม่"; };
+  const linked = (e) => e.memberId && (byId.has(e.memberId) || rosterPub.has(e.memberId));
+  const pickList = [...byId.values()].sort((a, b) => a.name.localeCompare(b.name, "th"));
+  const memberCell = (e) => linked(e) ? esc(nameOf(e))
+    : linkArmed === e.id ? `<span class="linkbox"><select data-linksel="${esc(e.id)}" aria-label="เลือกสมาชิกเดิม"><option value="">— เลือกสมาชิก —</option>${pickList.map((m) => `<option value="${esc(m.id)}">${esc(m.name)} (${esc(m.code)})</option>`).join("")}</select><button class="btn gold sm" data-linkok="${esc(e.id)}">ผูก</button><button class="btn sm" data-linkcancel="1">ยกเลิก</button></span>`
+    : `<span class="newtag">คนใหม่</span><span class="linkbox"><button class="btn gold sm" data-mk="${esc(e.id)}">+ เป็นสมาชิก</button><button class="btn sm" data-link="${esc(e.id)}">ผูกกับสมาชิกเดิม</button></span>`;
   $("rDetail").innerHTML = `<div class="rhead"><div><b style="font-size:21px">${esc(thaiDay(r.id))}</b> <span class="st ${esc(r.status)}">${esc(STATUS[r.status] || r.status)}</span><div style="color:var(--muted);font-weight:700;font-size:13px;margin-top:4px">ลงชื่อ ${total}/${cap}${waitN ? ` • สำรอง ${waitN}` : ""} • ${st.map((s) => `${s.time} ${s.used}/${s.cap}`).join(" • ")} • ปิดรับ ${esc(thaiWhen(r.closeAt))}</div>${dupN ? `<div style="color:#c2533a;font-weight:900;font-size:13px;margin-top:4px">พบชื่อซ้ำ ${dupN} รายการ • ตรวจแล้วกด ลบ อันที่เกิน</div>` : ""}</div>
     <div class="acts">
       ${r.status !== "open" ? `<button class="btn gold" data-status="open">เปิดรับลงชื่อ</button>` : `<button class="btn danger" data-status="closed">ปิดรับลงชื่อ</button>`}
@@ -721,9 +742,9 @@ function renderDetail() {
       <button class="btn" id="rReload">รีเฟรช</button>
     </div></div>
     <div class="wrapx"><table class="etable"><thead><tr><th>ลำดับ</th><th>ชื่อเล่น</th><th>สมาชิก</th><th>เพื่อน</th><th>ฝากบอก</th><th>ลงเมื่อ</th><th></th></tr></thead><tbody>
-    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${esc(nameOf(e))}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td><button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
+    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${memberCell(e)}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td><button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
     </tbody></table></div>
-    <p style="margin:0;padding:10px 18px 14px;color:var(--muted);font-size:12px">หน้าลงชื่อสำหรับผู้เล่น: <a href="../signup/" target="_blank" rel="noopener">/badman/signup/</a> • ลบชื่อ = ที่ว่างในช่วงนั้นจะเลื่อนให้คนแรกในคิวสำรองของช่วงเดียวกัน</p>`;
+    <p style="margin:0;padding:10px 18px 14px;color:var(--muted);font-size:12px">หน้าลงชื่อสำหรับผู้เล่น: <a href="../signup/" target="_blank" rel="noopener">badmanbegin.github.io/signup/</a> • ลบชื่อ = ที่ว่างในช่วงนั้นจะเลื่อนให้คนแรกในคิวสำรองของช่วงเดียวกัน • คนใหม่: กด + เป็นสมาชิก หรือผูกกับสมาชิกเดิม (เพื่อนที่พามาจะเป็นสมาชิกตอนเช็กอินที่สนาม)</p>`;
 }
 $("rDetail").addEventListener("click", async (e) => {
   const b = e.target.closest("button");
@@ -734,6 +755,20 @@ $("rDetail").addEventListener("click", async (e) => {
       await loadRounds(selRound.id);
       toast(b.dataset.status === "open" ? "เปิดรับลงชื่อแล้ว" : b.dataset.status === "closed" ? "ปิดรับแล้ว" : "จบรอบแล้ว");
     } else if (b.id === "rReload") { await selectRound(selRound.id); }
+    else if (b.dataset.mk) {
+      const en = selEntries.find((x) => x.id === b.dataset.mk); if (!en) return;
+      openEditor(null);
+      $("fName").value = en.name;
+      linkAfterSave = { round: selRound.id, entry: en.id };
+    }
+    else if (b.dataset.link) { linkArmed = b.dataset.link; renderDetail(); }
+    else if (b.dataset.linkcancel) { linkArmed = null; renderDetail(); }
+    else if (b.dataset.linkok) {
+      const id = $("rDetail").querySelector(`[data-linksel="${CSS.escape(b.dataset.linkok)}"]`)?.value;
+      if (!id) { toast("เลือกสมาชิกก่อน", true); return; }
+      linkArmed = null;
+      await linkEntry(selRound.id, b.dataset.linkok, id);
+    }
     else if (b.id === "rCopy") {
       const st = standingsOf(selRound, selEntries);
       const lines = [`ก๊วนแบด BADMAN BEGIN • ${thaiDay(selRound.id)}`];
