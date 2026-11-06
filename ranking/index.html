@@ -306,8 +306,21 @@ function circle(ctx, img, x, y, r, fill) {
   if (img) { const k = Math.max((2 * r) / img.width, (2 * r) / img.height); const w = img.width * k, h = img.height * k; ctx.drawImage(img, x - w / 2, y - h / 2, w, h); }
   ctx.restore();
 }
+// iPhone/iPad Safari measure Thai text on a canvas too narrow, so textAlign "center" and measureText put it off-centre.
+// Measure with the page's own text layout instead (same font, same px size) and place the text ourselves.
+let measurer = null;
+function textWidth(font, text) {
+  if (!measurer) { measurer = document.createElement("span"); measurer.setAttribute("aria-hidden", "true"); measurer.style.cssText = "position:absolute;left:-10000px;top:0;visibility:hidden;white-space:pre;"; document.body.appendChild(measurer); }
+  measurer.style.font = font; measurer.textContent = text;
+  return measurer.getBoundingClientRect().width;
+}
+function fill(ctx, text, x, y) {
+  const align = ctx.textAlign;
+  if (align !== "center") return ctx.fillText(text, x, y);
+  ctx.textAlign = "left"; ctx.fillText(text, x - textWidth(ctx.font, text) / 2, y); ctx.textAlign = align;
+}
 function fitText(ctx, text, max, size, weight = 900) {
-  let px = size; do { ctx.font = `${weight} ${px}px "Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif`; px -= 4; } while (ctx.measureText(text).width > max && px > 24);
+  let px = size; do { ctx.font = `${weight} ${px}px "Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif`; px -= 4; } while (textWidth(ctx.font, text) > max && px > 24);
 }
 async function drawCard(m) {
   const s = stats.members[m.id];
@@ -334,27 +347,27 @@ async function drawCard(m) {
   // header
   if (logo) { circle(ctx, logo, 120, 120, 62, "#0f0f0e"); ctx.beginPath(); ctx.arc(120, 120, 62, 0, Math.PI * 2); ctx.lineWidth = 5; ctx.strokeStyle = "#e9b92f"; ctx.stroke(); }
   ctx.textBaseline = "middle"; ctx.textAlign = "left";
-  ctx.font = '900 46px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#fff"; ctx.fillText("BADMAN", 206, 104);
-  const bw = ctx.measureText("BADMAN ").width; ctx.fillStyle = "#e9b92f"; ctx.fillText("BEGIN", 206 + bw, 104);
-  ctx.font = '700 26px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#b9b29f"; ctx.fillText("PLAYER CARD • ก๊วนแบดวันศุกร์", 206, 150);
+  ctx.font = '900 46px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#fff"; fill(ctx, "BADMAN", 206, 104);
+  const bw = ctx.measureText("BADMAN ").width; ctx.fillStyle = "#e9b92f"; fill(ctx, "BEGIN", 206 + bw, 104);
+  ctx.font = '700 26px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#b9b29f"; fill(ctx, "PLAYER CARD • ก๊วนแบดวันศุกร์", 206, 150);
   // portrait
   const cx = W / 2, cy = 520, R = 250;
   ctx.beginPath(); ctx.arc(cx, cy, R + 22, 0, Math.PI * 2); ctx.fillStyle = "rgba(233,185,47,.14)"; ctx.fill();
   circle(ctx, photo || art, cx, cy, R, photo ? "#fff" : art ? "#fff" : "#0f0f0e");
-  if (!photo && !art) { ctx.textAlign = "center"; ctx.font = '900 200px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#e9b92f"; ctx.fillText(display(m).trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase(), cx, cy + 10); }
+  if (!photo && !art) { ctx.textAlign = "center"; ctx.font = '900 200px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#e9b92f"; fill(ctx, display(m).trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase(), cx, cy + 10); }
   ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.lineWidth = 12; ctx.strokeStyle = "#e9b92f"; ctx.stroke();
   if (badge && photo) { const bx = cx + R * 0.72, by = cy + R * 0.72; circle(ctx, badge, bx, by, 82, "#fff"); ctx.beginPath(); ctx.arc(bx, by, 82, 0, Math.PI * 2); ctx.lineWidth = 8; ctx.strokeStyle = "#e9b92f"; ctx.stroke(); }
   if (s) {
     const rx = cx - R * 0.78, ry = cy - R * 0.78;
     ctx.beginPath(); ctx.arc(rx, ry, 92, 0, Math.PI * 2); ctx.fillStyle = "#e9b92f"; ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = "#0f0f0e"; ctx.stroke();
-    ctx.textAlign = "center"; ctx.fillStyle = "#0f0f0e"; ctx.font = '800 26px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillText("อันดับ", rx, ry - 34);
-    fitText(ctx, "#" + s.rank, 150, 76); ctx.fillText("#" + s.rank, rx, ry + 22);
+    ctx.textAlign = "center"; ctx.fillStyle = "#0f0f0e"; ctx.font = '800 26px "Noto Sans Thai",Tahoma,sans-serif'; fill(ctx, "อันดับ", rx, ry - 34);
+    fitText(ctx, "#" + s.rank, 150, 76); fill(ctx, "#" + s.rank, rx, ry + 22);
   }
   // name + level
-  ctx.textAlign = "center"; ctx.fillStyle = "#fff"; fitText(ctx, display(m), W - 140, 104); ctx.fillText(display(m), cx, 875);
+  ctx.textAlign = "center"; ctx.fillStyle = "#fff"; fitText(ctx, display(m), W - 140, 104); fill(ctx, display(m), cx, 875);
   ctx.font = '800 38px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#e9b92f";
-  ctx.fillText(lv ? `LEVEL ${lv.value} • ${lv.name}` : m.code, cx, 960);
-  if (lv) { ctx.font = '700 30px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#d8d2c0"; ctx.fillText(lv.th, cx, 1008); }
+  fill(ctx, lv ? `LEVEL ${lv.value} • ${lv.name}` : m.code, cx, 960);
+  if (lv) { ctx.font = '700 30px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#d8d2c0"; fill(ctx, lv.th, cx, 1008); }
   // stat tiles
   const tiles = s ? [["แต้ม", s.points], ["เกม", s.games], ["ชนะ", s.wins], ["อัตราชนะ", s.winPct + "%"]] : [["สมาชิก", m.code], ["ระดับ", lv ? "Lv." + lv.value : "—"]];
   const gap = 18, tw = (W - 120 - gap * (tiles.length - 1)) / tiles.length, ty = 1060;
@@ -362,12 +375,12 @@ async function drawCard(m) {
     const x = 60 + i * (tw + gap);
     ctx.fillStyle = "rgba(255,255,255,.07)"; ctx.strokeStyle = "rgba(233,185,47,.35)"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, ty, tw, 140, 22) : ctx.rect(x, ty, tw, 140); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#b9b29f"; ctx.font = '800 26px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillText(k, x + tw / 2, ty + 40);
-    ctx.fillStyle = "#fff"; fitText(ctx, String(v), tw - 24, 60); ctx.fillText(String(v), x + tw / 2, ty + 96);
+    ctx.fillStyle = "#b9b29f"; ctx.font = '800 26px "Noto Sans Thai",Tahoma,sans-serif'; fill(ctx, k, x + tw / 2, ty + 40);
+    ctx.fillStyle = "#fff"; fitText(ctx, String(v), tw - 24, 60); fill(ctx, String(v), x + tw / 2, ty + 96);
   });
   // footer band
   ctx.fillStyle = "#e9b92f"; ctx.fillRect(0, H - 100, W, 100);
-  ctx.fillStyle = "#0f0f0e"; fitText(ctx, "ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", W - 80, 34, 800); ctx.fillText("ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", cx, H - 50);
+  ctx.fillStyle = "#0f0f0e"; fitText(ctx, "ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", W - 80, 34, 800); fill(ctx, "ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", cx, H - 50);
   return new Promise((ok) => c.toBlob((b) => ok(b), "image/png"));
 }
 document.addEventListener("click", async (e) => {
