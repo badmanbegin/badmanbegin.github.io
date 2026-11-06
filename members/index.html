@@ -108,6 +108,8 @@ dialog::backdrop { background:rgba(15,15,14,.55); }
 .rhead .acts { display:flex; flex-wrap:wrap; gap:8px; }
 .etable { width:100%; border-collapse:collapse; }
 .btn.sm { padding:5px 10px; font-size:12px; border-radius:8px; }
+.editrow td { background:#fff9e5; }
+.eform { display:grid; gap:10px; max-width:520px; }
 .linkbox { display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center; margin-left:6px; }
 .linkbox select { font:inherit; font-size:13px; padding:5px 8px; border:1px solid var(--line); border-radius:8px; max-width:200px; }
 .newtag { color:#2b6b4a; font-weight:800; font-size:12px; }
@@ -598,7 +600,7 @@ async function start() {
 }
 /* ================= sign-up rounds ================= */
 const ROOT_DOCS = `projects/${FIREBASE.projectId}/databases/(default)/documents`;
-let currentTab = "members", rounds = [], selRound = null, selEntries = [], selNotes = new Map(), rosterPub = new Map(), delArmed = null, linkArmed = null, linkAfterSave = null;
+let currentTab = "members", rounds = [], selRound = null, selEntries = [], selNotes = new Map(), rosterPub = new Map(), delArmed = null, linkArmed = null, linkAfterSave = null, editArmed = null;
 const pad = (n) => String(n).padStart(2, "0");
 function nextFriday() { const d = new Date(Date.now() + 7 * 3600e3); const add = (5 - d.getUTCDay() + 7) % 7; d.setUTCDate(d.getUTCDate() + add); return d.toISOString().slice(0, 10); }
 const thaiDay = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
@@ -662,6 +664,11 @@ async function saveRound(statusOverride) {
   if (new Set(slots.map((x) => x.time)).size !== slots.length) throw new Error("มีช่วงเวลาซ้ำกัน");
   if (!closeLocal) throw new Error("ตั้งเวลาปิดรับ");
   const existing = rounds.find((r) => r.id === day);
+  if (existing && selRound?.id === day) {
+    const keep = new Set(slots.map((x) => x.time));
+    const stranded = selEntries.filter((e) => !keep.has(e.slot));
+    if (stranded.length) throw new Error(`ช่วง ${[...new Set(stranded.map((e) => e.slot))].join(", ")} ยังมีคนลงอยู่ ${stranded.length} คน • ย้ายช่วงเวลาให้เขาก่อน (กด แก้ไข) แล้วค่อยลบช่วงนี้`);
+  }
   const status = statusOverride || existing?.status || "draft";
   const closeAt = new Date(closeLocal + ":00+07:00").toISOString();
   const json = JSON.stringify({ slots, start: $("rStart").value, end: $("rEnd").value, fee: $("rFee").value.trim() });
@@ -687,6 +694,11 @@ async function loadRounds(selectId) {
   $("rList").innerHTML = rounds.length ? rounds.map((r) => `<button data-round="${esc(r.id)}" aria-current="${r.id === id}"><span><b>${esc(thaiDay(r.id))}</b><small>${esc(roundCfg(r).slots.map((x) => `${x.time}·${x.cap}`).join("  "))}</small></span><span class="st ${esc(r.status)}">${esc(STATUS[r.status] || r.status)}</span></button>`).join("") : `<div class="empty">ยังไม่มีรอบ • สร้างรอบแรกทางด้านบน</div>`;
   if (id) await selectRound(id); else { selRound = null; $("rDetail").innerHTML = `<div class="empty">ยังไม่มีรอบ</div>`; fillForm(null); }
 }
+$("rDetail").addEventListener("change", (e) => {
+  if (e.target.id !== "eMember" || !e.target.value) return;
+  const m = members.find((x) => x.id === e.target.value);
+  if (m && !$("eName").value.trim()) $("eName").value = m.name;
+});
 $("rList").addEventListener("click", (e) => { const b = e.target.closest("[data-round]"); if (b) loadRounds(b.dataset.round).catch((x) => toast(x.message, true)); });
 
 function standingsOf(r, list) {
@@ -701,6 +713,31 @@ function standingsOf(r, list) {
     s.list.push(e);
   }
   return [...by.values()];
+}
+/** Staff add a sign-up for someone, or fix a name, friends, time slot or member link (see firestore.rules). */
+async function saveEntry(id) {
+  const r = selRound;
+  const old = id ? selEntries.find((x) => x.id === id) : null;
+  const memberId = $("eMember").value || null;
+  const m = memberId ? members.find((x) => x.id === memberId) : null;
+  const name = ($("eName").value.trim() || m?.name || "").replace(/\s+/g, " ").slice(0, 30);
+  const slot = $("eSlot").value;
+  const guests = $("eGuests").value.split(/[,\n]/).map((g) => g.trim().replace(/\s+/g, " ").slice(0, 30)).filter(Boolean);
+  const err = (t) => { $("eErr").textContent = t; };
+  if (!name) return err("ใส่ชื่อเล่น หรือเลือกสมาชิก");
+  if (!roundCfg(r).slots.some((x) => x.time === slot)) return err("เลือกช่วงเวลา");
+  if (guests.length > 5) return err("เพื่อนได้ไม่เกิน 5 คน");
+  const now = new Date().toISOString();
+  const createdAt = old && old.slot === slot && old.createdAt ? old.createdAt : now;
+  const docId = id || "staff-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  await call("PATCH", `rounds/${r.id}/entries/${docId}`, { fields: {
+    name: { stringValue: name }, memberId: memberId ? { stringValue: memberId } : { nullValue: null },
+    guests: { arrayValue: { values: guests.map((g) => ({ stringValue: g })) } }, slot: { stringValue: slot },
+    createdAt: { timestampValue: createdAt }, updatedAt: { timestampValue: now },
+  } });
+  editArmed = null;
+  await selectRound(r.id);
+  toast(id ? `แก้ไข ${name} แล้ว` : `เพิ่ม ${name} (มา ${slot}) แล้ว`);
 }
 /** Point a sign-up entry at a member (staff may change only memberId; see firestore.rules). */
 async function linkEntry(roundId, entryId, memberId) {
@@ -734,15 +771,33 @@ function renderDetail() {
   const memberCell = (e) => linked(e) ? esc(nameOf(e))
     : linkArmed === e.id ? `<span class="linkbox"><select data-linksel="${esc(e.id)}" aria-label="เลือกสมาชิกเดิม"><option value="">— เลือกสมาชิก —</option>${pickList.map((m) => `<option value="${esc(m.id)}">${esc(m.name)} (${esc(m.code)})</option>`).join("")}</select><button class="btn gold sm" data-linkok="${esc(e.id)}">ผูก</button><button class="btn sm" data-linkcancel="1">ยกเลิก</button></span>`
     : `<span class="newtag">คนใหม่</span><span class="linkbox"><button class="btn gold sm" data-mk="${esc(e.id)}">+ เป็นสมาชิก</button><button class="btn sm" data-link="${esc(e.id)}">ผูกกับสมาชิกเดิม</button></span>`;
+  const slotsNow = roundCfg(r).slots.map((x) => x.time);
+  const editor = (e) => {
+    const isNew = !e;
+    const memberOpts = `<option value="">— ไม่ผูกสมาชิก (คนใหม่) —</option>${pickList.map((m) => `<option value="${esc(m.id)}"${e?.memberId === m.id ? " selected" : ""}>${esc(m.name)} (${esc(m.code)})</option>`).join("")}`;
+    return `<tr class="editrow"><td colspan="7"><div class="eform">
+      <b>${isNew ? "เพิ่มชื่อแทนผู้เล่น" : `แก้ไข ${esc(e.name)}`}</b>
+      <label class="f">สมาชิก<select class="t" id="eMember">${memberOpts}</select></label>
+      <label class="f">ชื่อเล่น<input class="t" id="eName" maxlength="30" value="${esc(e?.name ?? "")}" placeholder="ชื่อเล่นที่จะแสดงในรายชื่อ"></label>
+      <label class="f">ช่วงเวลา<select class="t" id="eSlot">${slotsNow.map((t) => `<option${(e ? e.slot === t : t === slotsNow[0]) ? " selected" : ""}>${esc(t)}</option>`).join("")}</select></label>
+      <label class="f">เพื่อนที่พามา (คั่นด้วย ,)<input class="t" id="eGuests" value="${esc((e?.guests || []).join(", "))}" placeholder="เช่น ปอนด์, บิว"></label>
+      ${isNew ? "" : `<small style="color:var(--muted)">เปลี่ยนช่วงเวลา = ไปต่อท้ายช่วงใหม่ (เหมือนผู้เล่นเปลี่ยนเอง)</small>`}
+      <div class="err" id="eErr"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn gold" data-esave="${esc(e?.id ?? "")}">บันทึก</button><button class="btn" data-ecancel="1">ยกเลิก</button></div>
+    </div></td></tr>`;
+  };
   $("rDetail").innerHTML = `<div class="rhead"><div><b style="font-size:21px">${esc(thaiDay(r.id))}</b> <span class="st ${esc(r.status)}">${esc(STATUS[r.status] || r.status)}</span><div style="color:var(--muted);font-weight:700;font-size:13px;margin-top:4px">ลงชื่อ ${total}/${cap}${waitN ? ` • สำรอง ${waitN}` : ""} • ${st.map((s) => `${s.time} ${s.used}/${s.cap}`).join(" • ")} • ปิดรับ ${esc(thaiWhen(r.closeAt))}</div>${dupN ? `<div style="color:#c2533a;font-weight:900;font-size:13px;margin-top:4px">พบชื่อซ้ำ ${dupN} รายการ • ตรวจแล้วกด ลบ อันที่เกิน</div>` : ""}</div>
     <div class="acts">
       ${r.status !== "open" ? `<button class="btn gold" data-status="open">เปิดรับลงชื่อ</button>` : `<button class="btn danger" data-status="closed">ปิดรับลงชื่อ</button>`}
       ${r.status === "closed" ? `<button class="btn" data-status="done">จบรอบ</button>` : ""}
+      <button class="btn gold" id="rAdd">+ เพิ่มชื่อ</button>
+      <button class="btn" id="rEditSlots">แก้ช่วงเวลา / จำนวนรับ</button>
       <button class="btn" id="rCopy">คัดลอกรายชื่อไปโพสต์ LINE</button>
       <button class="btn" id="rReload">รีเฟรช</button>
     </div></div>
     <div class="wrapx"><table class="etable"><thead><tr><th>ลำดับ</th><th>ชื่อเล่น</th><th>สมาชิก</th><th>เพื่อน</th><th>ฝากบอก</th><th>ลงเมื่อ</th><th></th></tr></thead><tbody>
-    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${memberCell(e)}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td><button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
+    ${editArmed === "new" ? editor(null) : ""}
+    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${memberCell(e)}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td style="white-space:nowrap"><button class="btn sm" data-edit="${esc(e.id)}">แก้ไข</button> <button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>${editArmed === e.id ? editor(e) : ""}`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
     </tbody></table></div>
     <p style="margin:0;padding:10px 18px 14px;color:var(--muted);font-size:12px">หน้าลงชื่อสำหรับผู้เล่น: <a href="../signup/" target="_blank" rel="noopener">badmanbegin.github.io/signup/</a> • ลบชื่อ = ที่ว่างในช่วงนั้นจะเลื่อนให้คนแรกในคิวสำรองของช่วงเดียวกัน • คนใหม่: กด + เป็นสมาชิก หรือผูกกับสมาชิกเดิม (เพื่อนที่พามาจะเป็นสมาชิกตอนเช็กอินที่สนาม)</p>`;
 }
@@ -755,6 +810,11 @@ $("rDetail").addEventListener("click", async (e) => {
       await loadRounds(selRound.id);
       toast(b.dataset.status === "open" ? "เปิดรับลงชื่อแล้ว" : b.dataset.status === "closed" ? "ปิดรับแล้ว" : "จบรอบแล้ว");
     } else if (b.id === "rReload") { await selectRound(selRound.id); }
+    else if (b.id === "rAdd") { editArmed = "new"; renderDetail(); $("eMember")?.focus(); }
+    else if (b.id === "rEditSlots") { $("rSlots").scrollIntoView({ behavior: "smooth", block: "center" }); toast("แก้ช่วงเวลาหรือจำนวนรับในฟอร์มด้านบน แล้วกด บันทึกรอบ"); }
+    else if (b.dataset.edit) { editArmed = b.dataset.edit; renderDetail(); }
+    else if (b.dataset.ecancel) { editArmed = null; renderDetail(); }
+    else if ("esave" in b.dataset) { await saveEntry(b.dataset.esave || null); }
     else if (b.dataset.mk) {
       const en = selEntries.find((x) => x.id === b.dataset.mk); if (!en) return;
       openEditor(null);
