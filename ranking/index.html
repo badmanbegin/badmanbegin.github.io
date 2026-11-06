@@ -10,6 +10,9 @@
 <meta property="og:image" content="../badman-logo.jpg">
 <meta name="theme-color" content="#0f0f0e">
 <link rel="icon" href="../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700;800;900&display=swap">
 <style>
 /* Same tokens and look as BADMAN Court Control (app/globals.css). */
 :root { --ink:#171611; --muted:#716d61; --line:#ddd6c5; --paper:#f3f0e7; --panel:#fffefa; --gold:#e9b92f; --mint:#f2c440; --orange:#ef7540; --black:#0f0f0e; --win:#2b9364; --loss:#c2533a; }
@@ -309,7 +312,13 @@ function fitText(ctx, text, max, size, weight = 900) {
 async function drawCard(m) {
   const s = stats.members[m.id];
   const lv = levelOf(m.level);
-  try { await document.fonts?.load('900 40px "Noto Sans Thai"'); } catch {}
+  // The card must be drawn with the Thai web font: iPhone/iPad Safari mis-measure Thai text drawn with a
+  // fallback system font, so centred names and the footer came out shifted to the right and cut off.
+  // Pass Thai sample text so the Thai part of the font (Google Fonts splits it by script) is downloaded.
+  try {
+    const sample = "กขคงจฉชซญฎฐดตถทธนบปผพฟภมยรลวศษสหฬอฮะาิีึืุูเแโใไ่้๊๋์ัำ็" + display(m) + (lv ? lv.th : "") + "อันดับแต้มเกมชนะอัตราทุกศุกร์ลาดพร้าว";
+    await Promise.race([Promise.all(["700", "800", "900"].map((w) => document.fonts.load(`${w} 40px "Noto Sans Thai"`, sample))), new Promise((r) => setTimeout(r, 4000))]);
+  } catch {}
   let photo = null;
   if (m.photo) {
     if (!photoCache.has(m.id)) photoCache.set(m.id, getDoc("photos/" + encodeURIComponent(m.id)).then((d) => d?.fields?.data?.stringValue || null).catch(() => null));
