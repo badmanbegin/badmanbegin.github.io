@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title data-en="Sign up — BADMAN BEGIN">ลงชื่อก๊วน — BADMAN BEGIN</title>
 <script src="../i18n.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700;800;900&display=swap">
 <meta name="description" content="ลงชื่อเข้าก๊วนแบด BADMAN BEGIN ทุกวันศุกร์ เลือกช่วงเวลาที่จะมา ดูรายชื่อและที่ว่างได้ทันที">
 <meta property="og:title" content="ลงชื่อก๊วนแบด BADMAN BEGIN">
 <meta property="og:description" content="เลือกช่วงเวลาที่จะมา 20:00 / 21:00 / 22:00 • ดูรายชื่อและที่ว่างได้ทันที">
@@ -79,6 +82,15 @@ header.top nav a:hover { background:rgba(255,255,255,.08); }
 .person .who small { color:var(--muted); font-size:12px; font-weight:700; }
 .tag { border-radius:99px; padding:3px 9px; font-size:11px; font-weight:900; white-space:nowrap; }
 .tag.new { background:#e3f1ea; color:#0f6843; }
+.tag.early { background:#fff3c4; color:#7a5600; }
+.urgent { display:flex; flex-direction:column; gap:6px; margin-top:2px; }
+.urgent span { display:block; line-height:1.5; font-size:13px; font-weight:800; color:#f3e7c0; background:rgba(255,255,255,.07); border:1px solid rgba(233,185,47,.3); border-radius:10px; padding:8px 10px; }
+.urgent span.bird { color:#ffe08a; border-color:rgba(255,224,138,.5); }
+.urgent b { color:#fff; }
+.slot .lbl.hot { color:#ff8a5c !important; animation:hot 1.6s ease-in-out infinite; }
+@keyframes hot { 50% { opacity:.55; } }
+@media (prefers-reduced-motion: reduce) { .slot .lbl.hot { animation:none; } }
+.btn.story { background:linear-gradient(135deg,#e9b92f,#ffd66b); color:#0f0f0e; }
 .tag.guest { background:#fff0b7; color:#725300; }
 .tag.wait { background:#ffd5b3; color:#98450c; }
 .empty { padding:22px 16px; text-align:center; color:var(--muted); font-weight:700; }
@@ -236,6 +248,16 @@ function standings() {
 }
 const peopleIn = (s) => s.used;
 const capTotal = () => round.slots.reduce((t, s) => t + s.cap, 0);
+/** Early Bird: signed up by 23:59 two days before the club night (Wednesday for a Friday round). */
+const earlyEnd = () => new Date(new Date(round.date + "T23:59:59+07:00").getTime() - 2 * 86400e3);
+const isEarly = (e) => e.createdAt && new Date(e.createdAt).getTime() <= earlyEnd().getTime();
+/** "2 วัน 5 ชม." / "2d 5h" until a time. */
+function countdown(t) {
+  const ms = Math.max(0, t - Date.now()), d = Math.floor(ms / 86400e3), h = Math.floor((ms % 86400e3) / 3600e3), m = Math.max(1, Math.floor((ms % 3600e3) / 60e3));
+  return d ? T(`${d} วัน ${h} ชม.`, `${d}d ${h}h`) : h ? T(`${h} ชม. ${m} นาที`, `${h}h ${m}m`) : T(`${m} นาที`, `${m} min`);
+}
+/** Few places left in a slot: 3 or fewer, or a quarter of the slot. */
+const isHot = (s) => s.cap - s.used > 0 && s.cap - s.used <= Math.max(3, Math.ceil(s.cap / 4));
 const mine = () => (auth ? entries.find((e) => e.id === auth.uid) : null);
 const isOpen = () => round && round.status === "open" && new Date(round.closeAt).getTime() > Date.now();
 
@@ -263,8 +285,10 @@ function renderRoundCard(st) {
       const pct = Math.min(100, Math.round((s.used / Math.max(1, s.cap)) * 100));
       const lbl = left <= 0 ? T(`เต็ม ${s.used}/${s.cap}`, `Full ${s.used}/${s.cap}`) : s.used ? T(`${s.used}/${s.cap} • เหลือ ${left}`, `${s.used}/${s.cap} • ${left} left`) : T(`ว่าง ${s.cap}`, `${s.cap} free`);
       const color = left <= 0 ? "#d8d2c0" : s.used ? "#e9b92f" : "#8fe0b2";
-      return `<div class="slot"><b>${esc(s.time)}</b><div><div class="bar"><div style="width:${pct}%"></div></div><small>${T(`รับ ${s.cap} คน`, `${s.cap} places`)}${s.waitPeople ? T(` • สำรอง ${s.waitPeople}`, ` • ${s.waitPeople} waiting`) : ""}</small></div><span class="lbl" style="color:${color}">${lbl}</span></div>`;
+      const hot = open && isHot(s);
+      return `<div class="slot"><b>${esc(s.time)}</b><div><div class="bar"><div style="width:${pct}%${hot ? ";background:#ff8a5c" : ""}"></div></div><small>${T(`รับ ${s.cap} คน`, `${s.cap} places`)}${s.waitPeople ? T(` • สำรอง ${s.waitPeople}`, ` • ${s.waitPeople} waiting`) : ""}</small></div><span class="lbl${hot ? " hot" : ""}" style="color:${color}">${hot ? T(`🔥 เหลือ ${left} ที่!`, `🔥 ${left} left!`) : lbl}</span></div>`;
     }).join("")}</div>
+    ${open ? `<div class="urgent"><span>⏳ ${T(`ปิดรับลงชื่อในอีก <b>${countdown(new Date(round.closeAt).getTime())}</b>`, `Sign-up closes in <b>${countdown(new Date(round.closeAt).getTime())}</b>`)}</span>${Date.now() < earlyEnd().getTime() ? `<span class="bird">🐦 ${T(`Early Bird: ลงชื่อภายใน ${esc(earlyEnd().toLocaleDateString(LOCALE, { weekday: "short", day: "numeric", month: "short" }))} 23:59 ได้ป้าย 🐦 (อีก <b>${countdown(earlyEnd().getTime())}</b>)`, `Early Bird: sign up by ${esc(earlyEnd().toLocaleDateString(LOCALE, { weekday: "short", day: "numeric", month: "short" }))} 23:59 for a 🐦 badge (<b>${countdown(earlyEnd().getTime())}</b> left)`)}</span>` : ""}</div>` : ""}
     ${open && !my ? `<button class="btn gold" id="goForm">${T("ลงชื่อรอบนี้", "Sign up for this round")}</button><span class="hint">${T(`ไม่ต้องสมัคร ไม่ต้องล็อกอิน • ยกเลิกเองได้ถึง ${esc(thaiWhen(round.closeAt))} น.`, `No account or login needed • you can cancel until ${esc(thaiWhen(round.closeAt))}`)}</span>` : ""}
     ${!open ? `<span class="hint">${T("ปิดรับลงชื่อแล้ว • ติดต่อทีมงานในกลุ่ม LINE", "Sign-up is closed • contact the staff in the LINE group")}</span>` : ""}
   </section>`;
@@ -279,11 +303,12 @@ function renderMine(st) {
     <div class="top">
       <span class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ok ? '<path d="M5 12l5 5 9-10"/>' : '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'}</svg></span>
       <b>${ok ? T("คุณลงชื่อแล้ว • ได้ที่แล้ว", "You're signed up • you have a place") : T(`อยู่คิวสำรองที่ ${my.no} ของช่วง ${esc(my.slot)}`, `Waiting list #${my.no} for ${esc(my.slot)}`)}</b>
-      <span class="sub">${esc(who)}</span>
+      <span class="sub">${esc(who)}${isEarly(my) ? " • 🐦 Early Bird" : ""}</span>
       ${ok ? `<span class="time">${T(`มาได้ตั้งแต่ ${esc(my.slot)} น.`, `Come from ${esc(my.slot)}`)}</span>` : ""}
     </div>
     <div class="body">
       <p>${ok ? T(`ถึงสนามแล้วแจ้งชื่อ "${esc(my.name)}" กับทีมงาน`, `When you arrive, tell the staff your name: "${esc(my.name)}"`) : T("มีคนยกเลิกเมื่อไร ระบบจะเลื่อนคุณขึ้นอัตโนมัติ เปิดหน้านี้เช็กสถานะได้ตลอด หรือเปลี่ยนไปช่วงที่ยังว่าง", "If someone cancels you move up automatically. Check back here any time, or switch to a time that still has room.")}</p>
+      <button class="btn story" id="goingCard">${T("📸 สร้างการ์ด “ศุกร์นี้ฉันไป!” ชวนเพื่อน", "📸 Make an “I'm in this Friday!” card")}</button>
       <a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">${T("เปิดกลุ่ม LINE ของก๊วน", "Open the club LINE group")}</a>
       ${isOpen() ? `<button class="btn ghost" id="editMine">${T("แก้ไข / เปลี่ยนช่วงเวลา", "Edit / change time")}</button><button class="btn danger" id="cancelMine">${cancelArmed ? T("กดอีกครั้งเพื่อยืนยันยกเลิก", "Tap again to confirm") : ok ? T("ยกเลิกการลงชื่อ", "Cancel my sign-up") : T("ออกจากคิวสำรอง", "Leave the waiting list")}</button>` : ""}
     </div>
@@ -296,6 +321,7 @@ function renderLists(st) {
   const me = auth?.uid;
   const row = (e, cls, no) => {
     const tags = [];
+    if (isEarly(e)) tags.push(`<span class="tag early" title="Early Bird">🐦</span>`);
     if (!e.memberId) tags.push(`<span class="tag new">${T("คนใหม่", "New")}</span>`);
     if (e.guests?.length) tags.push(`<span class="tag guest">+${e.guests.length} ${T("เพื่อน", e.guests.length > 1 ? "friends" : "friend")}</span>`);
     return `<div class="person ${cls}${e.id === me ? " me" : ""}"><span class="no">${no}</span>${avatar(e)}<span class="who"><b>${esc(e.name)}${e.id === me ? T(" (คุณ)", " (you)") : ""}</b><small>${esc(subOf(e))}${e.guests?.length ? T(" • พา ", " • with ") + e.guests.map(esc).join(", ") : ""}</small></span>${tags.join("")}</div>`;
@@ -473,6 +499,7 @@ document.addEventListener("click", (ev) => {
   if (!t) return;
   if (t.id === "goForm") openForm(false);
   else if (t.id === "editMine") openForm(true);
+  else if (t.id === "goingCard") makeGoingCard(t);
   else if (t.id === "cancelMine") cancelMine();
   else if (t.id === "backList") { view = "list"; form = null; render(); }
   else if (t.id === "submit") submit();
@@ -493,5 +520,6 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && vi
 setInterval(() => { if (view === "list" && !document.hidden) refresh(); }, 60000);
 refresh();
 </script>
+<script src="card.js"></script>
 </body>
 </html>

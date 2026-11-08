@@ -792,12 +792,13 @@ function renderDetail() {
       ${r.status === "closed" ? `<button class="btn" data-status="done">จบรอบ</button>` : ""}
       <button class="btn gold" id="rAdd">+ เพิ่มชื่อ</button>
       <button class="btn" id="rEditSlots">แก้ช่วงเวลา / จำนวนรับ</button>
+      <button class="btn gold" id="rStatus">📣 คัดลอกสถานะชวนลงชื่อ (LINE)</button>
       <button class="btn" id="rCopy">คัดลอกรายชื่อไปโพสต์ LINE</button>
       <button class="btn" id="rReload">รีเฟรช</button>
     </div></div>
     <div class="wrapx"><table class="etable"><thead><tr><th>ลำดับ</th><th>ชื่อเล่น</th><th>สมาชิก</th><th>เพื่อน</th><th>ฝากบอก</th><th>ลงเมื่อ</th><th></th></tr></thead><tbody>
     ${editArmed === "new" ? editor(null) : ""}
-    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${memberCell(e)}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td style="white-space:nowrap"><button class="btn sm" data-edit="${esc(e.id)}">แก้ไข</button> <button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>${editArmed === e.id ? editor(e) : ""}`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
+    ${rows.length ? st.map((s) => s.list.length ? `<tr><td colspan="7" style="background:var(--black);color:var(--gold);font-weight:900;font-size:12px">มา ${esc(s.time)} • ${s.used}/${s.cap}${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</td></tr>` + s.list.map((e) => `<tr class="${e.state === "wait" ? "wait" : ""}"><td class="n">${e.state === "wait" ? "ส." : ""}${e.no}</td><td><b>${esc(e.name)}</b>${e.createdAt && new Date(e.createdAt).getTime() <= new Date(r.id + "T23:59:59+07:00").getTime() - 2 * 86400e3 ? ` <span title="Early Bird">🐦</span>` : ""}${isDup(e) ? ` <span style="background:#c2533a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-weight:900;white-space:nowrap">ชื่อซ้ำ</span>` : ""}</td><td>${memberCell(e)}</td><td>${(e.guests || []).map(esc).join(", ")}</td><td>${esc(selNotes.get(e.id) || "")}</td><td style="white-space:nowrap;color:var(--muted)">${esc(thaiWhen(e.createdAt))}</td><td style="white-space:nowrap"><button class="btn sm" data-edit="${esc(e.id)}">แก้ไข</button> <button class="btn danger" style="padding:6px 10px" data-del="${esc(e.id)}">${delArmed === e.id ? "ยืนยันลบ" : "ลบ"}</button></td></tr>${editArmed === e.id ? editor(e) : ""}`).join("") : "").join("") : `<tr><td colspan="7" class="empty">ยังไม่มีคนลงชื่อ${r.status === "draft" ? " • กด เปิดรับลงชื่อ เมื่อพร้อม" : ""}</td></tr>`}
     </tbody></table></div>
     <p style="margin:0;padding:10px 18px 14px;color:var(--muted);font-size:12px">หน้าลงชื่อสำหรับผู้เล่น: <a href="../signup/" target="_blank" rel="noopener">badmanbegin.github.io/signup/</a> • ลบชื่อ = ที่ว่างในช่วงนั้นจะเลื่อนให้คนแรกในคิวสำรองของช่วงเดียวกัน • คนใหม่: กด + เป็นสมาชิก หรือผูกกับสมาชิกเดิม (เพื่อนที่พามาจะเป็นสมาชิกตอนเช็กอินที่สนาม)</p>`;
 }
@@ -828,6 +829,26 @@ $("rDetail").addEventListener("click", async (e) => {
       if (!id) { toast("เลือกสมาชิกก่อน", true); return; }
       linkArmed = null;
       await linkEntry(selRound.id, b.dataset.linkok, id);
+    }
+    else if (b.id === "rStatus") {
+      // A short "places are going" post for the LINE group: how many signed up, what's nearly full, deadlines.
+      const r = selRound, st = standingsOf(r, selEntries);
+      const total = st.reduce((t, s) => t + s.used, 0), cap = st.reduce((t, s) => t + s.cap, 0);
+      const short = (iso) => new Date(iso).toLocaleString("th-TH", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+      const earlyEnd = new Date(new Date(r.id + "T23:59:59+07:00").getTime() - 2 * 86400e3);
+      const names = st.flatMap((s) => s.list.filter((x) => x.state === "ok").map((x) => x.name));
+      const lines = [`🏸 BADMAN BEGIN • ${thaiDay(r.id)}`, `ลงชื่อแล้ว ${total}/${cap} คน${total < cap ? ` • เหลือ ${cap - total} ที่` : " • เต็มแล้ว"}`, ""];
+      for (const s of st) {
+        const left = s.cap - s.used;
+        lines.push(`• มา ${s.time}: ${left <= 0 ? `เต็มแล้ว${s.waitPeople ? ` (สำรอง ${s.waitPeople})` : ""} ต่อคิวสำรองได้` : `เหลือ ${left} ที่${left <= Math.max(3, Math.ceil(s.cap / 4)) ? " 🔥" : ""}`}`);
+      }
+      if (names.length) lines.push("", `มีใครบ้าง: ${names.slice(0, 8).join(", ")}${names.length > 8 ? ` และอีก ${names.length - 8} คน` : ""}`);
+      lines.push("");
+      if (Date.now() < earlyEnd.getTime()) lines.push(`🐦 Early Bird: ลงภายใน ${earlyEnd.toLocaleDateString("th-TH", { weekday: "short", day: "numeric", month: "short" })} 23:59 ได้ป้าย 🐦 ข้างชื่อ`);
+      if (r.closeAt) lines.push(`⏳ ปิดรับ ${short(r.closeAt)} น.`);
+      lines.push("👉 ลงชื่อ: https://badmanbegin.github.io/signup/");
+      await navigator.clipboard.writeText(lines.join("\n"));
+      toast("คัดลอกสถานะแล้ว วางในกลุ่ม LINE ได้เลย");
     }
     else if (b.id === "rCopy") {
       const st = standingsOf(selRound, selEntries);
