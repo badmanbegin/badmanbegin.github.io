@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>BADMAN BEGIN — ก๊วนแบดคืนวันศุกร์ ลาดพร้าว 64</title>
+<title data-en="BADMAN BEGIN — Friday night badminton, Lat Phrao 64">BADMAN BEGIN — ก๊วนแบดคืนวันศุกร์ ลาดพร้าว 64</title>
+<script src="i18n.js"></script>
 <meta name="description" content="ก๊วนแบด BADMAN BEGIN ทุกวันศุกร์ 20:00–24:00 น. สนามแบดวังนาคา ลาดพร้าว 64 รับทุกระดับมือ ระบบจัดคิวอัตโนมัติ ดูคิวสดและ Ranking ได้บนมือถือ">
 <meta property="og:title" content="BADMAN BEGIN — ก๊วนแบดคืนวันศุกร์ ลาดพร้าว 64">
 <meta property="og:description" content="ทุกวันศุกร์ 20:00–24:00 น. • สนามแบดวังนาคา ลาดพร้าว 64 • มือใหม่มาได้ ระบบจัดคู่ให้สูสี">
@@ -219,20 +220,21 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
 </style>
 </head>
 <body>
-<div class="staff" id="staff" hidden><div class="wrap"><span>เครื่องนี้มีข้อมูลระบบจัดก๊วน • ระบบจัดก๊วน (Court Control) อยู่ที่ thexman49.github.io/badman/court/</span><a href="https://thexman49.github.io/badman/court/">เปิด Court Control</a></div></div>
+<div class="staff" id="staff" hidden><div class="wrap"><span data-en="This device has club manager data • Court Control is at thexman49.github.io/badman/court/">เครื่องนี้มีข้อมูลระบบจัดก๊วน • ระบบจัดก๊วน (Court Control) อยู่ที่ thexman49.github.io/badman/court/</span><a href="https://thexman49.github.io/badman/court/">เปิด Court Control</a></div></div>
 
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#top">
-      <img src="badman-begin-logo.webp" alt="โลโก้ BADMAN BEGIN" width="46" height="46">
-      <span><b>BADMAN <span>BEGIN</span></b><small>ก๊วนแบดวันศุกร์ ลาดพร้าว 64</small></span>
+      <img src="badman-begin-logo.webp" alt="โลโก้ BADMAN BEGIN" data-en-alt="BADMAN BEGIN logo" width="46" height="46">
+      <span><b>BADMAN <span>BEGIN</span></b><small data-en="Friday badminton • Lat Phrao 64">ก๊วนแบดวันศุกร์ ลาดพร้าว 64</small></span>
     </a>
-    <nav aria-label="เมนูหลัก">
-      <a href="live/"><span class="dot" id="navDot"></span>คิวสด</a>
+    <nav aria-label="เมนูหลัก" data-en-aria-label="Main menu">
+      <a href="live/"><span class="dot" id="navDot"></span><span data-en="Live queue">คิวสด</span></a>
       <a href="ranking/">Ranking</a>
-      <a href="#levels">ระดับฝีมือ</a>
-      <a href="#join">วิธีมาเล่น</a>
-      <a class="cta" href="signup/">ลงชื่อรอบนี้</a>
+      <a href="#levels" data-en="Levels">ระดับฝีมือ</a>
+      <a href="#join" data-en="How to join">วิธีมาเล่น</a>
+      <a class="cta" href="signup/" data-en="Sign up">ลงชื่อรอบนี้</a>
+      <span data-lang-slot></span>
     </nav>
   </div>
 </header>
@@ -242,55 +244,55 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
   <div class="wrap">
     <div class="hero-text">
       <p class="eyebrow">BADMAN • BADMINTON CLUB</p>
-      <h1>ก๊วนแบดคืนวันศุกร์<br><span>ทุกมือ ทุกคู่ ทุกเกม</span><br>จัดให้ลงตัว</h1>
-      <p class="lead">มือใหม่มาได้ ระบบจัดคิวให้อัตโนมัติ คู่สูสี ไม่ต้องรอนาน ดูคิวสดได้จากมือถือ และจ่ายตามที่เล่นจริง</p>
+      <h1 data-en="Friday night badminton<br><span>every level, every pair, every game</span><br>matched just right">ก๊วนแบดคืนวันศุกร์<br><span>ทุกมือ ทุกคู่ ทุกเกม</span><br>จัดให้ลงตัว</h1>
+      <p class="lead" data-en="Beginners welcome. The queue is organised automatically with evenly matched games and short waits. Follow the live queue on your phone and pay only for what you play.">มือใหม่มาได้ ระบบจัดคิวให้อัตโนมัติ คู่สูสี ไม่ต้องรอนาน ดูคิวสดได้จากมือถือ และจ่ายตามที่เล่นจริง</p>
       <div class="chips">
-        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>ทุกวันศุกร์ 20:00–24:00 น.</span>
-        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>สนามแบดวังนาคา ลาดพร้าว 64</span>
-        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="7" rx="7" ry="3"/><path d="M5 7v5c0 1.7 3.1 3 7 3s7-1.3 7-3V7"/><path d="M5 12v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg><span id="feeChip">100 บาท/คน + ลูกละ 28 บาท</span></span>
+        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-en="Every Friday 20:00–24:00">ทุกวันศุกร์ 20:00–24:00 น.</span></span>
+        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span data-en="Wang Naka Badminton Court, Lat Phrao 64">สนามแบดวังนาคา ลาดพร้าว 64</span></span>
+        <span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e9b92f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="7" rx="7" ry="3"/><path d="M5 7v5c0 1.7 3.1 3 7 3s7-1.3 7-3V7"/><path d="M5 12v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg><span id="feeChip" data-en="100 THB/person + 28 THB/shuttle">100 บาท/คน + ลูกละ 28 บาท</span></span>
       </div>
       <div class="hero-actions">
-        <a class="btn gold" href="signup/">ลงชื่อรอบนี้</a>
-        <a class="btn ghost" href="live/"><span class="dot live"></span>ดูคิวสด</a>
+        <a class="btn gold" href="signup/" data-en="Sign up for this round">ลงชื่อรอบนี้</a>
+        <a class="btn ghost" href="live/"><span class="dot live"></span><span data-en="Live queue">ดูคิวสด</span></a>
         <a class="btn ghost" href="ranking/">Ranking</a>
       </div>
     </div>
-    <div class="hero-logo"><img src="badman-begin-logo.webp" alt="โลโก้ก๊วน BADMAN BEGIN" width="380" height="380"></div>
+    <div class="hero-logo"><img src="badman-begin-logo.webp" alt="โลโก้ก๊วน BADMAN BEGIN" data-en-alt="BADMAN BEGIN logo" width="380" height="380"></div>
   </div>
 </section>
 
-<section class="livebox" aria-label="สถานะก๊วนคืนนี้">
+<section class="livebox" aria-label="สถานะก๊วนคืนนี้" data-en-aria-label="Tonight at the club">
   <div class="wrap">
     <div class="card">
-      <div class="head"><span class="dot" id="liveDot"></span><b id="liveTitle">LIVE คืนนี้</b><small id="liveAt"></small></div>
-      <div class="nums" id="liveNums"><span class="closed">กำลังโหลด…</span></div>
-      <a class="btn dark" href="live/">เปิดหน้าคิวสด →</a>
+      <div class="head"><span class="dot" id="liveDot"></span><b id="liveTitle">LIVE</b><small id="liveAt"></small></div>
+      <div class="nums" id="liveNums"><span class="closed" data-en="Loading…">กำลังโหลด…</span></div>
+      <a class="btn dark" href="live/" data-en="Open live queue →">เปิดหน้าคิวสด →</a>
     </div>
   </div>
 </section>
 
-<section class="coming" id="coming" hidden aria-label="คนที่ลงชื่อรอบนี้">
+<section class="coming" id="coming" hidden aria-label="คนที่ลงชื่อรอบนี้" data-en-aria-label="Who signed up this round">
   <div class="wrap head">
-    <div><p class="eyebrow" id="comingDay">รอบนี้</p><h2 id="comingTitle">ใครมาบ้าง</h2><small id="comingSub"></small></div>
-    <a class="btn gold" href="signup/" id="comingCta">ลงชื่อเข้าร่วม</a>
+    <div><p class="eyebrow" id="comingDay" data-en="This round">รอบนี้</p><h2 id="comingTitle" data-en="Who's coming">ใครมาบ้าง</h2><small id="comingSub"></small></div>
+    <a class="btn gold" href="signup/" id="comingCta" data-en="Join">ลงชื่อเข้าร่วม</a>
   </div>
   <div class="belt"><div class="track" id="track"></div></div>
 </section>
 
 <section class="block" id="join">
   <div class="wrap">
-    <p class="eyebrow">วิธีมาเล่น</p>
-    <h2 style="margin-bottom:24px">มาคนเดียวก็ได้ ระบบจัดคู่ให้</h2>
-    <p style="margin:-14px 0 22px"><a class="btn dark" href="signup/">ลงชื่อรอบนี้ →</a></p>
+    <p class="eyebrow" data-en="How to join">วิธีมาเล่น</p>
+    <h2 style="margin-bottom:24px" data-en="Come alone, we'll find you partners">มาคนเดียวก็ได้ ระบบจัดคู่ให้</h2>
+    <p style="margin:-14px 0 22px"><a class="btn dark" href="signup/" data-en="Sign up for this round →">ลงชื่อรอบนี้ →</a></p>
     <div class="steps">
-      <div class="step"><span class="no">1</span><b>ลงชื่อบนเว็บ</b><span>เลือกช่วงเวลาที่จะมา 20:00 / 21:00 / 22:00 พาเพื่อนมาได้ ถึงสนามแล้วแจ้งชื่อกับทีมงาน</span></div>
-      <div class="step"><span class="no">2</span><b>ระบบจัดคิวให้</b><span>จัดคู่ 4 คนตามลำดับคิว รอไม่นาน คู่สูสี ได้เล่นกับคนใหม่ๆ ทุกเกม</span></div>
-      <div class="step"><span class="no">3</span><b>ดูคิวบนมือถือ</b><span>เปิดหน้าคิวสดดูว่าเกมถัดไปเป็นของใคร ค่าตีของตัวเองเท่าไร แล้วจ่ายตามจริงตอนกลับ</span></div>
+      <div class="step"><span class="no">1</span><b data-en="Sign up online">ลงชื่อบนเว็บ</b><span data-en="Pick when you'll arrive (20:00 / 21:00 / 22:00), bring friends if you like, and tell the staff your name when you get there.">เลือกช่วงเวลาที่จะมา 20:00 / 21:00 / 22:00 พาเพื่อนมาได้ ถึงสนามแล้วแจ้งชื่อกับทีมงาน</span></div>
+      <div class="step"><span class="no">2</span><b data-en="We run the queue">ระบบจัดคิวให้</b><span data-en="Games of four in queue order: short waits, even matches, new partners every game.">จัดคู่ 4 คนตามลำดับคิว รอไม่นาน คู่สูสี ได้เล่นกับคนใหม่ๆ ทุกเกม</span></div>
+      <div class="step"><span class="no">3</span><b data-en="Follow on your phone">ดูคิวบนมือถือ</b><span data-en="See who's up next and what you owe on the live queue page, then pay for what you played when you leave.">เปิดหน้าคิวสดดูว่าเกมถัดไปเป็นของใคร ค่าตีของตัวเองเท่าไร แล้วจ่ายตามจริงตอนกลับ</span></div>
     </div>
     <div class="fees">
-      <div><small>ค่าสนาม</small><div class="big"><strong id="feeCourt">100</strong><span>บาท / คน</span></div><span class="note">เก็บเมื่อลงเล่นอย่างน้อย 1 เกม</span></div>
-      <div><small>ค่าลูกแบด</small><div class="big"><strong id="feeShuttle">28</strong><span>บาท / ลูก</span></div><span class="note">นับตามลูกที่ใช้ในเกมที่คุณเล่น</span></div>
-      <div><small>ดูยอดตัวเองได้</small><div class="text">เช็กค่าตีของคุณได้สดๆ<br>ใน<a href="live/">หน้าคิวสด</a> แท็บ "ค่าตีแบด"</div></div>
+      <div><small data-en="Court fee">ค่าสนาม</small><div class="big"><strong id="feeCourt">100</strong><span data-en="THB / person">บาท / คน</span></div><span class="note" data-en="Charged once you play at least one game">เก็บเมื่อลงเล่นอย่างน้อย 1 เกม</span></div>
+      <div><small data-en="Shuttles">ค่าลูกแบด</small><div class="big"><strong id="feeShuttle">28</strong><span data-en="THB / shuttle">บาท / ลูก</span></div><span class="note" data-en="Split by the shuttles used in your games">นับตามลูกที่ใช้ในเกมที่คุณเล่น</span></div>
+      <div><small data-en="Check your bill">ดูยอดตัวเองได้</small><div class="text" data-en="See what you owe live<br>on the <a href=&quot;live/&quot;>live queue page</a>, &quot;Fees&quot; tab">เช็กค่าตีของคุณได้สดๆ<br>ใน<a href="live/">หน้าคิวสด</a> แท็บ "ค่าตีแบด"</div></div>
     </div>
   </div>
 </section>
@@ -298,8 +300,8 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
 <section class="block" id="levels">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">BADMAN BEGIN</p><h2>8 ระดับค้างคาวน้อย</h2></div>
-      <span>เน้นสนุก ไม่กดดัน • ทีมงานช่วยประเมินระดับให้ในคืนแรก</span>
+      <div><p class="eyebrow">BADMAN BEGIN</p><h2 data-en="8 little-bat levels">8 ระดับค้างคาวน้อย</h2></div>
+      <span data-en="Fun first, no pressure • staff help find your level on your first night">เน้นสนุก ไม่กดดัน • ทีมงานช่วยประเมินระดับให้ในคืนแรก</span>
     </div>
     <div class="levels" id="levelGrid"></div>
   </div>
@@ -308,10 +310,10 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
 <section class="block" id="ranking">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">RANKING</p><h2>ท็อป 3 ของก๊วน</h2></div>
-      <a class="more" href="ranking/">ดูอันดับทั้งหมด →</a> <a class="more" href="night/">สรุปคืนล่าสุด →</a>
+      <div><p class="eyebrow">RANKING</p><h2 data-en="Club top 3">ท็อป 3 ของก๊วน</h2></div>
+      <a class="more" href="ranking/" data-en="Full ranking →">ดูอันดับทั้งหมด →</a> <a class="more" href="night/" data-en="Latest night recap →">สรุปคืนล่าสุด →</a>
     </div>
-    <div id="podium"><div class="empty-note">กำลังโหลดอันดับ…</div></div>
+    <div id="podium"><div class="empty-note" data-en="Loading ranking…">กำลังโหลดอันดับ…</div></div>
     <div class="club" id="club" hidden></div>
   </div>
 </section>
@@ -319,21 +321,21 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
 <section class="block">
   <div class="wrap duo">
     <div class="rules">
-      <p class="eyebrow" style="margin:0">กติกาก๊วน</p>
-      <h2>เล่นสนุก ดูแลกันและกัน</h2>
+      <p class="eyebrow" style="margin:0" data-en="Club rules">กติกาก๊วน</p>
+      <h2 data-en="Have fun, look out for each other">เล่นสนุก ดูแลกันและกัน</h2>
       <ul>
-        <li>รู้กติกาและมารยาทในสนาม</li>
-        <li>ดูแลตัวเองได้ วอร์มก่อนลงเล่น</li>
-        <li>เล่นเพื่อสนุก มือใหม่ช่วยกันประคอง</li>
-        <li>แจ้งชื่อกับทีมงานเมื่อมาถึง ระบบจะต่อคิวให้</li>
+        <li data-en="Know the rules and court etiquette">รู้กติกาและมารยาทในสนาม</li>
+        <li data-en="Look after yourself and warm up before playing">ดูแลตัวเองได้ วอร์มก่อนลงเล่น</li>
+        <li data-en="Play for fun and help beginners along">เล่นเพื่อสนุก มือใหม่ช่วยกันประคอง</li>
+        <li data-en="Tell the staff your name when you arrive and we'll add you to the queue">แจ้งชื่อกับทีมงานเมื่อมาถึง ระบบจะต่อคิวให้</li>
       </ul>
     </div>
     <div class="map">
-      <iframe title="แผนที่สนามแบดวังนาคา ลาดพร้าว 64" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64&amp;output=embed"></iframe>
+      <iframe title="แผนที่สนามแบดวังนาคา ลาดพร้าว 64" data-en-title="Map: Wang Naka Badminton Court, Lat Phrao 64" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64&amp;output=embed"></iframe>
       <div class="info">
-        <b>สนามแบดวังนาคา</b>
-        <span>ซอยลาดพร้าว 64 กรุงเทพฯ</span>
-        <a class="btn dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64">เปิดใน Google Maps</a>
+        <b data-en="Wang Naka Badminton Court">สนามแบดวังนาคา</b>
+        <span data-en="Soi Lat Phrao 64, Bangkok">ซอยลาดพร้าว 64 กรุงเทพฯ</span>
+        <a class="btn dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64"><span data-en="Open in Google Maps">เปิดใน Google Maps</span></a>
       </div>
     </div>
   </div>
@@ -343,15 +345,15 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
   <div class="wrap">
     <div class="card">
       <div>
-        <p class="eyebrow">มาตีด้วยกัน</p>
-        <h2>ศุกร์นี้ 20:00 น. เจอกันที่สนาม</h2>
-        <p>ลงชื่อล่วงหน้าบนเว็บ เลือกช่วงเวลาที่จะมา ไม่ต้องสมัครสมาชิก มาคนเดียวก็มีคู่ให้ตี มีคำถามทักมาได้ทางเพจหรือโอเพนแชทของก๊วน</p>
+        <p class="eyebrow" data-en="Come and play">มาตีด้วยกัน</p>
+        <h2 data-en="See you on court this Friday at 20:00">ศุกร์นี้ 20:00 น. เจอกันที่สนาม</h2>
+        <p data-en="Sign up online and pick when you'll arrive. No membership needed, and if you come alone we'll find you partners. Questions? Message us on the page or the club's LINE open chat.">ลงชื่อล่วงหน้าบนเว็บ เลือกช่วงเวลาที่จะมา ไม่ต้องสมัครสมาชิก มาคนเดียวก็มีคู่ให้ตี มีคำถามทักมาได้ทางเพจหรือโอเพนแชทของก๊วน</p>
       </div>
       <div class="actions" id="contactLinks">
-        <a class="btn gold" href="signup/">ลงชื่อรอบนี้</a>
-        <a class="btn line" target="_blank" rel="noopener" href="https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5c0 4.1-4 7.5-9 7.5-1 0-2-.1-2.9-.4L5 20l1-3.3C4.2 15.3 3 13.5 3 11.5 3 7.4 7 4 12 4s9 3.4 9 7.5z"/></svg>เข้าโอเพนแชท LINE</a>
-        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.facebook.com/BadmintonBadman"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5H14l.6-3.5h-3.1V7.8c0-.7.5-1.3 1.3-1.3H15z"/></svg>เพจ Facebook BADMAN</a>
-        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64">นำทางไปสนาม</a>
+        <a class="btn gold" href="signup/" data-en="Sign up for this round">ลงชื่อรอบนี้</a>
+        <a class="btn line" target="_blank" rel="noopener" href="https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5c0 4.1-4 7.5-9 7.5-1 0-2-.1-2.9-.4L5 20l1-3.3C4.2 15.3 3 13.5 3 11.5 3 7.4 7 4 12 4s9 3.4 9 7.5z"/></svg><span data-en="Join the LINE open chat">เข้าโอเพนแชท LINE</span></a>
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.facebook.com/BadmintonBadman"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5H14l.6-3.5h-3.1V7.8c0-.7.5-1.3 1.3-1.3H15z"/></svg><span data-en="BADMAN Facebook page">เพจ Facebook BADMAN</span></a>
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%E0%B8%AA%E0%B8%99%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%9A%E0%B8%94%E0%B8%A7%E0%B8%B1%E0%B8%87%E0%B8%99%E0%B8%B2%E0%B8%84%E0%B8%B2+%E0%B8%A5%E0%B8%B2%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%A7+64"><span data-en="Directions">นำทางไปสนาม</span></a>
       </div>
     </div>
   </div>
@@ -360,8 +362,8 @@ footer nav { display:flex; gap:14px; flex-wrap:wrap; }
 
 <footer>
   <div class="wrap">
-    <span>©2026 BADMAN Badminton • ก๊วนแบดวันศุกร์ ลาดพร้าว 64</span>
-    <nav aria-label="ลิงก์ท้ายหน้า"><a href="signup/">ลงชื่อ</a><a href="https://www.facebook.com/BadmintonBadman" target="_blank" rel="noopener">Facebook</a><a href="https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA" target="_blank" rel="noopener">LINE โอเพนแชท</a><a href="live/">คิวสด</a><a href="ranking/">Ranking</a><a href="night/">สรุปคืนก๊วน</a><a href="https://thexman49.github.io/badman/court/">สำหรับทีมงาน</a></nav>
+    <span data-en="©2026 BADMAN Badminton • Friday badminton, Lat Phrao 64">©2026 BADMAN Badminton • ก๊วนแบดวันศุกร์ ลาดพร้าว 64</span>
+    <nav aria-label="ลิงก์ท้ายหน้า" data-en-aria-label="Footer links"><a href="signup/" data-en="Sign up">ลงชื่อ</a><a href="https://www.facebook.com/BadmintonBadman" target="_blank" rel="noopener">Facebook</a><a href="https://line.me/ti/g2/1V9hnTcnCEHI0yKYq7qrirFQPJjd8am_GNZqrA" target="_blank" rel="noopener" data-en="LINE open chat">LINE โอเพนแชท</a><a href="live/" data-en="Live queue">คิวสด</a><a href="ranking/">Ranking</a><a href="night/" data-en="Night recap">สรุปคืนก๊วน</a><a href="https://thexman49.github.io/badman/court/" data-en="Staff">สำหรับทีมงาน</a></nav>
   </div>
 </footer>
 
@@ -382,7 +384,7 @@ const LEVELS = [ // keep in sync with app/members.ts
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const clubDay = (d = new Date()) => new Date(d.getTime() - 6 * 3600e3).toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
-const clock = (iso) => new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const clock = (iso) => new Date(iso).toLocaleTimeString(LOCALE, { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
 const levelOf = (v) => LEVELS.find((l) => l.value === v);
 const initial = (s) => String(s || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
 async function getJson(path) {
@@ -393,7 +395,7 @@ async function getJson(path) {
   return JSON.parse(d.fields.json.stringValue);
 }
 
-$("levelGrid").innerHTML = LEVELS.map((l) => `<div class="lv"><div class="pic"><img src="levels/full${l.value}.webp" alt="ตัวละครระดับ ${l.value} ${esc(l.name)}" width="150" height="150" loading="lazy"></div><div class="body"><span class="tag">LEVEL ${l.value}</span><b>${esc(l.name)}</b><span class="th">${esc(l.th)}</span><span class="desc">${esc(l.desc)}</span></div></div>`).join("");
+$("levelGrid").innerHTML = LEVELS.map((l) => `<div class="lv"><div class="pic"><img src="levels/full${l.value}.webp" alt="${T("ตัวละครระดับ", "Level")} ${l.value} ${esc(l.name)}" width="150" height="150" loading="lazy"></div><div class="body"><span class="tag">LEVEL ${l.value}</span><b>${esc(l.name)}</b>${LANG === "en" ? "" : `<span class="th">${esc(l.th)}</span>`}<span class="desc">${esc(T(l.desc, LEVEL_EN[l.value]))}</span></div></div>`).join("");
 
 try { if (localStorage.getItem("badminton-queue-offline-v1")) $("staff").hidden = false; } catch (e) {}
 // The old app's service worker lived at this address; the court app now has its own under court/.
@@ -405,21 +407,21 @@ async function loadLive() {
     const live = snap && snap.day === clubDay() && Date.now() - new Date(snap.updatedAt).getTime() < 30 * 60000;
     if (snap) {
       $("feeCourt").textContent = snap.courtFee; $("feeShuttle").textContent = snap.shuttleFee;
-      $("feeChip").textContent = `${snap.courtFee} บาท/คน + ลูกละ ${snap.shuttleFee} บาท`;
+      $("feeChip").textContent = T(`${snap.courtFee} บาท/คน + ลูกละ ${snap.shuttleFee} บาท`, `${snap.courtFee} THB/person + ${snap.shuttleFee} THB/shuttle`);
     }
     $("liveDot").className = live ? "dot live" : "dot"; $("navDot").className = live ? "dot live" : "dot";
     if (live) {
       const playing = snap.games.filter((g) => g.status === "playing").length;
-      $("liveTitle").textContent = "LIVE คืนนี้";
-      $("liveAt").textContent = `อัปเดต ${clock(snap.updatedAt)} น.`;
-      $("liveNums").innerHTML = `<div><strong>${snap.totals.present}</strong><span>ผู้เล่น</span></div><div><strong>${playing}</strong><span>เกมกำลังเล่น</span></div><div><strong>${snap.queue.length}</strong><span>คนรอคิว</span></div><div><strong>${snap.totals.gamesEnded}</strong><span>เกมจบแล้ว</span></div>`;
+      $("liveTitle").textContent = T("LIVE คืนนี้", "LIVE tonight");
+      $("liveAt").textContent = T(`อัปเดต ${clock(snap.updatedAt)} น.`, `updated ${clock(snap.updatedAt)}`);
+      $("liveNums").innerHTML = `<div><strong>${snap.totals.present}</strong><span>${T("ผู้เล่น", "players")}</span></div><div><strong>${playing}</strong><span>${T("เกมกำลังเล่น", "games on court")}</span></div><div><strong>${snap.queue.length}</strong><span>${T("คนรอคิว", "waiting")}</span></div><div><strong>${snap.totals.gamesEnded}</strong><span>${T("เกมจบแล้ว", "games played")}</span></div>`;
     } else {
-      $("liveTitle").textContent = "ยังไม่เปิดก๊วน";
+      $("liveTitle").textContent = T("ยังไม่เปิดก๊วน", "Not open yet");
       $("liveAt").textContent = "";
-      $("liveNums").innerHTML = `<span class="closed">เจอกันวันศุกร์ 20:00 น. • ช่วงเปิดก๊วน กล่องนี้จะแสดงจำนวนผู้เล่นและคิวแบบสด</span>`;
+      $("liveNums").innerHTML = `<span class="closed">${T("เจอกันวันศุกร์ 20:00 น. • ช่วงเปิดก๊วน กล่องนี้จะแสดงจำนวนผู้เล่นและคิวแบบสด", "See you Friday at 20:00 • while the club is open this box shows players and the queue live")}</span>`;
     }
   } catch {
-    $("liveNums").innerHTML = `<span class="closed">โหลดสถานะคืนนี้ไม่สำเร็จ ลองเปิดหน้าคิวสด</span>`;
+    $("liveNums").innerHTML = `<span class="closed">${T("โหลดสถานะคืนนี้ไม่สำเร็จ ลองเปิดหน้าคิวสด", "Couldn't load tonight's status. Try the live queue page.")}</span>`;
   }
 }
 
@@ -429,13 +431,13 @@ async function loadRanking() {
     const byId = new Map((roster?.members ?? []).map((m) => [m.id, m]));
     const ranked = Object.entries(stats?.members ?? {}).map(([id, s]) => ({ m: byId.get(id), s })).filter((x) => x.m && x.m.active !== false && x.s.games > 0).sort((a, b) => a.s.rank - b.s.rank).slice(0, 3);
     if (!ranked.length) {
-      $("podium").innerHTML = `<div class="empty-note">อันดับจะขึ้นหลังจบเกมแรกที่บันทึกผล • <a href="ranking/">ดูหน้า Ranking</a></div>`;
+      $("podium").innerHTML = `<div class="empty-note">${T("อันดับจะขึ้นหลังจบเกมแรกที่บันทึกผล", "The ranking appears after the first recorded game")} • <a href="ranking/">${T("ดูหน้า Ranking", "Ranking page")}</a></div>`;
     } else {
       const pod = (x, i) => {
         if (!x) return "<div></div>";
         const lv = levelOf(x.m.level);
         const name = x.m.name || x.m.code;
-        return `<a class="pod r${i + 1}" href="ranking/#${encodeURIComponent(x.m.code)}"><span class="medal">#${i + 1}</span><span class="pav"${x.m.photo ? ` data-photo="${esc(x.m.id)}"` : ""}><span class="ini">${esc(initial(name))}</span>${lv ? `<img class="lvb" src="levels/lv${lv.value}.webp" alt="">` : ""}</span><b>${esc(name)}</b><span class="lvname">${lv ? `Lv.${lv.value} ${esc(lv.name)}` : "&nbsp;"}</span><div class="stat"><span><strong>${x.s.points}</strong><small>แต้ม</small></span><span><strong>${x.s.winPct}%</strong><small>ชนะ</small></span></div></a>`;
+        return `<a class="pod r${i + 1}" href="ranking/#${encodeURIComponent(x.m.code)}"><span class="medal">#${i + 1}</span><span class="pav"${x.m.photo ? ` data-photo="${esc(x.m.id)}"` : ""}><span class="ini">${esc(initial(name))}</span>${lv ? `<img class="lvb" src="levels/lv${lv.value}.webp" alt="">` : ""}</span><b>${esc(name)}</b><span class="lvname">${lv ? `Lv.${lv.value} ${esc(lv.name)}` : "&nbsp;"}</span><div class="stat"><span><strong>${x.s.points}</strong><small>${T("แต้ม", "pts")}</small></span><span><strong>${x.s.winPct}%</strong><small>${T("ชนะ", "wins")}</small></span></div></a>`;
       };
       $("podium").innerHTML = `<div class="podium">${pod(ranked[1], 1)}${pod(ranked[0], 0)}${pod(ranked[2], 2)}</div>`;
       document.querySelectorAll("[data-photo]").forEach(async (el) => {
@@ -450,10 +452,10 @@ async function loadRanking() {
     const cs = stats?.club;
     if (cs && cs.games) {
       $("club").hidden = false;
-      $("club").innerHTML = `<div><small>สมาชิก</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>เกมทั้งหมด</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>คืนที่เปิดก๊วน</small><strong>${cs.nights.toLocaleString()}</strong></div><div><small>ลูกแบดที่ใช้</small><strong class="gold">${cs.shuttles.toLocaleString()}</strong></div>`;
+      $("club").innerHTML = `<div><small>${T("สมาชิก", "Members")}</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>${T("เกมทั้งหมด", "Games")}</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>${T("คืนที่เปิดก๊วน", "Club nights")}</small><strong>${cs.nights.toLocaleString()}</strong></div><div><small>${T("ลูกแบดที่ใช้", "Shuttles used")}</small><strong class="gold">${cs.shuttles.toLocaleString()}</strong></div>`;
     }
   } catch {
-    $("podium").innerHTML = `<div class="empty-note">โหลดอันดับไม่สำเร็จ • <a href="ranking/">เปิดหน้า Ranking</a></div>`;
+    $("podium").innerHTML = `<div class="empty-note">${T("โหลดอันดับไม่สำเร็จ", "Couldn't load the ranking")} • <a href="ranking/">${T("เปิดหน้า Ranking", "Open Ranking")}</a></div>`;
   }
 }
 
@@ -483,9 +485,9 @@ async function loadComing() {
     const [entries, roster, stats] = await Promise.all([listCol(`rounds/${round.id}/entries`), getJson("public/roster").catch(() => null), getJson("public/stats").catch(() => null)]);
     if (!entries.length) {
       $("coming").hidden = false;
-      $("comingDay").textContent = new Date(round.id + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short" });
-      $("comingTitle").innerHTML = `ยังไม่มีใครลงชื่อ <span>มาเป็นคนแรก</span>`;
-      $("comingSub").textContent = cap ? `รับ ${cap} คน • เลือกช่วงเวลาที่จะมาได้เอง` : "";
+      $("comingDay").textContent = new Date(round.id + "T12:00:00+07:00").toLocaleDateString(LOCALE, { weekday: "long", day: "numeric", month: "short" });
+      $("comingTitle").innerHTML = T(`ยังไม่มีใครลงชื่อ <span>มาเป็นคนแรก</span>`, `No one yet <span>be the first</span>`);
+      $("comingSub").textContent = cap ? T(`รับ ${cap} คน • เลือกช่วงเวลาที่จะมาได้เอง`, `${cap} places • pick your arrival time`) : "";
       $("track").className = "track still"; $("track").innerHTML = "";
       return;
     }
@@ -503,17 +505,17 @@ async function loadComing() {
     people.sort((a, b) => (a.st ? a.st.rank : 9999) - (b.st ? b.st.rank : 9999) || a.order - b.order);
     const headcount = entries.reduce((t, e) => t + (e.dupOf ? 0 : 1) + (e.guests?.length || 0), 0);
     $("coming").hidden = false;
-    $("comingDay").textContent = "ใครมาบ้าง • " + new Date(round.id + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short" });
-    $("comingTitle").innerHTML = `ลงชื่อแล้ว <span>${headcount} คน</span>`;
-    $("comingSub").textContent = cap ? (headcount < cap ? `เหลือ ${cap - headcount} ที่ • เรียงตามอันดับ Ranking` : "เต็มแล้ว ลงชื่อต่อคิวสำรองได้") : "";
-    $("comingCta").textContent = cap && headcount >= cap ? "ลงชื่อต่อคิวสำรอง" : `ลงชื่อเข้าร่วม${cap ? ` • เหลือ ${Math.max(0, cap - headcount)} ที่` : ""}`;
+    $("comingDay").textContent = T("ใครมาบ้าง • ", "Who's coming • ") + new Date(round.id + "T12:00:00+07:00").toLocaleDateString(LOCALE, { weekday: "long", day: "numeric", month: "short" });
+    $("comingTitle").innerHTML = T(`ลงชื่อแล้ว <span>${headcount} คน</span>`, `Signed up <span>${headcount}</span>`);
+    $("comingSub").textContent = cap ? (headcount < cap ? T(`เหลือ ${cap - headcount} ที่ • เรียงตามอันดับ Ranking`, `${cap - headcount} places left • sorted by ranking`) : T("เต็มแล้ว ลงชื่อต่อคิวสำรองได้", "Full: you can still join the waiting list")) : "";
+    $("comingCta").textContent = cap && headcount >= cap ? T("ลงชื่อต่อคิวสำรอง", "Join the waiting list") : T(`ลงชื่อเข้าร่วม${cap ? ` • เหลือ ${Math.max(0, cap - headcount)} ที่` : ""}`, `Join${cap ? ` • ${Math.max(0, cap - headcount)} places left` : ""}`);
     const card = ({ e, m, st }) => {
       const lv = m && levelOf(m.level);
       const cls = lv && lv.value >= 7 ? "top" : lv && lv.value >= 5 ? "mid" : "";
       const name = m?.name || e.name;
       const pic = m?.photo ? `<span class="ini" data-cphoto="${esc(m.id)}">${esc(initial(name))}</span>` : lv ? `<img src="levels/full${lv.value}.webp" alt="" loading="lazy">` : `<span class="ini">${esc(initial(name))}</span>`;
       const href = m?.code && st ? `ranking/#${encodeURIComponent(m.code)}` : "signup/";
-      return `<a class="pcard ${cls}" href="${href}"><div class="pic">${pic}${st ? `<span class="rk">#${st.rank}</span>` : `<span class="rk">${m ? "สมาชิก" : "ใหม่"}</span>`}<span class="tm">${esc(e.slot || "")}</span>${e.guests?.length ? `<span class="gst">+${e.guests.length} เพื่อน</span>` : ""}</div><div class="bd"><b>${esc(name)}</b><span class="lvl">${lv ? `<img src="levels/lv${lv.value}.webp" alt=""><small>Lv.${lv.value} ${esc(lv.name)}</small>` : `<small style="color:#b9b29f">ยังไม่ระบุระดับ</small>`}</span><div class="nums"><span><strong>${st ? st.points : "–"}</strong><small>แต้ม</small></span><span><strong>${st ? st.winPct + "%" : "–"}</strong><small>ชนะ</small></span><span><strong>${st ? st.games : "–"}</strong><small>เกม</small></span></div></div></a>`;
+      return `<a class="pcard ${cls}" href="${href}"><div class="pic">${pic}${st ? `<span class="rk">#${st.rank}</span>` : `<span class="rk">${m ? T("สมาชิก", "member") : T("ใหม่", "new")}</span>`}<span class="tm">${esc(e.slot || "")}</span>${e.guests?.length ? `<span class="gst">+${e.guests.length} ${T("เพื่อน", "friend" + (e.guests.length > 1 ? "s" : ""))}</span>` : ""}</div><div class="bd"><b>${esc(name)}</b><span class="lvl">${lv ? `<img src="levels/lv${lv.value}.webp" alt=""><small>Lv.${lv.value} ${esc(lv.name)}</small>` : `<small style="color:#b9b29f">${T("ยังไม่ระบุระดับ", "level not set")}</small>`}</span><div class="nums"><span><strong>${st ? st.points : "–"}</strong><small>${T("แต้ม", "pts")}</small></span><span><strong>${st ? st.winPct + "%" : "–"}</strong><small>${T("ชนะ", "wins")}</small></span><span><strong>${st ? st.games : "–"}</strong><small>${T("เกม", "games")}</small></span></div></div></a>`;
     };
     const cards = people.map(card).join("");
     const run = people.length >= 5;

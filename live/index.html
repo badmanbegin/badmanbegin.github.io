@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>BADMAN BEGIN — คิวก๊วนสด</title>
+<title data-en="BADMAN BEGIN — Live queue">BADMAN BEGIN — คิวก๊วนสด</title>
+<script src="../i18n.js"></script>
 <meta name="description" content="ก๊วนแบด BADMAN ทุกวันศุกร์ 20:00–24:00 น. สนามแบดวังนาคา ลาดพร้าว 64 ดูคิวเกมและค่าตีแบดแบบสด">
 <meta property="og:title" content="BADMAN — คิวก๊วนสด">
 <meta property="og:description" content="ทุกวันศุกร์ 20:00–24:00 น. สนามแบดวังนาคา ลาดพร้าว 64 · ดูคิวเกมสด">
@@ -175,59 +176,59 @@ footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; m
     <div class="brand-lockup">
       <img src="../badman-logo.jpg" alt="Badman Badminton">
       <div>
-        <p class="eyebrow">คิวก๊วนสด • LIVE QUEUE</p>
+        <p class="eyebrow" data-en="LIVE QUEUE">คิวก๊วนสด • LIVE QUEUE</p>
         <h1>BADMAN <span>BEGIN</span></h1>
-        <p class="brand-tagline">ทุกมือ • ทุกคู่ • ทุกเกม จัดให้ลงตัว</p>
+        <p class="brand-tagline" data-en="Every level • every pair • every game, matched just right">ทุกมือ • ทุกคู่ • ทุกเกม จัดให้ลงตัว</p>
       </div>
     </div>
-    <div class="live-chip" aria-live="polite"><span class="dot" id="dot"></span><span id="stat">กำลังโหลดข้อมูลสด…</span></div>
+    <div class="live-chip" aria-live="polite"><span class="dot" id="dot"></span><span id="stat" data-en="Loading live data…">กำลังโหลดข้อมูลสด…</span></div><span data-lang-slot></span>
   </header>
 
   <div class="info-bar">
-    <span>ทุกวันศุกร์ <b>20:00–24:00 น.</b></span>
-    <span>สนามแบดวังนาคา <b>ลาดพร้าว 64</b></span>
+    <span data-en="Every Friday <b>20:00–24:00</b>">ทุกวันศุกร์ <b>20:00–24:00 น.</b></span>
+    <span data-en="Wang Naka court <b>Lat Phrao 64</b>">สนามแบดวังนาคา <b>ลาดพร้าว 64</b></span>
     <span id="rate"></span>
     <span id="courts"></span>
   </div>
   <div class="closed" id="closed" hidden></div>
 
-  <section class="summary-grid" aria-label="สรุปวันนี้">
-    <article><span>ผู้เล่น</span><strong id="sPlayers">–</strong><small>คน</small></article>
-    <article><span>รอคิว</span><strong id="sQueue">–</strong><small>คน</small></article>
-    <article><span>ในสนาม</span><strong id="sCourt">–</strong><small>คน</small></article>
-    <article><span>จบแล้ว</span><strong id="sDone">–</strong><small>เกม</small></article>
-    <article><span>จำนวนลูก</span><strong id="sShuttle">–</strong><small>ลูก</small></article>
+  <section class="summary-grid" aria-label="สรุปวันนี้" data-en-aria-label="Tonight">
+    <article><span data-en="Players">ผู้เล่น</span><strong id="sPlayers">–</strong><small data-en="">คน</small></article>
+    <article><span data-en="Waiting">รอคิว</span><strong id="sQueue">–</strong><small data-en="">คน</small></article>
+    <article><span data-en="On court">ในสนาม</span><strong id="sCourt">–</strong><small data-en="">คน</small></article>
+    <article><span data-en="Played">จบแล้ว</span><strong id="sDone">–</strong><small data-en="games">เกม</small></article>
+    <article><span data-en="Shuttles">จำนวนลูก</span><strong id="sShuttle">–</strong><small data-en="">ลูก</small></article>
   </section>
 
   <div class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="queue">คิวและเกม</button>
-    <button role="tab" aria-selected="false" data-tab="cost">ค่าตีแบด</button>
-    <button role="tab" aria-selected="false" data-tab="history">เกมที่จบแล้ว</button>
+    <button role="tab" aria-selected="true" data-tab="queue" data-en="Queue &amp; games">คิวและเกม</button>
+    <button role="tab" aria-selected="false" data-tab="cost" data-en="Fees">ค่าตีแบด</button>
+    <button role="tab" aria-selected="false" data-tab="history" data-en="Finished games">เกมที่จบแล้ว</button>
   </div>
 
   <section data-panel="queue" class="grid2">
     <div class="stack">
       <div class="panel">
-        <div class="panel-heading"><div><p class="section-no">01</p><h2>กำลังเล่น</h2></div><span id="playingNote"></span></div>
+        <div class="panel-heading"><div><p class="section-no">01</p><h2 data-en="On court">กำลังเล่น</h2></div><span id="playingNote"></span></div>
         <div class="game-list" id="playing"></div>
       </div>
       <div class="panel">
-        <div class="panel-heading"><div><p class="section-no">02</p><h2>เกมถัดไป</h2></div><span>จัดแล้ว รอลงสนาม</span></div>
+        <div class="panel-heading"><div><p class="section-no">02</p><h2 data-en="Up next">เกมถัดไป</h2></div><span data-en="Set up, waiting for a court">จัดแล้ว รอลงสนาม</span></div>
         <div class="game-list" id="next"></div>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-heading"><div><p class="section-no">03</p><h2>คิวรอ</h2></div><span>ลำดับจากระบบจัดก๊วน</span></div>
+      <div class="panel-heading"><div><p class="section-no">03</p><h2 data-en="Queue">คิวรอ</h2></div><span data-en="Order from Court Control">ลำดับจากระบบจัดก๊วน</span></div>
       <div id="queue"></div>
     </div>
   </section>
 
   <section data-panel="cost" hidden>
     <div class="panel">
-      <div class="panel-heading"><div><p class="section-no">ค่าตีแบด</p><h2>ยอดของแต่ละคน</h2></div><span id="rate2"></span></div>
-      <div class="search"><input id="q" placeholder="พิมพ์ชื่อเพื่อค้นหายอดของตัวเอง" autocomplete="off" aria-label="ค้นหาชื่อ"></div>
+      <div class="panel-heading"><div><p class="section-no" data-en="Fees">ค่าตีแบด</p><h2 data-en="What each player owes">ยอดของแต่ละคน</h2></div><span id="rate2"></span></div>
+      <div class="search"><input id="q" placeholder="พิมพ์ชื่อเพื่อค้นหายอดของตัวเอง" data-en-placeholder="Type your name to find your bill" autocomplete="off" aria-label="ค้นหาชื่อ" data-en-aria-label="Search name"></div>
       <div class="table-wrap"><table>
-        <thead><tr><th>ผู้เล่น</th><th>สถานะ</th><th class="r">เกม</th><th class="r">ลูก</th><th class="r">ค่าตี</th></tr></thead>
+        <thead><tr><th data-en="Player">ผู้เล่น</th><th data-en="Status">สถานะ</th><th class="r" data-en="Games">เกม</th><th class="r" data-en="Shuttles">ลูก</th><th class="r" data-en="Total">ค่าตี</th></tr></thead>
         <tbody id="costs"></tbody>
       </table></div>
     </div>
@@ -235,19 +236,19 @@ footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; m
 
   <section data-panel="history" hidden>
     <div class="panel">
-      <div class="panel-heading"><div><p class="section-no">ประวัติ</p><h2>เกมที่จบแล้ว</h2></div><span id="doneNote"></span></div>
+      <div class="panel-heading"><div><p class="section-no" data-en="History">ประวัติ</p><h2 data-en="Finished games">เกมที่จบแล้ว</h2></div><span id="doneNote"></span></div>
       <div class="game-list compact" id="done"></div>
     </div>
   </section>
 
-  <section class="club-stats" id="clubStats" aria-label="สถิติรวมของก๊วน" hidden></section>
+  <section class="club-stats" id="clubStats" aria-label="สถิติรวมของก๊วน" data-en-aria-label="Club stats" hidden></section>
 
-  <section class="rules" aria-label="ข้อมูลก๊วน">
-    <div><b>รับทุกระดับมือ</b><span>มือใหม่มาได้ จัดคู่ให้สูสี</span></div>
-    <div><b>กติกาก๊วน</b><span>รู้กติกา มารยาท • ดูแลตัวเองได้ • เล่นเพื่อสนุก</span></div>
-    <div><b>ข้อมูลสด</b><span>อัปเดตอัตโนมัติจาก BADMAN Court Control</span></div>
+  <section class="rules" aria-label="ข้อมูลก๊วน" data-en-aria-label="About the club">
+    <div><b data-en="All levels welcome">รับทุกระดับมือ</b><span data-en="Beginners welcome, even matches">มือใหม่มาได้ จัดคู่ให้สูสี</span></div>
+    <div><b data-en="Club rules">กติกาก๊วน</b><span data-en="Know the rules and etiquette • look after yourself • play for fun">รู้กติกา มารยาท • ดูแลตัวเองได้ • เล่นเพื่อสนุก</span></div>
+    <div><b data-en="Live data">ข้อมูลสด</b><span data-en="Updated automatically from BADMAN Court Control">อัปเดตอัตโนมัติจาก BADMAN Court Control</span></div>
   </section>
-  <footer><span>BADMAN BEGIN • Live Queue · <a href="../ranking/" style="color:inherit;font-weight:800">ดู Ranking สมาชิก →</a> · <a href="../night/" style="color:inherit;font-weight:800">สรุปคืนก๊วน →</a></span><span>©2026 BADMAN BEGIN</span></footer>
+  <footer><span>BADMAN BEGIN • Live Queue · <a href="../ranking/" style="color:inherit;font-weight:800" data-en="Member ranking →">ดู Ranking สมาชิก →</a> · <a href="../night/" style="color:inherit;font-weight:800" data-en="Night recap →">สรุปคืนก๊วน →</a></span><span>©2026 BADMAN BEGIN</span></footer>
 </main>
 
 <script>
@@ -258,11 +259,11 @@ const POLL_MS = 5000;
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const clubDay = (d = new Date()) => new Date(d.getTime() - 6 * 3600e3).toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
-const thaiDay = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short" });
-const clock = (iso) => new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const thaiDay = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString(LOCALE, { weekday: "long", day: "numeric", month: "short" });
+const clock = (iso) => new Date(iso).toLocaleTimeString(LOCALE, { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
 const mins = (iso) => Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
 const baht = (n) => Number(n || 0).toLocaleString("th-TH", { maximumFractionDigits: 2 });
-const STATE = { playing: "กำลังเล่น", waiting: "รอลงสนาม", queue: "รอคิว", resting: "พัก", stopped: "เลิกเล่น", paid: "ชำระแล้ว" };
+const STATE = LANG === "en" ? { playing: "Playing", waiting: "Up next", queue: "Waiting", resting: "Resting", stopped: "Left", paid: "Paid" } : { playing: "กำลังเล่น", waiting: "รอลงสนาม", queue: "รอคิว", resting: "พัก", stopped: "เลิกเล่น", paid: "ชำระแล้ว" };
 
 let snap = null, failing = false;
 
@@ -314,22 +315,22 @@ function levelTag(p, withThai = true, short = false) {
   const lv = m && levelOf(m.level);
   if (!lv) return "";
   if (short) return `<span class="plv short" title="${esc(lv.name)}">Lv.${lv.value}</span>`;
-  return `<span class="plv"><em>Lv.${lv.value}</em> ${esc(lv.name)}</span>${withThai ? `<span class="pth">${esc(lv.th)}</span>` : ""}`;
+  return `<span class="plv"><em>Lv.${lv.value}</em> ${esc(lv.name)}</span>${withThai && LANG !== "en" ? `<span class="pth">${esc(lv.th)}</span>` : ""}`;
 }
 
 function gameCard(g, name, P) {
   const tile = (id) => { const p = P.get(id); return `<div class="pt">${avatar(p, g.status === "ended" ? 46 : 68)}<b>${name(id)}</b>${levelTag(p, g.status !== "ended", g.status === "ended")}</div>`; };
   const side = (ids) => `<div class="team${ids.length < 2 ? " solo" : ""}">${ids.map(tile).join("")}</div>`;
-  const right = g.status === "playing" ? (g.startedAt ? `${mins(g.startedAt)} นาที` : "กำลังเล่น")
-    : g.status === "waiting" ? "รอลงสนาม" : `${g.shuttles} ลูก${g.endedAt ? " • " + clock(g.endedAt) : ""}`;
+  const right = g.status === "playing" ? (g.startedAt ? T(`${mins(g.startedAt)} นาที`, `${mins(g.startedAt)} min`) : T("กำลังเล่น", "Playing"))
+      : g.status === "waiting" ? T("รอลงสนาม", "Up next") : `${g.shuttles} ${T("ลูก", g.shuttles === 1 ? "shuttle" : "shuttles")}${g.endedAt ? " • " + clock(g.endedAt) : ""}`;
   const r = g.status === "ended" ? g.result : null;
   const scored = r && typeof g.scoreA === "number" && typeof g.scoreB === "number" && (g.scoreA || g.scoreB);
   const cls = (who) => (!r ? "" : r === "draw" ? " draw" : r === who ? " win" : " lose");
-  const tag = (who) => (!r ? "" : r === "draw" ? `<span class="res draw">เสมอ</span>` : r === who ? `<span class="res win">ชนะ</span>` : `<span class="res lose">แพ้</span>`);
+  const tag = (who) => (!r ? "" : r === "draw" ? `<span class="res draw">${T("เสมอ", "Draw")}</span>` : r === who ? `<span class="res win">${T("ชนะ", "Won")}</span>` : `<span class="res lose">${T("แพ้", "Lost")}</span>`);
   const mid = g.status !== "ended" ? "<b>VS</b>"
     : scored ? `<b class="score">${g.scoreA}<i>–</i>${g.scoreB}</b>`
-    : r === "draw" ? `<b class="score draw">เสมอ</b>` : r || g.result === undefined ? "<b>VS</b>" : `<b class="nores">ไม่ได้<br>บันทึกผล</b>`;
-  return `<article class="game-card ${g.status}"><div class="game-title"><span>เกมที่</span><strong>${g.number}</strong><em class="status-dot ${g.status}">${right}</em></div><div class="matchup"><div class="side${cls("a")}">${tag("a")}${side(g.playerIds.slice(0, 2))}</div>${mid}<div class="side${cls("b")}">${tag("b")}${side(g.playerIds.slice(2))}</div></div></article>`;
+    : r === "draw" ? `<b class="score draw">${T("เสมอ", "Draw")}</b>` : r || g.result === undefined ? "<b>VS</b>" : `<b class="nores">${T("ไม่ได้<br>บันทึกผล", "No result<br>recorded")}</b>`;
+  return `<article class="game-card ${g.status}"><div class="game-title"><span>${T("เกมที่", "Game")}</span><strong>${g.number}</strong><em class="status-dot ${g.status}">${right}</em></div><div class="matchup"><div class="side${cls("a")}">${tag("a")}${side(g.playerIds.slice(0, 2))}</div>${mid}<div class="side${cls("b")}">${tag("b")}${side(g.playerIds.slice(2))}</div></div></article>`;
 }
 
 function render() {
@@ -339,10 +340,10 @@ function render() {
   const isToday = snap.day === clubDay();
 
   $("closed").hidden = isToday;
-  if (!isToday) $("closed").textContent = `ยังไม่เปิดก๊วนวันนี้ • ข้อมูลด้านล่างเป็นของรอบ${thaiDay(snap.day)} • เจอกันวันศุกร์ 20:00 น.`;
-  $("rate").innerHTML = `เก็บ <b>${baht(snap.courtFee)}</b> บาท/คน • ลูกละ <b>${baht(snap.shuttleFee)}</b> บาท`;
-  $("rate2").textContent = `ค่าสนาม ${baht(snap.courtFee)} บาท/คน (เมื่อลงเล่น) + ลูกละ ${baht(snap.shuttleFee)} บาท`;
-  $("courts").innerHTML = snap.openCourts.length ? `เปิดอยู่ <b>${snap.openCourts.length}</b> คอร์ท` : "";
+  if (!isToday) $("closed").textContent = T(`ยังไม่เปิดก๊วนวันนี้ • ข้อมูลด้านล่างเป็นของรอบ${thaiDay(snap.day)} • เจอกันวันศุกร์ 20:00 น.`, `The club isn't open today • below is ${thaiDay(snap.day)} • see you Friday at 20:00`);
+  $("rate").innerHTML = T(`เก็บ <b>${baht(snap.courtFee)}</b> บาท/คน • ลูกละ <b>${baht(snap.shuttleFee)}</b> บาท`, `<b>${baht(snap.courtFee)}</b> THB/person • <b>${baht(snap.shuttleFee)}</b> THB/shuttle`);
+  $("rate2").textContent = T(`ค่าสนาม ${baht(snap.courtFee)} บาท/คน (เมื่อลงเล่น) + ลูกละ ${baht(snap.shuttleFee)} บาท`, `Court ${baht(snap.courtFee)} THB/person (once you play) + ${baht(snap.shuttleFee)} THB/shuttle`);
+  $("courts").innerHTML = snap.openCourts.length ? T(`เปิดอยู่ <b>${snap.openCourts.length}</b> คอร์ท`, `<b>${snap.openCourts.length}</b> court${snap.openCourts.length > 1 ? "s" : ""} open`) : "";
   $("sPlayers").textContent = snap.totals.present;
   $("sQueue").textContent = snap.queue.length;
   $("sCourt").textContent = snap.totals.onCourt;
@@ -350,42 +351,42 @@ function render() {
   $("sShuttle").textContent = snap.totals.shuttles;
 
   const playing = snap.games.filter((g) => g.status === "playing").sort((a, b) => a.number - b.number);
-  $("playingNote").textContent = playing.length ? `${playing.length} เกม` : "";
-  $("playing").innerHTML = playing.length ? playing.map((g) => gameCard(g, name, P)).join("") : '<div class="empty"><b>ยังไม่มีเกมในสนาม</b><span>เกมที่กำลังเล่นจะขึ้นตรงนี้</span></div>';
+  $("playingNote").textContent = playing.length ? T(`${playing.length} เกม`, `${playing.length} game${playing.length > 1 ? "s" : ""}`) : "";
+  $("playing").innerHTML = playing.length ? playing.map((g) => gameCard(g, name, P)).join("") : `<div class="empty"><b>${T("ยังไม่มีเกมในสนาม", "No games on court")}</b><span>${T("เกมที่กำลังเล่นจะขึ้นตรงนี้", "Games in play show up here")}</span></div>`;
   const waiting = snap.games.filter((g) => g.status === "waiting").sort((a, b) => a.number - b.number);
-  $("next").innerHTML = waiting.length ? waiting.map((g) => gameCard(g, name, P)).join("") : '<div class="empty"><span>ยังไม่มีเกมที่จัดรอไว้</span></div>';
+  $("next").innerHTML = waiting.length ? waiting.map((g) => gameCard(g, name, P)).join("") : `<div class="empty"><span>${T("ยังไม่มีเกมที่จัดรอไว้", "No games set up yet")}</span></div>`;
 
   const q = snap.queue.map((id) => P.get(id)).filter(Boolean);
   $("queue").innerHTML = q.length
-    ? q.map((p, i) => `<div class="queue-item"><span class="queue-number">${i + 1}</span>${avatar(p, 54)}<span><b>${esc(p.name)}</b><span class="qlv">${levelTag(p)}</span><small>เล่นแล้ว ${p.games} เกม${p.waitSince ? ` • <em class="queue-wait">รอ ${mins(p.waitSince)} นาที</em>` : ""}</small></span></div>`).join("")
-    : '<div class="empty"><b>ไม่มีคนรอคิว</b><span>ทุกคนอยู่ในเกมหรือพักอยู่</span></div>';
+    ? q.map((p, i) => `<div class="queue-item"><span class="queue-number">${i + 1}</span>${avatar(p, 54)}<span><b>${esc(p.name)}</b><span class="qlv">${levelTag(p)}</span><small>${T(`เล่นแล้ว ${p.games} เกม`, `${p.games} played`)}${p.waitSince ? ` • <em class="queue-wait">${T(`รอ ${mins(p.waitSince)} นาที`, `waiting ${mins(p.waitSince)} min`)}</em>` : ""}</small></span></div>`).join("")
+    : `<div class="empty"><b>${T("ไม่มีคนรอคิว", "No one waiting")}</b><span>${T("ทุกคนอยู่ในเกมหรือพักอยู่", "Everyone is playing or resting")}</span></div>`;
 
   const term = $("q").value.trim().toLowerCase();
   const rows = snap.players.filter((p) => !term || p.name.toLowerCase().includes(term));
   $("costs").innerHTML = rows.length
     ? rows.map((p) => `<tr class="st-${p.state}"><td><b>${esc(p.name)}</b></td><td><span class="badge ${p.state}">${STATE[p.state] || ""}</span></td><td class="r">${p.games}</td><td class="r">${p.shuttles}</td><td class="r ${p.paid ? "paid-amt" : p.charge ? "balance-due" : ""}">${baht(p.charge)} ฿</td></tr>`).join("")
-    : `<tr><td colspan="5" class="empty">${term ? "ไม่พบชื่อนี้ในรอบนี้" : "ยังไม่มีใครแจ้งชื่อ"}</td></tr>`;
+    : `<tr><td colspan="5" class="empty">${term ? T("ไม่พบชื่อนี้ในรอบนี้", "No one by that name tonight") : T("ยังไม่มีใครแจ้งชื่อ", "No players yet")}</td></tr>`;
 
   const done = snap.games.filter((g) => g.status === "ended").sort((a, b) => b.number - a.number);
-  $("doneNote").textContent = done.length ? `${done.length} เกม` : "";
+  $("doneNote").textContent = done.length ? T(`${done.length} เกม`, `${done.length} game${done.length > 1 ? "s" : ""}`) : "";
   const cs = snap.clubStats;
   $("clubStats").hidden = !cs || !cs.games;
   if (cs && cs.games) {
-    const since = cs.since ? new Date(cs.since + "T12:00:00+07:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }) : "";
-    $("clubStats").innerHTML = `<header><b>สถิติก๊วน BADMAN</b><span>${since ? "ตั้งแต่ " + since + " • " : ""}${cs.nights} คืน</span></header><div class="tiles"><div><small>สมาชิก</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>เกมทั้งหมด</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>ผลเสมอ</small><strong class="gold">${cs.drawPct}%</strong></div><div><small>ลูกแบดที่ใช้</small><strong>${cs.shuttles.toLocaleString()}</strong></div><div><small>เฉลี่ยต่อคืน</small><strong>${Math.round(cs.games / Math.max(1, cs.nights))}</strong></div></div>`;
+    const since = cs.since ? new Date(cs.since + "T12:00:00+07:00").toLocaleDateString(LOCALE, { day: "numeric", month: "short", year: "numeric" }) : "";
+    $("clubStats").innerHTML = `<header><b>${T("สถิติก๊วน BADMAN", "BADMAN club stats")}</b><span>${since ? T("ตั้งแต่ ", "since ") + since + " • " : ""}${cs.nights} ${T("คืน", "nights")}</span></header><div class="tiles"><div><small>${T("สมาชิก", "Members")}</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>${T("เกมทั้งหมด", "Games")}</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>${T("ผลเสมอ", "Draws")}</small><strong class="gold">${cs.drawPct}%</strong></div><div><small>${T("ลูกแบดที่ใช้", "Shuttles used")}</small><strong>${cs.shuttles.toLocaleString()}</strong></div><div><small>${T("เฉลี่ยต่อคืน", "Games per night")}</small><strong>${Math.round(cs.games / Math.max(1, cs.nights))}</strong></div></div>`;
   }
-  $("done").innerHTML = done.length ? done.map((g) => gameCard(g, name, P)).join("") : '<div class="empty"><span>ยังไม่มีเกมที่จบ</span></div>';
+  $("done").innerHTML = done.length ? done.map((g) => gameCard(g, name, P)).join("") : `<div class="empty"><span>${T("ยังไม่มีเกมที่จบ", "No finished games yet")}</span></div>`;
   renderStatus();
 }
 
 function renderStatus() {
   const dot = $("dot"), stat = $("stat");
-  if (!FIREBASE.apiKey) { dot.className = "dot err"; stat.textContent = "ยังไม่ได้เชื่อมกับระบบจัดก๊วน"; return; }
-  if (!snap) { dot.className = failing ? "dot err" : "dot"; stat.textContent = failing ? "โหลดไม่สำเร็จ กำลังลองใหม่…" : "กำลังโหลดข้อมูลสด…"; return; }
+  if (!FIREBASE.apiKey) { dot.className = "dot err"; stat.textContent = T("ยังไม่ได้เชื่อมกับระบบจัดก๊วน", "Not connected to Court Control"); return; }
+  if (!snap) { dot.className = failing ? "dot err" : "dot"; stat.textContent = failing ? T("โหลดไม่สำเร็จ กำลังลองใหม่…", "Couldn't load, retrying…") : T("กำลังโหลดข้อมูลสด…", "Loading live data…"); return; }
   const age = (Date.now() - new Date(snap.updatedAt).getTime()) / 60000;
   const live = snap.day === clubDay() && age < 10;
   dot.className = failing ? "dot err" : live ? "dot live" : "dot stale";
-  stat.textContent = (live ? "LIVE • " : "") + `อัปเดต ${clock(snap.updatedAt)} น.` + (failing ? " • เชื่อมต่อมีปัญหา" : "");
+  stat.textContent = (live ? "LIVE • " : "") + T(`อัปเดต ${clock(snap.updatedAt)} น.`, `updated ${clock(snap.updatedAt)}`) + (failing ? T(" • เชื่อมต่อมีปัญหา", " • connection problem") : "");
 }
 
 async function load() {
@@ -393,7 +394,7 @@ async function load() {
   try {
     const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents/live/current?key=${FIREBASE.apiKey}`;
     const res = await fetch(url, { cache: "no-store" });
-    if (res.status === 404) { failing = false; $("stat").textContent = "ยังไม่มีข้อมูลจากสนาม"; return; }
+    if (res.status === 404) { failing = false; $("stat").textContent = T("ยังไม่มีข้อมูลจากสนาม", "No data from the court yet"); return; }
     if (!res.ok) throw new Error(String(res.status));
     const doc = await res.json();
     const next = JSON.parse(doc.fields.json.stringValue);

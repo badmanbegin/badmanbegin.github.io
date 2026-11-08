@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>สรุปคืนก๊วน — BADMAN BEGIN</title>
+<title data-en="Night recap — BADMAN BEGIN">สรุปคืนก๊วน — BADMAN BEGIN</title>
+<script src="../i18n.js"></script>
 <meta name="description" content="สรุปผลก๊วนแบด BADMAN BEGIN แต่ละคืน: MVP คู่หูแห่งคืน เกมที่สูสีที่สุด และผลทุกเกม">
 <meta property="og:title" content="สรุปคืนก๊วนแบด BADMAN BEGIN">
 <meta property="og:description" content="MVP ประจำคืน • คู่หูแห่งคืน • เกมที่สูสีที่สุด • ผลทุกเกม">
@@ -90,10 +91,10 @@ footer { text-align:center; color:var(--muted); font-size:12px; padding:0 14px 2
 <body>
 <header class="top"><div class="in">
   <a class="brand" href="../"><img src="../badman-begin-logo.webp" alt="BADMAN BEGIN" width="38" height="38"><b>BADMAN <span>BEGIN</span></b></a>
-  <nav aria-label="เมนู"><a href="../signup/">ลงชื่อ</a><a href="../live/">คิวสด</a><a href="../ranking/">Ranking</a></nav>
+  <nav aria-label="เมนู" data-en-aria-label="Menu"><a href="../signup/" data-en="Sign up">ลงชื่อ</a><a href="../live/" data-en="Live queue">คิวสด</a><a href="../ranking/">Ranking</a><span data-lang-slot></span></nav>
 </div></header>
-<main id="view"><div class="panel"><div class="empty">กำลังโหลดสรุป…</div></div></main>
-<footer>สรุปจากผลเกมที่บันทึกในระบบจัดก๊วน • ชนะ 2 แต้ม เสมอ 1 แต้ม • แสดงชื่อและรูปเฉพาะสมาชิกที่ยินยอม</footer>
+<main id="view"><div class="panel"><div class="empty" data-en="Loading recap…">กำลังโหลดสรุป…</div></div></main>
+<footer data-en="Based on results recorded in Court Control • win 2 pts, draw 1 pt • names and photos only for members who agreed">สรุปจากผลเกมที่บันทึกในระบบจัดก๊วน • ชนะ 2 แต้ม เสมอ 1 แต้ม • แสดงชื่อและรูปเฉพาะสมาชิกที่ยินยอม</footer>
 <div class="toast" id="toast" hidden></div>
 <script>
 // Public data only: public/nights (list of days), public/night-{day} (member ids + numbers), public/roster, photos/{id}.
@@ -103,13 +104,13 @@ const LV = ["", "Baby Bat", "Tiny Wing", "Little Bat", "Bouncing Bat", "Junior B
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const initial = (s) => String(s || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
-const thaiDate = (day, long = true) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", long ? { weekday: "long", day: "numeric", month: "long", year: "numeric" } : { day: "numeric", month: "short", year: "2-digit" });
+const thaiDate = (day, long = true) => new Date(day + "T12:00:00+07:00").toLocaleDateString(LOCALE, long ? { weekday: "long", day: "numeric", month: "long", year: "numeric" } : { day: "numeric", month: "short", year: "2-digit" });
 function toast(m) { const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 3000); }
 async function getJson(path) { const r = await fetch(DOC(path), { cache: "no-store" }); if (r.status === 404) return null; if (!r.ok) throw new Error(String(r.status)); const d = await r.json(); return JSON.parse(d.fields.json.stringValue); }
 
 let roster = new Map(), days = [], sum = null;
 const who = (id) => (id ? roster.get(id) : null);
-const nameOf = (id) => { const m = who(id); return m ? m.name || m.code : "ผู้เล่น"; };
+const nameOf = (id) => { const m = who(id); return m ? m.name || m.code : T("ผู้เล่น", "Player"); };
 function avatar(id, size) {
   const m = who(id);
   const lv = m?.level;
@@ -119,33 +120,33 @@ const link = (id) => { const m = who(id); return m?.code ? `../ranking/#${encode
 const team = (ids) => ids.filter(Boolean).map((id) => esc(nameOf(id))).join(" + ") || "—";
 
 function render() {
-  if (!sum) { $("view").innerHTML = `<section class="hero"><p class="eyebrow">สรุปคืนก๊วน</p><h1>ยังไม่มีสรุป</h1><span style="color:#d8d2c0">สรุปจะขึ้นหลังจบเกมแรกที่บันทึกผลในคืนนั้น</span></section>`; return; }
+  if (!sum) { $("view").innerHTML = `<section class="hero"><p class="eyebrow">${T("สรุปคืนก๊วน", "Night recap")}</p><h1>${T("ยังไม่มีสรุป", "No recap yet")}</h1><span style="color:#d8d2c0">${T("สรุปจะขึ้นหลังจบเกมแรกที่บันทึกผลในคืนนั้น", "The recap appears after the first recorded game of the night")}</span></section>`; return; }
   const s = sum;
   const mvp = s.leaders[0];
   const opts = days.map((d) => `<option value="${esc(d)}"${d === s.day ? " selected" : ""}>${esc(thaiDate(d, false))}</option>`).join("");
   let html = `<section class="hero">
-    <div class="row"><p class="eyebrow">สรุปคืนก๊วน BADMAN</p>${days.length > 1 ? `<select id="pick" aria-label="เลือกคืน">${opts}</select>` : ""}</div>
+    <div class="row"><p class="eyebrow">${T("สรุปคืนก๊วน BADMAN", "BADMAN night recap")}</p>${days.length > 1 ? `<select id="pick" aria-label="${T("เลือกคืน", "Pick a night")}">${opts}</select>` : ""}</div>
     <h1>${esc(thaiDate(s.day))}</h1>
-    <div class="tiles"><div><small>เกม</small><strong>${s.games}</strong></div><div><small>ผู้เล่น</small><strong>${s.players}</strong></div><div><small>ลูกแบด</small><strong>${s.shuttles}</strong></div><div><small>เสมอ</small><strong>${s.draws}</strong></div></div>
-    <div class="actions"><button class="btn line" id="copy">คัดลอกสรุปไปโพสต์ LINE</button>${navigator.share ? `<button class="btn ghost" id="share">แชร์ลิงก์</button>` : ""}<a class="btn gold" href="../signup/">ลงชื่อรอบถัดไป</a></div>
+    <div class="tiles"><div><small>${T("เกม", "Games")}</small><strong>${s.games}</strong></div><div><small>${T("ผู้เล่น", "Players")}</small><strong>${s.players}</strong></div><div><small>${T("ลูกแบด", "Shuttles")}</small><strong>${s.shuttles}</strong></div><div><small>${T("เสมอ", "Draws")}</small><strong>${s.draws}</strong></div></div>
+    <div class="actions"><button class="btn line" id="copy">${T("คัดลอกสรุปไปโพสต์ LINE", "Copy recap for LINE")}</button>${navigator.share ? `<button class="btn ghost" id="share">${T("แชร์ลิงก์", "Share link")}</button>` : ""}<a class="btn gold" href="../signup/">${T("ลงชื่อรอบถัดไป", "Sign up for next round")}</a></div>
   </section>`;
   if (mvp) {
     const m = who(mvp.id);
-    html += `<section class="panel"><a class="mvp" href="${link(mvp.id)}" style="text-decoration:none">${avatar(mvp.id, 116)}<div><span class="badge">MVP ประจำคืน</span><b class="n">${esc(nameOf(mvp.id))}</b>${m?.level ? `<span class="lvl">Lv.${m.level} ${esc(LV[m.level])}</span>` : ""}<div class="st">${mvp.points} แต้ม • ชนะ ${mvp.wins} เสมอ ${mvp.draws} แพ้ ${mvp.losses} จาก ${mvp.games} เกม</div></div></a></section>`;
+    html += `<section class="panel"><a class="mvp" href="${link(mvp.id)}" style="text-decoration:none">${avatar(mvp.id, 116)}<div><span class="badge">${T("MVP ประจำคืน", "MVP of the night")}</span><b class="n">${esc(nameOf(mvp.id))}</b>${m?.level ? `<span class="lvl">Lv.${m.level} ${esc(LV[m.level])}</span>` : ""}<div class="st">${T(`${mvp.points} แต้ม • ชนะ ${mvp.wins} เสมอ ${mvp.draws} แพ้ ${mvp.losses} จาก ${mvp.games} เกม`, `${mvp.points} pts • ${mvp.wins} W ${mvp.draws} D ${mvp.losses} L from ${mvp.games} games`)}</div></div></a></section>`;
   }
   if (s.leaders.length > 1) {
-    html += `<section class="panel"><h2>ตารางคะแนนคืนนี้ <small>ชนะ 2 • เสมอ 1</small></h2>${s.leaders.slice(0, 8).map((x, i) => `<a class="row-p" href="${link(x.id)}"><span class="no">${i + 1}</span>${avatar(x.id, 42)}<span class="who"><b>${esc(nameOf(x.id))}</b><small>ชนะ ${x.wins} • เสมอ ${x.draws} • แพ้ ${x.losses}</small></span><span class="pts"><strong>${x.points}</strong><small>แต้ม</small></span></a>`).join("")}</section>`;
+    html += `<section class="panel"><h2>${T("ตารางคะแนนคืนนี้", "Tonight's table")} <small>${T("ชนะ 2 • เสมอ 1", "win 2 • draw 1")}</small></h2>${s.leaders.slice(0, 8).map((x, i) => `<a class="row-p" href="${link(x.id)}"><span class="no">${i + 1}</span>${avatar(x.id, 42)}<span class="who"><b>${esc(nameOf(x.id))}</b><small>${T(`ชนะ ${x.wins} • เสมอ ${x.draws} • แพ้ ${x.losses}`, `${x.wins} W • ${x.draws} D • ${x.losses} L`)}</small></span><span class="pts"><strong>${x.points}</strong><small>${T("แต้ม", "pts")}</small></span></a>`).join("")}</section>`;
   }
   const pair = s.pairs[0], close = s.closest;
   if (pair || close) {
     html += `<div class="duo">`;
-    html += pair ? `<section class="panel"><h2>คู่หูแห่งคืน</h2><div class="feature"><div class="pair">${avatar(pair.a, 72)}${avatar(pair.b, 72)}</div><b>${esc(nameOf(pair.a))} + ${esc(nameOf(pair.b))}</b><small>ชนะด้วยกัน ${pair.wins} จาก ${pair.games} เกม</small></div></section>` : "<div></div>";
-    html += close ? `<section class="panel"><h2>เกมที่สูสีที่สุด <small>เกมที่ ${close.n}</small></h2><div class="feature"><span class="score">${close.sa} – ${close.sb}</span><b style="font-size:15px">${team(close.a)}</b><small>พบ</small><b style="font-size:15px">${team(close.b)}</b></div></section>` : "<div></div>";
+    html += pair ? `<section class="panel"><h2>${T("คู่หูแห่งคืน", "Pair of the night")}</h2><div class="feature"><div class="pair">${avatar(pair.a, 72)}${avatar(pair.b, 72)}</div><b>${esc(nameOf(pair.a))} + ${esc(nameOf(pair.b))}</b><small>${T(`ชนะด้วยกัน ${pair.wins} จาก ${pair.games} เกม`, `won ${pair.wins} of ${pair.games} games together`)}</small></div></section>` : "<div></div>";
+    html += close ? `<section class="panel"><h2>${T("เกมที่สูสีที่สุด", "Closest game")} <small>${T("เกมที่", "game")} ${close.n}</small></h2><div class="feature"><span class="score">${close.sa} – ${close.sb}</span><b style="font-size:15px">${team(close.a)}</b><small>${T("พบ", "vs")}</small><b style="font-size:15px">${team(close.b)}</b></div></section>` : "<div></div>";
     html += `</div>`;
   }
-  html += `<section class="panel"><h2>ผลทุกเกม <small>${s.decided}/${s.games} เกมมีผล</small></h2>${s.list.map((g) => {
-    const mid = g.r === "draw" ? "เสมอ" : g.r && typeof g.sa === "number" && (g.sa || g.sb) ? `${g.sa}–${g.sb}` : g.r ? "VS" : "–";
-    return `<div class="game"><span class="n">#${g.n}</span><span class="t${g.r === "a" ? " win" : ""}">${g.a.map((id) => `<span>${esc(id ? nameOf(id) : "ผู้เล่น")}</span>`).join("")}</span><span class="mid">${esc(mid)}<small>${g.r === "a" ? "◀ ชนะ" : g.r === "b" ? "ชนะ ▶" : g.r ? "" : "ไม่บันทึกผล"}</small></span><span class="t right${g.r === "b" ? " win" : ""}">${g.b.map((id) => `<span>${esc(id ? nameOf(id) : "ผู้เล่น")}</span>`).join("")}</span></div>`;
+  html += `<section class="panel"><h2>${T("ผลทุกเกม", "All games")} <small>${T(`${s.decided}/${s.games} เกมมีผล`, `${s.decided}/${s.games} with a result`)}</small></h2>${s.list.map((g) => {
+    const mid = g.r === "draw" ? T("เสมอ", "Draw") : g.r && typeof g.sa === "number" && (g.sa || g.sb) ? `${g.sa}–${g.sb}` : g.r ? "VS" : "–";
+    return `<div class="game"><span class="n">#${g.n}</span><span class="t${g.r === "a" ? " win" : ""}">${g.a.map((id) => `<span>${esc(id ? nameOf(id) : T("ผู้เล่น", "Player"))}</span>`).join("")}</span><span class="mid">${esc(mid)}<small>${g.r === "a" ? T("◀ ชนะ", "◀ won") : g.r === "b" ? T("ชนะ ▶", "won ▶") : g.r ? "" : T("ไม่บันทึกผล", "no result")}</small></span><span class="t right${g.r === "b" ? " win" : ""}">${g.b.map((id) => `<span>${esc(id ? nameOf(id) : T("ผู้เล่น", "Player"))}</span>`).join("")}</span></div>`;
   }).join("")}</section>`;
   $("view").innerHTML = html;
   document.querySelectorAll("[data-photo]").forEach(async (el) => {
@@ -160,19 +161,19 @@ function render() {
 
 function summaryText() {
   const s = sum;
-  const lines = [`🏸 สรุปก๊วน BADMAN • ${thaiDate(s.day)}`, `${s.games} เกม • ${s.players} คน • ลูกแบด ${s.shuttles} ลูก`];
-  if (s.leaders[0]) lines.push("", `🏆 MVP: ${nameOf(s.leaders[0].id)} (${s.leaders[0].points} แต้ม, ชนะ ${s.leaders[0].wins}/${s.leaders[0].games})`);
-  if (s.leaders.length > 1) { lines.push("", "ตารางคะแนนคืนนี้"); s.leaders.slice(0, 5).forEach((x, i) => lines.push(`${i + 1}. ${nameOf(x.id)} • ${x.points} แต้ม`)); }
-  if (s.pairs[0]) lines.push("", `🤝 คู่หูแห่งคืน: ${nameOf(s.pairs[0].a)} + ${nameOf(s.pairs[0].b)} (ชนะ ${s.pairs[0].wins}/${s.pairs[0].games})`);
-  if (s.closest) lines.push(`🔥 เกมสูสีที่สุด: ${team(s.closest.a)} ${s.closest.sa}–${s.closest.sb} ${team(s.closest.b)}`.replace(/&amp;/g, "&"));
-  lines.push("", `ดูสรุปเต็ม: ${location.origin}${location.pathname}?d=${s.day}`, `ลงชื่อรอบถัดไป: ${location.origin}${location.pathname.replace(/night\/.*$/, "signup/")}`);
+  const lines = [T(`🏸 สรุปก๊วน BADMAN • ${thaiDate(s.day)}`, `🏸 BADMAN recap • ${thaiDate(s.day)}`), T(`${s.games} เกม • ${s.players} คน • ลูกแบด ${s.shuttles} ลูก`, `${s.games} games • ${s.players} players • ${s.shuttles} shuttles`)];
+  if (s.leaders[0]) lines.push("", T(`🏆 MVP: ${nameOf(s.leaders[0].id)} (${s.leaders[0].points} แต้ม, ชนะ ${s.leaders[0].wins}/${s.leaders[0].games})`, `🏆 MVP: ${nameOf(s.leaders[0].id)} (${s.leaders[0].points} pts, won ${s.leaders[0].wins}/${s.leaders[0].games})`));
+  if (s.leaders.length > 1) { lines.push("", T("ตารางคะแนนคืนนี้", "Tonight's table")); s.leaders.slice(0, 5).forEach((x, i) => lines.push(`${i + 1}. ${nameOf(x.id)} • ${x.points} ${T("แต้ม", "pts")}`)); }
+  if (s.pairs[0]) lines.push("", T(`🤝 คู่หูแห่งคืน: ${nameOf(s.pairs[0].a)} + ${nameOf(s.pairs[0].b)} (ชนะ ${s.pairs[0].wins}/${s.pairs[0].games})`, `🤝 Pair of the night: ${nameOf(s.pairs[0].a)} + ${nameOf(s.pairs[0].b)} (won ${s.pairs[0].wins}/${s.pairs[0].games})`));
+  if (s.closest) lines.push(`🔥 ${T("เกมสูสีที่สุด", "Closest game")}: ${team(s.closest.a)} ${s.closest.sa}–${s.closest.sb} ${team(s.closest.b)}`.replace(/&amp;/g, "&"));
+  lines.push("", `${T("ดูสรุปเต็ม", "Full recap")}: ${location.origin}${location.pathname}?d=${s.day}`, `${T("ลงชื่อรอบถัดไป", "Sign up for next round")}: ${location.origin}${location.pathname.replace(/night\/.*$/, "signup/")}`);
   return lines.join("\n");
 }
 
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("button"); if (!b) return;
-  if (b.id === "copy") { try { await navigator.clipboard.writeText(summaryText()); toast("คัดลอกแล้ว วางในกลุ่ม LINE ได้เลย"); } catch { toast("คัดลอกไม่สำเร็จ"); } }
-  if (b.id === "share") { try { await navigator.share({ title: "สรุปก๊วน BADMAN", text: summaryText().split("\n").slice(0, 4).join("\n"), url: `${location.origin}${location.pathname}?d=${sum.day}` }); } catch {} }
+  if (b.id === "copy") { try { await navigator.clipboard.writeText(summaryText()); toast(T("คัดลอกแล้ว วางในกลุ่ม LINE ได้เลย", "Copied. Paste it in the LINE group.")); } catch { toast(T("คัดลอกไม่สำเร็จ", "Couldn't copy")); } }
+  if (b.id === "share") { try { await navigator.share({ title: T("สรุปก๊วน BADMAN", "BADMAN recap"), text: summaryText().split("\n").slice(0, 4).join("\n"), url: `${location.origin}${location.pathname}?d=${sum.day}` }); } catch {} }
 });
 document.addEventListener("change", async (e) => { if (e.target.id === "pick") { history.replaceState(null, "", `?d=${e.target.value}`); await load(e.target.value); } });
 
@@ -187,7 +188,7 @@ async function load(day) {
     roster = new Map((r?.members || []).map((m) => [m.id, m]));
     const want = new URLSearchParams(location.search).get("d");
     await load(want && /^\d{4}-\d{2}-\d{2}$/.test(want) ? want : days[0]);
-  } catch { $("view").innerHTML = `<div class="panel"><div class="empty">โหลดสรุปไม่สำเร็จ ลองรีเฟรช</div></div>`; }
+  } catch { $("view").innerHTML = `<div class="panel"><div class="empty">${T("โหลดสรุปไม่สำเร็จ ลองรีเฟรช", "Couldn't load the recap. Please refresh.")}</div></div>`; }
 })();
 </script>
 </body>

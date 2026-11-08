@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>BADMAN BEGIN — Ranking สมาชิก</title>
+<title data-en="BADMAN BEGIN — Member ranking">BADMAN BEGIN — Ranking สมาชิก</title>
+<script src="../i18n.js"></script>
 <meta name="description" content="อันดับและสถิติสมาชิกก๊วนแบด BADMAN ทุกวันศุกร์ 20:00–24:00 น. สนามแบดวังนาคา ลาดพร้าว 64">
 <meta property="og:title" content="BADMAN — Ranking สมาชิก">
 <meta property="og:description" content="ใครอันดับไหน ชนะกี่เกม ดูสถิติสมาชิกก๊วน BADMAN">
@@ -163,20 +164,20 @@ footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; m
     <a class="brand-lockup" href="./">
       <img src="../badman-logo.jpg" alt="Badman Badminton">
       <div>
-        <p class="eyebrow">อันดับสมาชิก • RANKING</p>
+        <p class="eyebrow" data-en="MEMBER RANKING">อันดับสมาชิก • RANKING</p>
         <h1>BADMAN <span>BEGIN</span></h1>
-        <p class="brand-tagline">ทุกมือ • ทุกคู่ • ทุกเกม จัดให้ลงตัว</p>
+        <p class="brand-tagline" data-en="Every level • every pair • every game, matched just right">ทุกมือ • ทุกคู่ • ทุกเกม จัดให้ลงตัว</p>
       </div>
     </a>
-    <nav class="nav"><a href="../live/">คิวสด</a><a href="./" class="on">Ranking</a></nav>
+    <nav class="nav"><a href="../live/" data-en="Live queue">คิวสด</a><a href="./" class="on">Ranking</a><span data-lang-slot></span></nav>
   </header>
   <div class="info-bar">
-    <span>ทุกวันศุกร์ <b>20:00–24:00 น.</b></span>
-    <span>สนามแบดวังนาคา <b>ลาดพร้าว 64</b></span>
-    <span>ชนะ <b>2</b> แต้ม • เสมอ <b>1</b> แต้ม</span>
+    <span data-en="Every Friday <b>20:00–24:00</b>">ทุกวันศุกร์ <b>20:00–24:00 น.</b></span>
+    <span data-en="Wang Naka court <b>Lat Phrao 64</b>">สนามแบดวังนาคา <b>ลาดพร้าว 64</b></span>
+    <span data-en="Win <b>2</b> pts • draw <b>1</b> pt">ชนะ <b>2</b> แต้ม • เสมอ <b>1</b> แต้ม</span>
   </div>
 
-  <div id="view"><div class="panel"><div class="empty">กำลังโหลด…</div></div></div>
+  <div id="view"><div class="panel"><div class="empty" data-en="Loading…">กำลังโหลด…</div></div></div>
 
   <footer><span>BADMAN BEGIN • Ranking</span><span>©2026 BADMAN BEGIN</span></footer>
 </main>
@@ -202,7 +203,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const levelOf = (v) => LEVELS.find((l) => l.value === v);
 const levelLabel = (v) => { const l = levelOf(v); return l ? `Lv.${l.value} ${l.name}` : ""; };
 const lvImg = (v, px = 18) => levelOf(v) ? `<img class="lvi" src="../levels/lv${v}.webp" alt="" width="${px}" height="${px}" loading="lazy">` : "";
-const thaiDate = (d, opt = { day: "numeric", month: "short", year: "2-digit" }) => d ? new Date(d + "T12:00:00+07:00").toLocaleDateString("th-TH", opt) : "";
+const thaiDate = (d, opt = { day: "numeric", month: "short", year: "2-digit" }) => d ? new Date(d + "T12:00:00+07:00").toLocaleDateString(LOCALE, opt) : "";
 
 let roster = new Map(), byCode = new Map(), stats = { members: {}, club: null }, ranked = [];
 let level = 0, term = "", shown = PAGE;
@@ -217,7 +218,7 @@ async function getDoc(path) {
 async function getJson(path) { const d = await getDoc(path); return d ? JSON.parse(d.fields.json.stringValue) : null; }
 
 const who = (id) => roster.get(id);
-const display = (m) => m?.name || m?.code || "สมาชิก";
+const display = (m) => m?.name || m?.code || T("สมาชิก", "Member");
 function avatar(m, cls = "") {
   const ch = esc((m?.name || m?.code || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase());
   return m?.photo ? `<span class="avatar ${cls}" data-photo="${esc(m.id)}">${ch}</span>` : `<span class="avatar ${cls}">${ch}</span>`;
@@ -230,52 +231,52 @@ async function fillPhoto(el) {
   if (src && src.startsWith("data:image/")) { const img = new Image(); img.alt = ""; img.src = src; el.textContent = ""; el.appendChild(img); }
 }
 function hydratePhotos() { document.querySelectorAll("[data-photo]").forEach((el) => (io ? io.observe(el) : fillPhoto(el))); }
-const formDots = (recent) => `<span class="form" aria-label="ฟอร์มล่าสุด">${recent.slice(0, 5).map((g) => `<i class="${g.r}"></i>`).join("")}</span>`;
+const formDots = (recent) => `<span class="form" aria-label="${T("ฟอร์มล่าสุด", "Recent form")}">${recent.slice(0, 5).map((g) => `<i class="${g.r}"></i>`).join("")}</span>`;
 const link = (m) => "#" + encodeURIComponent(m?.code || "");
 
 function clubBox() {
   const cs = stats.club;
   if (!cs || !cs.games) return "";
   const since = cs.since ? thaiDate(cs.since, { day: "numeric", month: "short", year: "numeric" }) : "";
-  return `<section class="club-stats" aria-label="สถิติรวมของก๊วน"><header><b>สถิติก๊วน BADMAN</b><span>${since ? "ตั้งแต่ " + since + " • " : ""}${cs.nights} คืน</span></header><div class="tiles"><div><small>สมาชิก</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>เกมทั้งหมด</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>ผลเสมอ</small><strong class="gold">${cs.drawPct}%</strong></div><div><small>ลูกแบดที่ใช้</small><strong>${cs.shuttles.toLocaleString()}</strong></div><div><small>เฉลี่ยต่อคืน</small><strong>${Math.round(cs.games / Math.max(1, cs.nights))}</strong></div></div></section>`;
+  return `<section class="club-stats" aria-label="${T("สถิติรวมของก๊วน", "Club stats")}"><header><b>${T("สถิติก๊วน BADMAN", "BADMAN club stats")}</b><span>${since ? T("ตั้งแต่ ", "since ") + since + " • " : ""}${cs.nights} ${T("คืน", "nights")}</span></header><div class="tiles"><div><small>${T("สมาชิก", "Members")}</small><strong>${cs.members.toLocaleString()}</strong></div><div><small>${T("เกมทั้งหมด", "Games")}</small><strong>${cs.games.toLocaleString()}</strong></div><div><small>${T("ผลเสมอ", "Draws")}</small><strong class="gold">${cs.drawPct}%</strong></div><div><small>${T("ลูกแบดที่ใช้", "Shuttles used")}</small><strong>${cs.shuttles.toLocaleString()}</strong></div><div><small>${T("เฉลี่ยต่อคืน", "Games per night")}</small><strong>${Math.round(cs.games / Math.max(1, cs.nights))}</strong></div></div></section>`;
 }
 
 function renderRanking() {
-  document.title = "BADMAN — Ranking สมาชิก";
+  document.title = T("BADMAN BEGIN — Ranking สมาชิก", "BADMAN BEGIN — Member ranking");
   const rows = ranked.filter(({ m }) => (!level || m.level === level) && (!term || display(m).toLowerCase().includes(term) || m.code.toLowerCase().includes(term)));
   const podium = !level && !term ? ranked.slice(0, 3) : [];
-  const pod = (x, i) => x ? `<a class="pod r${i + 1}" href="${link(x.m)}"><span class="medal">#${i + 1}</span>${avatar(x.m)}<b>${esc(display(x.m))}</b><small>${x.s.wins} ชนะ • ${x.s.games} เกม</small><div class="pts">${x.s.points}<small style="display:inline;font-size:12px"> แต้ม</small></div></a>` : "<div></div>";
+  const pod = (x, i) => x ? `<a class="pod r${i + 1}" href="${link(x.m)}"><span class="medal">#${i + 1}</span>${avatar(x.m)}<b>${esc(display(x.m))}</b><small>${T(`${x.s.wins} ชนะ • ${x.s.games} เกม`, `${x.s.wins} wins • ${x.s.games} games`)}</small><div class="pts">${x.s.points}<small style="display:inline;font-size:12px"> ${T("แต้ม", "pts")}</small></div></a>` : "<div></div>";
   const usedLevels = [...new Set(ranked.map(({ m }) => m.level).filter(Boolean))].sort((a, b) => a - b);
   $("view").innerHTML = clubBox() + `<section class="panel">
-    <div class="panel-heading"><div><p class="section-no">RANKING</p><h2>อันดับสมาชิก</h2></div><span>${stats.updatedAt ? "อัปเดต " + new Date(stats.updatedAt).toLocaleString("th-TH", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" }) + " น." : ""}</span></div>
+    <div class="panel-heading"><div><p class="section-no">RANKING</p><h2>${T("อันดับสมาชิก", "Member ranking")}</h2></div><span>${stats.updatedAt ? T("อัปเดต ", "updated ") + new Date(stats.updatedAt).toLocaleString(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" }) + T(" น.", "") : ""}</span></div>
     ${podium.length ? `<div class="podium">${pod(podium[1], 1)}${pod(podium[0], 0)}${pod(podium[2], 2)}</div>` : ""}
-    <div class="toolbar"><input id="q" placeholder="ค้นหาชื่อหรือรหัสสมาชิก" value="${esc(term)}" autocomplete="off" aria-label="ค้นหา">
-      ${usedLevels.length ? `<div class="chips" role="group" aria-label="ระดับ"><button class="chip" data-level="0" aria-pressed="${!level}">ทุกระดับ</button>${usedLevels.map((l) => `<button class="chip" data-level="${l}" aria-pressed="${level === l}">${lvImg(l)}${esc(levelLabel(l))}</button>`).join("")}</div>` : ""}</div>
-    <div id="rows">${rows.length ? rows.slice(0, shown).map(({ m, s }) => `<a class="rank-row" href="${link(m)}"><span class="rank-no">${s.rank}</span>${avatar(m)}<span class="who"><b>${esc(display(m))}</b><small>${esc(m.name ? m.code : "")}${m.level ? (m.name ? " • " : "") + lvImg(m.level, 16) + " " + esc(levelLabel(m.level)) : ""} ${formDots(s.recent)}</small></span><span class="nums"><span>${s.points}<small>แต้ม</small></span><span class="opt">${s.games}<small>เกม</small></span><span>${s.winPct}%<small>ชนะ</small></span></span></a>`).join("") : `<div class="empty">${ranked.length ? "ไม่พบสมาชิกที่ค้นหา" : "ยังไม่มีผลการแข่งขัน • อันดับจะขึ้นหลังบันทึกผลเกมในระบบจัดก๊วน"}</div>`}</div>
-    ${rows.length > shown ? `<button class="more" id="more">ดูเพิ่มอีก ${Math.min(PAGE, rows.length - shown)} คน</button>` : ""}
-    <p class="note">สมาชิกที่ไม่ได้ยินยอมให้แสดงชื่อ จะแสดงเป็นรหัสสมาชิก • นับเฉพาะเกมที่บันทึกผล</p>
+    <div class="toolbar"><input id="q" placeholder="${T("ค้นหาชื่อหรือรหัสสมาชิก", "Search name or member code")}" value="${esc(term)}" autocomplete="off" aria-label="${T("ค้นหา", "Search")}">
+      ${usedLevels.length ? `<div class="chips" role="group" aria-label="${T("ระดับ", "Level")}"><button class="chip" data-level="0" aria-pressed="${!level}">${T("ทุกระดับ", "All levels")}</button>${usedLevels.map((l) => `<button class="chip" data-level="${l}" aria-pressed="${level === l}">${lvImg(l)}${esc(levelLabel(l))}</button>`).join("")}</div>` : ""}</div>
+    <div id="rows">${rows.length ? rows.slice(0, shown).map(({ m, s }) => `<a class="rank-row" href="${link(m)}"><span class="rank-no">${s.rank}</span>${avatar(m)}<span class="who"><b>${esc(display(m))}</b><small>${esc(m.name ? m.code : "")}${m.level ? (m.name ? " • " : "") + lvImg(m.level, 16) + " " + esc(levelLabel(m.level)) : ""} ${formDots(s.recent)}</small></span><span class="nums"><span>${s.points}<small>${T("แต้ม", "pts")}</small></span><span class="opt">${s.games}<small>${T("เกม", "games")}</small></span><span>${s.winPct}%<small>${T("ชนะ", "wins")}</small></span></span></a>`).join("") : `<div class="empty">${ranked.length ? T("ไม่พบสมาชิกที่ค้นหา", "No members match") : T("ยังไม่มีผลการแข่งขัน • อันดับจะขึ้นหลังบันทึกผลเกมในระบบจัดก๊วน", "No results yet • the ranking appears once games are recorded")}</div>`}</div>
+    ${rows.length > shown ? `<button class="more" id="more">${T(`ดูเพิ่มอีก ${Math.min(PAGE, rows.length - shown)} คน`, `Show ${Math.min(PAGE, rows.length - shown)} more`)}</button>` : ""}
+    <p class="note">${T("สมาชิกที่ไม่ได้ยินยอมให้แสดงชื่อ จะแสดงเป็นรหัสสมาชิก • นับเฉพาะเกมที่บันทึกผล", "Members who haven't agreed to show their name appear as their member code • only games with a recorded result count")}</p>
   </section>
-  <section class="panel" aria-label="ระดับฝีมือ">
-    <div class="panel-heading"><div><p class="section-no">BADMAN BEGIN</p><h2>8 ระดับค้างคาวน้อย</h2></div><span>เน้นสนุก ไม่กดดัน! • กดเพื่อดูสมาชิกแต่ละระดับ</span></div>
-    <div class="levels">${LEVELS.map((l) => { const n = [...roster.values()].filter((m) => m.active !== false && m.level === l.value).length; return `<button class="lv" data-level="${level === l.value ? 0 : l.value}" aria-pressed="${level === l.value}"><span class="ic" aria-hidden="true"><img src="../levels/full${l.value}.webp" alt="" width="96" height="96" loading="lazy"></span><b><em>LEVEL ${l.value}</em>${esc(l.name)}</b><span>${esc(l.th)}</span><p>${esc(l.desc)}</p>${n ? `<small>${n} คน</small>` : ""}</button>`; }).join("")}</div>
+  <section class="panel" aria-label="${T("ระดับฝีมือ", "Levels")}">
+    <div class="panel-heading"><div><p class="section-no">BADMAN BEGIN</p><h2>${T("8 ระดับค้างคาวน้อย", "8 little-bat levels")}</h2></div><span>${T("เน้นสนุก ไม่กดดัน! • กดเพื่อดูสมาชิกแต่ละระดับ", "Fun first, no pressure! • tap a level to see its members")}</span></div>
+    <div class="levels">${LEVELS.map((l) => { const n = [...roster.values()].filter((m) => m.active !== false && m.level === l.value).length; return `<button class="lv" data-level="${level === l.value ? 0 : l.value}" aria-pressed="${level === l.value}"><span class="ic" aria-hidden="true"><img src="../levels/full${l.value}.webp" alt="" width="96" height="96" loading="lazy"></span><b><em>LEVEL ${l.value}</em>${esc(l.name)}</b>${LANG === "en" ? "" : `<span>${esc(l.th)}</span>`}<p>${esc(T(l.desc, LEVEL_EN[l.value]))}</p>${n ? `<small>${n} ${T("คน", n > 1 ? "members" : "member")}</small>` : ""}</button>`; }).join("")}</div>
   </section>`;
   hydratePhotos();
 }
 
 function renderProfile(code) {
   const m = byCode.get(code.toUpperCase());
-  if (!m) { $("view").innerHTML = `<section class="panel"><div class="empty">ไม่พบสมาชิก ${esc(code)}</div></section><a class="back" href="./">← กลับไปหน้า Ranking</a>`; return; }
+  if (!m) { $("view").innerHTML = `<section class="panel"><div class="empty">${T("ไม่พบสมาชิก", "Member not found:")} ${esc(code)}</div></section><a class="back" href="./">${T("← กลับไปหน้า Ranking", "← Back to ranking")}</a>`; return; }
   const s = stats.members[m.id];
   document.title = `${display(m)} — BADMAN BEGIN`;
-  const meta = [m.name ? `<span><b>${esc(m.code)}</b></span>` : "", m.level ? `<span>${lvImg(m.level, 22)} ${esc(levelLabel(m.level))} • ${esc(levelOf(m.level)?.th ?? "")}</span>` : "", m.hand ? `<span>${m.hand === "L" ? "ถนัดซ้าย" : "ถนัดขวา"}</span>` : "", m.joined ? `<span>เข้าก๊วน ${esc(thaiDate(m.joined))}</span>` : "", s?.lastDay ? `<span>เล่นล่าสุด ${esc(thaiDate(s.lastDay))}</span>` : ""].join("");
+  const meta = [m.name ? `<span><b>${esc(m.code)}</b></span>` : "", m.level ? `<span>${lvImg(m.level, 22)} ${esc(levelLabel(m.level))}${LANG === "en" ? "" : " • " + esc(levelOf(m.level)?.th ?? "")}</span>` : "", m.hand ? `<span>${m.hand === "L" ? T("ถนัดซ้าย", "Left-handed") : T("ถนัดขวา", "Right-handed")}</span>` : "", m.joined ? `<span>${T("เข้าก๊วน", "Joined")} ${esc(thaiDate(m.joined))}</span>` : "", s?.lastDay ? `<span>${T("เล่นล่าสุด", "Last played")} ${esc(thaiDate(s.lastDay))}</span>` : ""].join("");
   const team = (ids) => ids.map((id) => esc(display(who(id)))).join(" + ");
   $("view").innerHTML = `<section class="panel">
-    <div class="profile-hero">${avatar(m)}<div>${s ? `<div class="rank-badge">อันดับ <strong>${s.rank}</strong> / ${ranked.length}</div>` : ""}<h2>${esc(display(m))}</h2><div class="meta">${meta}</div></div>${m.level ? `<img class="hero-lv" src="../levels/full${m.level}.webp" alt="${esc(levelLabel(m.level))}">` : ""}</div>
-    ${s ? `<div class="tiles"><div><small>แต้ม</small><strong>${s.points}</strong></div><div><small>เกม</small><strong>${s.games}</strong></div><div><small>ชนะ</small><strong class="w">${s.wins}</strong></div><div><small>เสมอ / แพ้</small><strong>${s.draws}<span style="color:var(--muted)"> / </span><span class="l">${s.losses}</span></strong></div><div><small>อัตราชนะ</small><strong>${s.winPct}%</strong></div></div>
-    <div class="split"><section><h3>เกมล่าสุด</h3>${s.recent.length ? s.recent.map((g) => `<div class="game"><span class="res ${g.r}">${g.r === "W" ? "ชนะ" : g.r === "L" ? "แพ้" : "เสมอ"}</span><span>${g.p ? `คู่กับ <b>${team([g.p])}</b>` : "<b>—</b>"}<small>พบ ${team(g.o.filter(Boolean)) || "—"}</small></span><time>${esc(thaiDate(g.d, { day: "numeric", month: "short" }))}</time></div>`).join("") : '<div class="empty">ยังไม่มีเกมที่บันทึกผล</div>'}</section>
-    <section><h3>คู่ที่เล่นด้วยบ่อย</h3>${s.partners.length ? s.partners.map((p) => { const pm = who(p.id); return `<a class="partner" href="${link(pm)}">${avatar(pm)}<span>${esc(display(pm))}</span><em>${p.n} เกม</em></a>`; }).join("") : '<div class="empty" style="padding:14px">ยังไม่มีข้อมูล</div>'}</section></div>` : '<div class="empty">ยังไม่มีผลการแข่งขันที่บันทึกไว้</div>'}
-    <div class="card-bar"><span>การ์ดผู้เล่นสำหรับลงสตอรี่ IG / FB หรือส่งใน LINE</span><button class="card-btn" id="makeCard" data-code="${esc(m.code)}">บันทึกการ์ดของฉัน</button></div>
-  </section><a class="back" href="./">← กลับไปหน้า Ranking</a>`;
+    <div class="profile-hero">${avatar(m)}<div>${s ? `<div class="rank-badge">${T("อันดับ", "Rank")} <strong>${s.rank}</strong> / ${ranked.length}</div>` : ""}<h2>${esc(display(m))}</h2><div class="meta">${meta}</div></div>${m.level ? `<img class="hero-lv" src="../levels/full${m.level}.webp" alt="${esc(levelLabel(m.level))}">` : ""}</div>
+    ${s ? `<div class="tiles"><div><small>${T("แต้ม", "Points")}</small><strong>${s.points}</strong></div><div><small>${T("เกม", "Games")}</small><strong>${s.games}</strong></div><div><small>${T("ชนะ", "Wins")}</small><strong class="w">${s.wins}</strong></div><div><small>${T("เสมอ / แพ้", "Draws / losses")}</small><strong>${s.draws}<span style="color:var(--muted)"> / </span><span class="l">${s.losses}</span></strong></div><div><small>${T("อัตราชนะ", "Win rate")}</small><strong>${s.winPct}%</strong></div></div>
+    <div class="split"><section><h3>${T("เกมล่าสุด", "Recent games")}</h3>${s.recent.length ? s.recent.map((g) => `<div class="game"><span class="res ${g.r}">${g.r === "W" ? T("ชนะ", "Won") : g.r === "L" ? T("แพ้", "Lost") : T("เสมอ", "Draw")}</span><span>${g.p ? `${T("คู่กับ", "with")} <b>${team([g.p])}</b>` : "<b>—</b>"}<small>${T("พบ", "vs")} ${team(g.o.filter(Boolean)) || "—"}</small></span><time>${esc(thaiDate(g.d, { day: "numeric", month: "short" }))}</time></div>`).join("") : `<div class="empty">${T("ยังไม่มีเกมที่บันทึกผล", "No recorded games yet")}</div>`}</section>
+    <section><h3>${T("คู่ที่เล่นด้วยบ่อย", "Frequent partners")}</h3>${s.partners.length ? s.partners.map((p) => { const pm = who(p.id); return `<a class="partner" href="${link(pm)}">${avatar(pm)}<span>${esc(display(pm))}</span><em>${p.n} ${T("เกม", "games")}</em></a>`; }).join("") : `<div class="empty" style="padding:14px">${T("ยังไม่มีข้อมูล", "No data yet")}</div>`}</section></div>` : `<div class="empty">${T("ยังไม่มีผลการแข่งขันที่บันทึกไว้", "No recorded results yet")}</div>`}
+    <div class="card-bar"><span>${T("การ์ดผู้เล่นสำหรับลงสตอรี่ IG / FB หรือส่งใน LINE", "A player card for your IG / FB story or LINE")}</span><button class="card-btn" id="makeCard" data-code="${esc(m.code)}">${T("บันทึกการ์ดของฉัน", "Save my card")}</button></div>
+  </section><a class="back" href="./">${T("← กลับไปหน้า Ranking", "← Back to ranking")}</a>`;
   hydratePhotos();
   window.scrollTo(0, 0);
 }
@@ -349,7 +350,7 @@ async function drawCard(m) {
   ctx.textBaseline = "middle"; ctx.textAlign = "left";
   ctx.font = '900 46px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#fff"; fill(ctx, "BADMAN", 206, 104);
   const bw = ctx.measureText("BADMAN ").width; ctx.fillStyle = "#e9b92f"; fill(ctx, "BEGIN", 206 + bw, 104);
-  ctx.font = '700 26px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#b9b29f"; fill(ctx, "PLAYER CARD • ก๊วนแบดวันศุกร์", 206, 150);
+  ctx.font = '700 26px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#b9b29f"; fill(ctx, T("PLAYER CARD • ก๊วนแบดวันศุกร์", "PLAYER CARD • Friday badminton"), 206, 150);
   // portrait
   const cx = W / 2, cy = 520, R = 250;
   ctx.beginPath(); ctx.arc(cx, cy, R + 22, 0, Math.PI * 2); ctx.fillStyle = "rgba(233,185,47,.14)"; ctx.fill();
@@ -360,16 +361,16 @@ async function drawCard(m) {
   if (s) {
     const rx = cx - R * 0.78, ry = cy - R * 0.78;
     ctx.beginPath(); ctx.arc(rx, ry, 92, 0, Math.PI * 2); ctx.fillStyle = "#e9b92f"; ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = "#0f0f0e"; ctx.stroke();
-    ctx.textAlign = "center"; ctx.fillStyle = "#0f0f0e"; ctx.font = '800 26px "Noto Sans Thai",Tahoma,sans-serif'; fill(ctx, "อันดับ", rx, ry - 34);
+    ctx.textAlign = "center"; ctx.fillStyle = "#0f0f0e"; ctx.font = '800 26px "Noto Sans Thai",Tahoma,sans-serif'; fill(ctx, T("อันดับ", "RANK"), rx, ry - 34);
     fitText(ctx, "#" + s.rank, 150, 76); fill(ctx, "#" + s.rank, rx, ry + 22);
   }
   // name + level
   ctx.textAlign = "center"; ctx.fillStyle = "#fff"; fitText(ctx, display(m), W - 140, 104); fill(ctx, display(m), cx, 875);
   ctx.font = '800 38px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#e9b92f";
   fill(ctx, lv ? `LEVEL ${lv.value} • ${lv.name}` : m.code, cx, 960);
-  if (lv) { ctx.font = '700 30px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#d8d2c0"; fill(ctx, lv.th, cx, 1008); }
+  if (lv && LANG !== "en") { ctx.font = '700 30px "Noto Sans Thai",Tahoma,sans-serif'; ctx.fillStyle = "#d8d2c0"; fill(ctx, lv.th, cx, 1008); }
   // stat tiles
-  const tiles = s ? [["แต้ม", s.points], ["เกม", s.games], ["ชนะ", s.wins], ["อัตราชนะ", s.winPct + "%"]] : [["สมาชิก", m.code], ["ระดับ", lv ? "Lv." + lv.value : "—"]];
+  const tiles = s ? [[T("แต้ม", "Points"), s.points], [T("เกม", "Games"), s.games], [T("ชนะ", "Wins"), s.wins], [T("อัตราชนะ", "Win rate"), s.winPct + "%"]] : [[T("สมาชิก", "Member"), m.code], [T("ระดับ", "Level"), lv ? "Lv." + lv.value : "—"]];
   const gap = 18, tw = (W - 120 - gap * (tiles.length - 1)) / tiles.length, ty = 1060;
   tiles.forEach(([k, v], i) => {
     const x = 60 + i * (tw + gap);
@@ -380,27 +381,27 @@ async function drawCard(m) {
   });
   // footer band
   ctx.fillStyle = "#e9b92f"; ctx.fillRect(0, H - 100, W, 100);
-  ctx.fillStyle = "#0f0f0e"; fitText(ctx, "ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", W - 80, 34, 800); fill(ctx, "ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", cx, H - 50);
+  ctx.fillStyle = "#0f0f0e"; const foot = T("ทุกศุกร์ 20:00 • ลาดพร้าว 64 • badmanbegin.github.io", "Fridays 20:00 • Lat Phrao 64 • badmanbegin.github.io"); fitText(ctx, foot, W - 80, 34, 800); fill(ctx, foot, cx, H - 50);
   return new Promise((ok) => c.toBlob((b) => ok(b), "image/png"));
 }
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("#makeCard");
   if (b) {
     const m = byCode.get(String(b.dataset.code).toUpperCase()); if (!m) return;
-    b.disabled = true; b.textContent = "กำลังสร้างการ์ด…";
+    b.disabled = true; b.textContent = T("กำลังสร้างการ์ด…", "Making your card…");
     try {
       const blob = await drawCard(m);
       const file = new File([blob], `badman-${m.code}.png`, { type: "image/png" });
       const url = URL.createObjectURL(blob);
       const box = document.createElement("div"); box.className = "card-preview"; box.id = "cardPreview";
       const canShare = navigator.canShare && navigator.canShare({ files: [file] });
-      box.innerHTML = `<img src="${url}" alt="การ์ดผู้เล่น ${esc(display(m))}"><div class="row">${canShare ? `<button id="cardShare" style="background:#e9b92f;color:#0f0f0e">แชร์ไป IG / FB / LINE</button>` : ""}<a href="${url}" download="badman-${esc(m.code)}.png">ดาวน์โหลดรูป</a><button id="cardClose">ปิด</button></div><small>บนมือถือ: กดค้างที่รูปแล้วเลือก บันทึกรูปภาพ ได้เช่นกัน</small>`;
+      box.innerHTML = `<img src="${url}" alt="${T("การ์ดผู้เล่น", "Player card")} ${esc(display(m))}"><div class="row">${canShare ? `<button id="cardShare" style="background:#e9b92f;color:#0f0f0e">${T("แชร์ไป IG / FB / LINE", "Share to IG / FB / LINE")}</button>` : ""}<a href="${url}" download="badman-${esc(m.code)}.png">${T("ดาวน์โหลดรูป", "Download image")}</a><button id="cardClose">${T("ปิด", "Close")}</button></div><small>${T("บนมือถือ: กดค้างที่รูปแล้วเลือก บันทึกรูปภาพ ได้เช่นกัน", "On a phone you can also press and hold the image and choose Save Image")}</small>`;
       document.body.appendChild(box);
       box._file = file;
-      b.disabled = false; b.textContent = "บันทึกการ์ดของฉัน"; } catch { b.disabled = false; b.textContent = "สร้างการ์ดไม่สำเร็จ ลองอีกครั้ง"; }
+      b.disabled = false; b.textContent = T("บันทึกการ์ดของฉัน", "Save my card"); } catch { b.disabled = false; b.textContent = T("สร้างการ์ดไม่สำเร็จ ลองอีกครั้ง", "Couldn't make the card, try again"); }
     return;
   }
-  if (e.target.id === "cardShare") { const f = $("cardPreview")?._file; try { await navigator.share({ files: [f], title: "BADMAN BEGIN", text: "การ์ดผู้เล่นก๊วน BADMAN • badmanbegin.github.io" }); } catch {} return; }
+  if (e.target.id === "cardShare") { const f = $("cardPreview")?._file; try { await navigator.share({ files: [f], title: "BADMAN BEGIN", text: T("การ์ดผู้เล่นก๊วน BADMAN • badmanbegin.github.io", "BADMAN BEGIN player card • badmanbegin.github.io") }); } catch {} return; }
   if (e.target.id === "cardClose" || e.target.id === "cardPreview") { $("cardPreview")?.remove(); }
 });
 
@@ -414,7 +415,7 @@ document.addEventListener("click", async (e) => {
     for (const x of ranked) stats.members[x.m.id] = x.s;
     route();
   } catch {
-    $("view").innerHTML = '<section class="panel"><div class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชอีกครั้ง</div></section>';
+    $("view").innerHTML = `<section class="panel"><div class="empty">${T("โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชอีกครั้ง", "Couldn't load. Please refresh.")}</div></section>`;
   }
 })();
 </script>

@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ลงชื่อก๊วน — BADMAN BEGIN</title>
+<title data-en="Sign up — BADMAN BEGIN">ลงชื่อก๊วน — BADMAN BEGIN</title>
+<script src="../i18n.js"></script>
 <meta name="description" content="ลงชื่อเข้าก๊วนแบด BADMAN BEGIN ทุกวันศุกร์ เลือกช่วงเวลาที่จะมา ดูรายชื่อและที่ว่างได้ทันที">
 <meta property="og:title" content="ลงชื่อก๊วนแบด BADMAN BEGIN">
 <meta property="og:description" content="เลือกช่วงเวลาที่จะมา 20:00 / 21:00 / 22:00 • ดูรายชื่อและที่ว่างได้ทันที">
@@ -132,12 +133,12 @@ input.t:focus { border-color:var(--ink); box-shadow:0 0 0 3px rgba(233,185,47,.2
 <body>
 <header class="top"><div class="in">
   <a class="brand" href="../"><img src="../badman-begin-logo.webp" alt="BADMAN BEGIN" width="38" height="38"><b>BADMAN <span>BEGIN</span></b></a>
-  <nav aria-label="เมนู"><a href="../live/">คิวสด</a><a href="../ranking/">Ranking</a></nav>
+  <nav aria-label="เมนู" data-en-aria-label="Menu"><a href="../live/" data-en="Live queue">คิวสด</a><a href="../ranking/">Ranking</a><span data-lang-slot></span></nav>
 </div></header>
 
 <main class="shell">
-  <div id="view"><div class="card"><div class="empty">กำลังโหลด…</div></div></div>
-  <p class="note">แสดงเฉพาะชื่อเล่น • ถึงสนามแล้วแจ้งชื่อกับทีมงาน ระบบจะเช็กอินและต่อคิวให้ • เครื่องนี้จำไว้ว่าคุณลงชื่ออะไร ยกเลิกหรือแก้ได้จากเครื่องนี้เท่านั้น (เปลี่ยนเครื่องให้แจ้งทีมงาน)</p>
+  <div id="view"><div class="card"><div class="empty" data-en="Loading…">กำลังโหลด…</div></div></div>
+  <p class="note" data-en="Only nicknames are shown • tell the staff your name when you arrive and they'll check you in • this device remembers your sign-up, so you can change or cancel it only from this device (ask the staff if you switch devices)">แสดงเฉพาะชื่อเล่น • ถึงสนามแล้วแจ้งชื่อกับทีมงาน ระบบจะเช็กอินและต่อคิวให้ • เครื่องนี้จำไว้ว่าคุณลงชื่ออะไร ยกเลิกหรือแก้ได้จากเครื่องนี้เท่านั้น (เปลี่ยนเครื่องให้แจ้งทีมงาน)</p>
 </main>
 <div class="toast" id="toast" hidden></div>
 
@@ -155,8 +156,8 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const initial = (s) => String(s || "?").trim().replace(/^[เแโใไ]+/, "").charAt(0).toUpperCase();
 const norm = (s) => String(s || "").trim().replace(/\s+/g, " ").toLocaleLowerCase();
-const thaiDate = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
-const thaiWhen = (iso) => new Date(iso).toLocaleString("th-TH", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
+const thaiDate = (day) => new Date(day + "T12:00:00+07:00").toLocaleDateString(LOCALE, { weekday: "long", day: "numeric", month: "short", year: "numeric" });
+const thaiWhen = (iso) => new Date(iso).toLocaleString(LOCALE, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" });
 const today = () => new Date(Date.now() - 6 * 3600e3).toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
 function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 3500); }
 
@@ -199,7 +200,7 @@ async function token() {
   }
   const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE.apiKey}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ returnSecureToken: true }) });
   const b = await r.json();
-  if (!r.ok) throw new Error(b?.error?.message === "ADMIN_ONLY_OPERATION" ? "ระบบลงชื่อยังไม่เปิดใช้งาน กรุณาแจ้งทีมงาน" : "เชื่อมต่อระบบไม่สำเร็จ ลองใหม่อีกครั้ง");
+  if (!r.ok) throw new Error(b?.error?.message === "ADMIN_ONLY_OPERATION" ? T("ระบบลงชื่อยังไม่เปิดใช้งาน กรุณาแจ้งทีมงาน", "Sign-up isn't switched on yet. Please tell the staff.") : T("เชื่อมต่อระบบไม่สำเร็จ ลองใหม่อีกครั้ง", "Couldn't connect. Please try again."));
   auth = { uid: b.localId, refreshToken: b.refreshToken, idToken: b.idToken, exp: Date.now() + Number(b.expiresIn) * 1000 };
   saveAuth();
   return auth.idToken;
@@ -208,8 +209,8 @@ async function commit(writes) {
   const r = await fetch(`${API}:commit`, { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + (await token()) }, body: JSON.stringify({ writes }) });
   if (!r.ok) {
     const b = await r.json().catch(() => ({}));
-    if (r.status === 403) throw new Error("ลงชื่อไม่ได้ อาจปิดรับแล้วหรือข้อมูลไม่ถูกต้อง ลองรีเฟรชหน้า");
-    throw new Error(b?.error?.message || "บันทึกไม่สำเร็จ");
+    if (r.status === 403) throw new Error(T("ลงชื่อไม่ได้ อาจปิดรับแล้วหรือข้อมูลไม่ถูกต้อง ลองรีเฟรชหน้า", "Couldn't sign up: it may be closed or something is wrong. Try refreshing the page."));
+    throw new Error(b?.error?.message || T("บันทึกไม่สำเร็จ", "Couldn't save"));
   }
 }
 const sv = (s) => ({ stringValue: String(s) });
@@ -245,7 +246,7 @@ function avatar(e) {
 }
 function subOf(e) {
   const m = e.memberId ? roster.get(e.memberId) : null;
-  return m?.level ? `Lv.${m.level} ${LV[m.level]}` : e.memberId ? "สมาชิก" : "คนใหม่";
+  return m?.level ? `Lv.${m.level} ${LV[m.level]}` : e.memberId ? T("สมาชิก", "Member") : T("คนใหม่", "New");
 }
 
 function renderRoundCard(st) {
@@ -253,19 +254,19 @@ function renderRoundCard(st) {
   const open = isOpen();
   const my = mine();
   return `<section class="round">
-    <div class="row"><span class="eyebrow">${round.date >= today() ? "รอบถัดไป" : "รอบล่าสุด"}</span><span class="pill ${open ? "open" : "closed"}"><span class="d"></span>${open ? "เปิดรับอยู่" : "ปิดรับแล้ว"}</span></div>
+    <div class="row"><span class="eyebrow">${round.date >= today() ? T("รอบถัดไป", "Next round") : T("รอบล่าสุด", "Latest round")}</span><span class="pill ${open ? "open" : "closed"}"><span class="d"></span>${open ? T("เปิดรับอยู่", "Open") : T("ปิดรับแล้ว", "Closed")}</span></div>
     <h1>${esc(thaiDate(round.date))}</h1>
-    <div class="meta"><span>${esc(round.start)}–${esc(round.end === "00:00" ? "24:00" : round.end)} น. • สนามแบดวังนาคา ลาดพร้าว 64</span>${round.fee ? `<span>${esc(round.fee)}</span>` : ""}</div>
-    <div class="total"><span>ลงชื่อแล้ว</span><span><strong>${total}</strong><span> / ${capTotal()} คน</span></span></div>
-    <div class="slots"><small>ช่วงเวลาที่เปิดรับ • เลือกเองตอนลงชื่อ</small>${st.map((s) => {
+    <div class="meta"><span>${esc(round.start)}–${esc(round.end === "00:00" ? "24:00" : round.end)}${T(" น. • สนามแบดวังนาคา ลาดพร้าว 64", " • Wang Naka court, Lat Phrao 64")}</span>${round.fee ? `<span>${esc(feeText(round.fee))}</span>` : ""}</div>
+    <div class="total"><span>${T("ลงชื่อแล้ว", "Signed up")}</span><span><strong>${total}</strong><span> / ${capTotal()}${T(" คน", "")}</span></span></div>
+    <div class="slots"><small>${T("ช่วงเวลาที่เปิดรับ • เลือกเองตอนลงชื่อ", "Arrival times • you pick one when you sign up")}</small>${st.map((s) => {
       const left = s.cap - s.used;
       const pct = Math.min(100, Math.round((s.used / Math.max(1, s.cap)) * 100));
-      const lbl = left <= 0 ? `เต็ม ${s.used}/${s.cap}` : s.used ? `${s.used}/${s.cap} • เหลือ ${left}` : `ว่าง ${s.cap}`;
+      const lbl = left <= 0 ? T(`เต็ม ${s.used}/${s.cap}`, `Full ${s.used}/${s.cap}`) : s.used ? T(`${s.used}/${s.cap} • เหลือ ${left}`, `${s.used}/${s.cap} • ${left} left`) : T(`ว่าง ${s.cap}`, `${s.cap} free`);
       const color = left <= 0 ? "#d8d2c0" : s.used ? "#e9b92f" : "#8fe0b2";
-      return `<div class="slot"><b>${esc(s.time)}</b><div><div class="bar"><div style="width:${pct}%"></div></div><small>รับ ${s.cap} คน${s.waitPeople ? ` • สำรอง ${s.waitPeople}` : ""}</small></div><span class="lbl" style="color:${color}">${lbl}</span></div>`;
+      return `<div class="slot"><b>${esc(s.time)}</b><div><div class="bar"><div style="width:${pct}%"></div></div><small>${T(`รับ ${s.cap} คน`, `${s.cap} places`)}${s.waitPeople ? T(` • สำรอง ${s.waitPeople}`, ` • ${s.waitPeople} waiting`) : ""}</small></div><span class="lbl" style="color:${color}">${lbl}</span></div>`;
     }).join("")}</div>
-    ${open && !my ? `<button class="btn gold" id="goForm">ลงชื่อรอบนี้</button><span class="hint">ไม่ต้องสมัคร ไม่ต้องล็อกอิน • ยกเลิกเองได้ถึง ${esc(thaiWhen(round.closeAt))} น.</span>` : ""}
-    ${!open ? `<span class="hint">ปิดรับลงชื่อแล้ว • ติดต่อทีมงานในกลุ่ม LINE</span>` : ""}
+    ${open && !my ? `<button class="btn gold" id="goForm">${T("ลงชื่อรอบนี้", "Sign up for this round")}</button><span class="hint">${T(`ไม่ต้องสมัคร ไม่ต้องล็อกอิน • ยกเลิกเองได้ถึง ${esc(thaiWhen(round.closeAt))} น.`, `No account or login needed • you can cancel until ${esc(thaiWhen(round.closeAt))}`)}</span>` : ""}
+    ${!open ? `<span class="hint">${T("ปิดรับลงชื่อแล้ว • ติดต่อทีมงานในกลุ่ม LINE", "Sign-up is closed • contact the staff in the LINE group")}</span>` : ""}
   </section>`;
 }
 
@@ -273,18 +274,18 @@ function renderMine(st) {
   const my = mine();
   if (!my) return "";
   const ok = my.state === "ok";
-  const who = [my.name, ...(my.guests || []).map((g) => `${g} (เพื่อน)`)].join(" • ");
+  const who = [my.name, ...(my.guests || []).map((g) => `${g} ${T("(เพื่อน)", "(friend)")}`)].join(" • ");
   return `<section class="mine ${ok ? "" : "wait"}">
     <div class="top">
       <span class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ok ? '<path d="M5 12l5 5 9-10"/>' : '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'}</svg></span>
-      <b>${ok ? "คุณลงชื่อแล้ว • ได้ที่แล้ว" : `อยู่คิวสำรองที่ ${my.no} ของช่วง ${esc(my.slot)}`}</b>
+      <b>${ok ? T("คุณลงชื่อแล้ว • ได้ที่แล้ว", "You're signed up • you have a place") : T(`อยู่คิวสำรองที่ ${my.no} ของช่วง ${esc(my.slot)}`, `Waiting list #${my.no} for ${esc(my.slot)}`)}</b>
       <span class="sub">${esc(who)}</span>
-      ${ok ? `<span class="time">มาได้ตั้งแต่ ${esc(my.slot)} น.</span>` : ""}
+      ${ok ? `<span class="time">${T(`มาได้ตั้งแต่ ${esc(my.slot)} น.`, `Come from ${esc(my.slot)}`)}</span>` : ""}
     </div>
     <div class="body">
-      <p>${ok ? `ถึงสนามแล้วแจ้งชื่อ "${esc(my.name)}" กับทีมงาน` : "มีคนยกเลิกเมื่อไร ระบบจะเลื่อนคุณขึ้นอัตโนมัติ เปิดหน้านี้เช็กสถานะได้ตลอด หรือเปลี่ยนไปช่วงที่ยังว่าง"}</p>
-      <a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">เปิดกลุ่ม LINE ของก๊วน</a>
-      ${isOpen() ? `<button class="btn ghost" id="editMine">แก้ไข / เปลี่ยนช่วงเวลา</button><button class="btn danger" id="cancelMine">${cancelArmed ? "กดอีกครั้งเพื่อยืนยันยกเลิก" : ok ? "ยกเลิกการลงชื่อ" : "ออกจากคิวสำรอง"}</button>` : ""}
+      <p>${ok ? T(`ถึงสนามแล้วแจ้งชื่อ "${esc(my.name)}" กับทีมงาน`, `When you arrive, tell the staff your name: "${esc(my.name)}"`) : T("มีคนยกเลิกเมื่อไร ระบบจะเลื่อนคุณขึ้นอัตโนมัติ เปิดหน้านี้เช็กสถานะได้ตลอด หรือเปลี่ยนไปช่วงที่ยังว่าง", "If someone cancels you move up automatically. Check back here any time, or switch to a time that still has room.")}</p>
+      <a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">${T("เปิดกลุ่ม LINE ของก๊วน", "Open the club LINE group")}</a>
+      ${isOpen() ? `<button class="btn ghost" id="editMine">${T("แก้ไข / เปลี่ยนช่วงเวลา", "Edit / change time")}</button><button class="btn danger" id="cancelMine">${cancelArmed ? T("กดอีกครั้งเพื่อยืนยันยกเลิก", "Tap again to confirm") : ok ? T("ยกเลิกการลงชื่อ", "Cancel my sign-up") : T("ออกจากคิวสำรอง", "Leave the waiting list")}</button>` : ""}
     </div>
   </section>`;
 }
@@ -295,22 +296,22 @@ function renderLists(st) {
   const me = auth?.uid;
   const row = (e, cls, no) => {
     const tags = [];
-    if (!e.memberId) tags.push(`<span class="tag new">คนใหม่</span>`);
-    if (e.guests?.length) tags.push(`<span class="tag guest">+${e.guests.length} เพื่อน</span>`);
-    return `<div class="person ${cls}${e.id === me ? " me" : ""}"><span class="no">${no}</span>${avatar(e)}<span class="who"><b>${esc(e.name)}${e.id === me ? " (คุณ)" : ""}</b><small>${esc(subOf(e))}${e.guests?.length ? " • พา " + e.guests.map(esc).join(", ") : ""}</small></span>${tags.join("")}</div>`;
+    if (!e.memberId) tags.push(`<span class="tag new">${T("คนใหม่", "New")}</span>`);
+    if (e.guests?.length) tags.push(`<span class="tag guest">+${e.guests.length} ${T("เพื่อน", e.guests.length > 1 ? "friends" : "friend")}</span>`);
+    return `<div class="person ${cls}${e.id === me ? " me" : ""}"><span class="no">${no}</span>${avatar(e)}<span class="who"><b>${esc(e.name)}${e.id === me ? T(" (คุณ)", " (you)") : ""}</b><small>${esc(subOf(e))}${e.guests?.length ? T(" • พา ", " • with ") + e.guests.map(esc).join(", ") : ""}</small></span>${tags.join("")}</div>`;
   };
-  let html = `<section class="card"><div class="head"><b>รายชื่อรอบนี้</b><span>${ok.reduce((t, x) => t + 1 + (x.e.guests?.length || 0), 0)} คน (รวมเพื่อน)</span></div>`;
-  if (!ok.length) html += `<div class="empty">ยังไม่มีคนลงชื่อ • มาเป็นคนแรกเลย</div>`;
+  let html = `<section class="card"><div class="head"><b>${T("รายชื่อรอบนี้", "This round")}</b><span>${ok.reduce((t, x) => t + 1 + (x.e.guests?.length || 0), 0)} ${T("คน (รวมเพื่อน)", "people (incl. friends)")}</span></div>`;
+  if (!ok.length) html += `<div class="empty">${T("ยังไม่มีคนลงชื่อ • มาเป็นคนแรกเลย", "No one yet • be the first")}</div>`;
   for (const s of st) {
     const list = s.list.filter((e) => e.state === "ok");
     if (!list.length) continue;
-    html += `<div class="slothead"><span>มา ${esc(s.time)}</span><span>${s.used}/${s.cap}${s.used >= s.cap ? " • เต็มแล้ว" : ` • เหลือ ${s.cap - s.used}`}</span></div>`;
+    html += `<div class="slothead"><span>${T("มา", "Arriving")} ${esc(s.time)}</span><span>${s.used}/${s.cap}${s.used >= s.cap ? T(" • เต็มแล้ว", " • full") : T(` • เหลือ ${s.cap - s.used}`, ` • ${s.cap - s.used} left`)}</span></div>`;
     html += list.map((e) => row(e, "", e.no)).join("");
   }
   html += `</section>`;
   if (waits.length) {
-    html += `<section class="card" style="border-color:#f0ad78"><div class="head" style="background:#fff3e8"><b style="color:#98450c">คิวสำรอง</b><span style="color:#98450c">เลื่อนขึ้นอัตโนมัติเมื่อมีคนยกเลิก</span></div>`;
-    html += waits.map(({ e, s }) => row(e, "wait", `${esc(s.time)}<br>ส.${e.no}`)).join("") + `</section>`;
+    html += `<section class="card" style="border-color:#f0ad78"><div class="head" style="background:#fff3e8"><b style="color:#98450c">${T("คิวสำรอง", "Waiting list")}</b><span style="color:#98450c">${T("เลื่อนขึ้นอัตโนมัติเมื่อมีคนยกเลิก", "Moves up automatically when someone cancels")}</span></div>`;
+    html += waits.map(({ e, s }) => row(e, "wait", `${esc(s.time)}<br>${T("ส.", "W")}${e.no}`)).join("") + `</section>`;
   }
   return html;
 }
@@ -330,34 +331,34 @@ function renderForm(st) {
   });
   const chosen = slotInfo.find((s) => s.time === f.slot);
   return `<div class="form">
-    <div class="box" style="flex-direction:row;align-items:center;justify-content:space-between"><b style="font-size:16px">${f.editing ? "แก้ไขการลงชื่อ" : "ลงชื่อ"} • ${esc(thaiDate(round.date))}</b><button class="btn ghost" id="backList" style="width:auto;padding:9px 14px">กลับ</button></div>
+    <div class="box" style="flex-direction:row;align-items:center;justify-content:space-between"><b style="font-size:16px">${f.editing ? T("แก้ไขการลงชื่อ", "Edit sign-up") : T("ลงชื่อ", "Sign up")} • ${esc(thaiDate(round.date))}</b><button class="btn ghost" id="backList" style="width:auto;padding:9px 14px">${T("กลับ", "Back")}</button></div>
     <div class="box">
-      <b>1. คุณคือใคร?</b>
-      ${picked ? `<div class="choices"><button type="button" class="choice" aria-pressed="true" id="unpick">${avatar({ name: picked.name, memberId: picked.id })}<span class="who"><b>${esc(picked.name)}</b><small>${esc(picked.code)}${picked.level ? " • Lv." + picked.level + " " + LV[picked.level] : ""} • แตะเพื่อเปลี่ยน</small></span></button></div>` : `
-      <label class="f">ชื่อเล่นที่ใช้ในก๊วน<input class="t" id="fName" value="${esc(f.query)}" maxlength="30" autocomplete="nickname" placeholder="พิมพ์ชื่อเล่น"></label>
-      ${matches.length ? `<div class="choices">${matches.map((m) => `<button type="button" class="choice" data-pick="${esc(m.id)}">${avatar({ name: m.name, memberId: m.id })}<span class="who"><b>${esc(m.name)}</b><small>${esc(m.code)}${m.level ? " • Lv." + m.level + " " + LV[m.level] : ""}${signedIds().has(m.id) ? " • ลงชื่อแล้ว" : ""}</small></span></button>`).join("")}</div><small style="color:var(--muted)">เป็นสมาชิกอยู่แล้ว แตะชื่อตัวเอง • ถ้าไม่ใช่ ลงด้วยชื่อที่พิมพ์ได้เลย</small>` : q ? `<small style="color:var(--muted)">ไม่พบชื่อนี้ในรายชื่อสมาชิกที่เปิดเผย จะลงเป็นชื่อ "${esc(f.query.trim())}"</small>` : ""}`}
+      <b>${T("1. คุณคือใคร?", "1. Who are you?")}</b>
+      ${picked ? `<div class="choices"><button type="button" class="choice" aria-pressed="true" id="unpick">${avatar({ name: picked.name, memberId: picked.id })}<span class="who"><b>${esc(picked.name)}</b><small>${esc(picked.code)}${picked.level ? " • Lv." + picked.level + " " + LV[picked.level] : ""}${T(" • แตะเพื่อเปลี่ยน", " • tap to change")}</small></span></button></div>` : `
+      <label class="f">${T("ชื่อเล่นที่ใช้ในก๊วน", "Your nickname at the club")}<input class="t" id="fName" value="${esc(f.query)}" maxlength="30" autocomplete="nickname" placeholder="${T("พิมพ์ชื่อเล่น", "Type your nickname")}"></label>
+      ${matches.length ? `<div class="choices">${matches.map((m) => `<button type="button" class="choice" data-pick="${esc(m.id)}">${avatar({ name: m.name, memberId: m.id })}<span class="who"><b>${esc(m.name)}</b><small>${esc(m.code)}${m.level ? " • Lv." + m.level + " " + LV[m.level] : ""}${signedIds().has(m.id) ? T(" • ลงชื่อแล้ว", " • signed up") : ""}</small></span></button>`).join("")}</div><small style="color:var(--muted)">${T("เป็นสมาชิกอยู่แล้ว แตะชื่อตัวเอง • ถ้าไม่ใช่ ลงด้วยชื่อที่พิมพ์ได้เลย", "Already a member? Tap your name • otherwise just sign up with the name you typed")}</small>` : q ? `<small style="color:var(--muted)">${T(`ไม่พบชื่อนี้ในรายชื่อสมาชิกที่เปิดเผย จะลงเป็นชื่อ "${esc(f.query.trim())}"`, `Not in the public member list. You'll sign up as "${esc(f.query.trim())}"`)}</small>` : ""}`}
     </div>
-    <fieldset class="box"><legend>2. จะมาถึงช่วงไหน?</legend>
-      ${slotInfo.map((s) => `<label class="slotpick"><input type="radio" name="slot" value="${esc(s.time)}"${f.slot === s.time ? " checked" : ""}><span><b>${esc(s.time)}</b><small style="color:${s.full ? "#98450c" : s.left < s.cap ? "#725300" : "#0f6843"}">${s.full ? "เต็มแล้ว • เลือกได้ จะต่อคิวสำรอง" : s.left < s.cap ? `เหลือ ${s.left} ที่` : `ว่าง ${s.left} ที่`}</small></span></label>`).join("")}
-      ${f.guests.length ? `<small style="color:var(--muted)">เพื่อนที่พามาจะอยู่ช่วงเดียวกัน</small>` : ""}
+    <fieldset class="box"><legend>${T("2. จะมาถึงช่วงไหน?", "2. When will you arrive?")}</legend>
+      ${slotInfo.map((s) => `<label class="slotpick"><input type="radio" name="slot" value="${esc(s.time)}"${f.slot === s.time ? " checked" : ""}><span><b>${esc(s.time)}</b><small style="color:${s.full ? "#98450c" : s.left < s.cap ? "#725300" : "#0f6843"}">${s.full ? T("เต็มแล้ว • เลือกได้ จะต่อคิวสำรอง", "Full • you can still pick it and join the waiting list") : s.left < s.cap ? T(`เหลือ ${s.left} ที่`, `${s.left} left`) : T(`ว่าง ${s.left} ที่`, `${s.left} free`)}</small></span></label>`).join("")}
+      ${f.guests.length ? `<small style="color:var(--muted)">${T("เพื่อนที่พามาจะอยู่ช่วงเดียวกัน", "Your friends arrive at the same time as you")}</small>` : ""}
     </fieldset>
     ${round.maxGuests > 0 ? `<div class="box">
-      <div class="stepper"><b style="font-size:18px">3. พาเพื่อนมาด้วยไหม?</b><div class="ctl"><button type="button" id="gMinus" aria-label="ลดจำนวนเพื่อน">−</button><strong>${f.guests.length}</strong><button type="button" class="plus" id="gPlus" aria-label="เพิ่มจำนวนเพื่อน">+</button></div></div>
-      <small style="color:var(--muted)">ไม่เกิน ${round.maxGuests} คน</small>
-      ${f.guests.map((g, i) => `<label class="f">ชื่อเล่นเพื่อนคนที่ ${i + 1}<input class="t" data-guest="${i}" value="${esc(g)}" maxlength="30"></label>`).join("")}
+      <div class="stepper"><b style="font-size:18px">${T("3. พาเพื่อนมาด้วยไหม?", "3. Bringing friends?")}</b><div class="ctl"><button type="button" id="gMinus" aria-label="${T("ลดจำนวนเพื่อน", "One friend fewer")}">−</button><strong>${f.guests.length}</strong><button type="button" class="plus" id="gPlus" aria-label="${T("เพิ่มจำนวนเพื่อน", "One more friend")}">+</button></div></div>
+      <small style="color:var(--muted)">${T(`ไม่เกิน ${round.maxGuests} คน`, `Up to ${round.maxGuests}`)}</small>
+      ${f.guests.map((g, i) => `<label class="f">${T(`ชื่อเล่นเพื่อนคนที่ ${i + 1}`, `Friend ${i + 1} nickname`)}<input class="t" data-guest="${i}" value="${esc(g)}" maxlength="30"></label>`).join("")}
     </div>` : ""}
-    <div class="box"><label class="f">ฝากบอกทีมงาน (ไม่บังคับ • ทีมงานเห็นคนเดียว)<input class="t" id="fNote" value="${esc(f.note)}" maxlength="120" placeholder="เช่น มาถึงประมาณ 21:30"></label></div>
+    <div class="box"><label class="f">${T("ฝากบอกทีมงาน (ไม่บังคับ • ทีมงานเห็นคนเดียว)", "Note to staff (optional • only staff see it)")}<input class="t" id="fNote" value="${esc(f.note)}" maxlength="120" placeholder="${T("เช่น มาถึงประมาณ 21:30", "e.g. arriving around 21:30")}"></label></div>
     <div class="summary">
-      <div class="row"><span>${esc(picked ? picked.name : f.query.trim() || "—")}${f.guests.length ? ` + เพื่อน ${f.guests.length} คน` : ""}</span><span>${chosen ? (chosen.full ? `ช่วง ${esc(chosen.time)} • คิวสำรอง` : `ช่วง ${esc(chosen.time)} • ได้ที่`) : "ยังไม่เลือกช่วงเวลา"}</span></div>
+      <div class="row"><span>${esc(picked ? picked.name : f.query.trim() || "—")}${f.guests.length ? T(` + เพื่อน ${f.guests.length} คน`, ` + ${f.guests.length} friend${f.guests.length > 1 ? "s" : ""}`) : ""}</span><span>${chosen ? (chosen.full ? T(`ช่วง ${esc(chosen.time)} • คิวสำรอง`, `${esc(chosen.time)} • waiting list`) : T(`ช่วง ${esc(chosen.time)} • ได้ที่`, `${esc(chosen.time)} • place available`)) : T("ยังไม่เลือกช่วงเวลา", "No time picked yet")}</span></div>
       <div class="err" id="formErr">${esc(f.error || "")}</div>
-      <button class="btn gold" id="submit"${busy ? " disabled" : ""}>${busy ? "กำลังบันทึก…" : f.editing ? "บันทึกการแก้ไข" : "ยืนยันลงชื่อ"}</button>
-      <span class="hint">ชื่อเล่นจะแสดงในรายชื่อรอบนี้ • เครื่องนี้จำไว้ว่าเป็นของคุณ</span>
+      <button class="btn gold" id="submit"${busy ? " disabled" : ""}>${busy ? T("กำลังบันทึก…", "Saving…") : f.editing ? T("บันทึกการแก้ไข", "Save changes") : T("ยืนยันลงชื่อ", "Confirm sign-up")}</button>
+      <span class="hint">${T("ชื่อเล่นจะแสดงในรายชื่อรอบนี้ • เครื่องนี้จำไว้ว่าเป็นของคุณ", "Your nickname appears in this round's list • this device remembers it's yours")}</span>
     </div>
   </div>`;
 }
 
 function render() {
-  if (!round) { $("view").innerHTML = `<section class="round"><span class="eyebrow">ลงชื่อก๊วน</span><h1>ยังไม่เปิดรอบลงชื่อ</h1><div class="meta"><span>ทีมงานจะเปิดรอบให้ลงชื่อก่อนวันศุกร์ ติดตามได้ในกลุ่ม LINE</span></div><a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">เปิดกลุ่ม LINE ของก๊วน</a></section>`; return; }
+  if (!round) { $("view").innerHTML = `<section class="round"><span class="eyebrow">${T("ลงชื่อก๊วน", "Sign up")}</span><h1>${T("ยังไม่เปิดรอบลงชื่อ", "No round open yet")}</h1><div class="meta"><span>${T("ทีมงานจะเปิดรอบให้ลงชื่อก่อนวันศุกร์ ติดตามได้ในกลุ่ม LINE", "The staff open sign-up before Friday. Watch the LINE group.")}</span></div><a class="btn line" href="${LINE_URL}" target="_blank" rel="noopener">${T("เปิดกลุ่ม LINE ของก๊วน", "Open the club LINE group")}</a></section>`; return; }
   const st = standings();
   if (view === "form" && form) {
     $("view").innerHTML = renderForm(st);
@@ -404,7 +405,7 @@ async function loadRoster() {
 }
 async function refresh() {
   try { await Promise.all([loadRound(), loadRoster()]); render(); }
-  catch { if (!round) $("view").innerHTML = `<div class="card"><div class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชอีกครั้ง</div></div>`; }
+  catch { if (!round) $("view").innerHTML = `<div class="card"><div class="empty">${T("โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชอีกครั้ง", "Couldn't load. Please refresh.")}</div></div>`; }
 }
 
 /* ---------- actions ---------- */
@@ -424,18 +425,18 @@ async function submit() {
   const picked = f.memberId ? roster.get(f.memberId) : null;
   const name = (picked ? picked.name : f.query).trim().replace(/\s+/g, " ").slice(0, 30);
   const guests = f.guests.map((g) => g.trim().replace(/\s+/g, " ").slice(0, 30)).filter(Boolean);
-  if (!name) { f.error = "กรุณาใส่ชื่อเล่น"; return render(); }
-  if (!f.slot) { f.error = "เลือกช่วงเวลาที่จะมา"; return render(); }
-  if (guests.length !== f.guests.length) { f.error = "ใส่ชื่อเล่นเพื่อนให้ครบ หรือกด − เพื่อลดจำนวน"; return render(); }
+  if (!name) { f.error = T("กรุณาใส่ชื่อเล่น", "Please enter your nickname"); return render(); }
+  if (!f.slot) { f.error = T("เลือกช่วงเวลาที่จะมา", "Pick an arrival time"); return render(); }
+  if (guests.length !== f.guests.length) { f.error = T("ใส่ชื่อเล่นเพื่อนให้ครบ หรือกด − เพื่อลดจำนวน", "Enter every friend's nickname, or tap − to remove one"); return render(); }
   if (!picked) {
     // A typed name that matches a public member name exactly links to that member.
     const exact = [...roster.values()].filter((m) => m.name && norm(m.name) === norm(name));
     if (exact.length === 1) f.memberId = exact[0].id;
   }
   const taken = f.memberId && entries.find((e) => e.id !== auth?.uid && e.memberId === f.memberId);
-  if (taken) { f.error = `${name} ลงชื่อในรอบนี้แล้ว (ช่วง ${taken.slot}) • ถ้าไม่ได้ลงเอง หรืออยากแก้ไขจากเครื่องอื่น ทักทีมงานในกลุ่ม LINE`; if (!picked) f.memberId = null; return render(); }
+  if (taken) { f.error = T(`${name} ลงชื่อในรอบนี้แล้ว (ช่วง ${taken.slot}) • ถ้าไม่ได้ลงเอง หรืออยากแก้ไขจากเครื่องอื่น ทักทีมงานในกลุ่ม LINE`, `${name} is already signed up for this round (${taken.slot}) • if that wasn't you, or you want to change it from another device, message the staff in the LINE group`); if (!picked) f.memberId = null; return render(); }
   const dup = entries.find((e) => e.id !== auth?.uid && norm(e.name) === norm(name));
-  if (dup && !f.dupOk) { f.dupOk = true; f.error = `มีคนลงชื่อ "${name}" ในรอบนี้แล้ว ถ้าเป็นคนละคน กดยืนยันอีกครั้ง หรือเพิ่มตัวอักษรท้ายชื่อ`; return render(); }
+  if (dup && !f.dupOk) { f.dupOk = true; f.error = T(`มีคนลงชื่อ "${name}" ในรอบนี้แล้ว ถ้าเป็นคนละคน กดยืนยันอีกครั้ง หรือเพิ่มตัวอักษรท้ายชื่อ`, `Someone named "${name}" is already signed up. If that's a different person, tap confirm again or add a letter to your name.`); return render(); }
   busy = true; f.error = ""; render();
   try {
     await token();
@@ -454,7 +455,7 @@ async function submit() {
     view = "list"; form = null; busy = false;
     render(); window.scrollTo(0, 0);
     const my = mine();
-    toast(my?.state === "ok" ? `ลงชื่อแล้ว • มาได้ตั้งแต่ ${my.slot} น.` : "บันทึกแล้ว • อยู่ในคิวสำรอง");
+    toast(my?.state === "ok" ? T(`ลงชื่อแล้ว • มาได้ตั้งแต่ ${my.slot} น.`, `Signed up • come from ${my.slot}`) : T("บันทึกแล้ว • อยู่ในคิวสำรอง", "Saved • you're on the waiting list"));
   } catch (e) { busy = false; f.error = e.message; render(); }
 }
 async function cancelMine() {
@@ -463,7 +464,7 @@ async function cancelMine() {
   try {
     await token();
     await commit([{ delete: `${ROOT}/rounds/${round.id}/entries/${auth.uid}` }, { delete: `${ROOT}/rounds/${round.id}/notes/${auth.uid}` }]);
-    await loadRound(); render(); toast("ยกเลิกการลงชื่อแล้ว");
+    await loadRound(); render(); toast(T("ยกเลิกการลงชื่อแล้ว", "Sign-up cancelled"));
   } catch (e) { toast(e.message); render(); }
 }
 
